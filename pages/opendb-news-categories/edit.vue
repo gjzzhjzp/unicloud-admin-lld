@@ -95,6 +95,7 @@
        */
       submitForm(value) {
         // 使用 clientDB 提交数据
+		console.log("value",value);
         return db.collection(dbCollectionName).doc(this.formDataId).update(value).then((res) => {
           uni.showToast({
             title: '修改成功'
@@ -120,7 +121,8 @@
         db.collection(dbCollectionName).doc(id).field("flbm,parent_flbm,name,description,icon,path").get().then((res) => {
           const data = res.result.data[0]
           if (data) {
-            this.formData = data
+			  Object.assign(this.formData,data);
+            // this.formData = data;
           }
         }).catch((err) => {
           uni.showModal({
