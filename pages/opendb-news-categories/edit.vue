@@ -121,8 +121,11 @@
         db.collection(dbCollectionName).doc(id).field("flbm,parent_flbm,name,description,icon,path").get().then((res) => {
           const data = res.result.data[0]
           if (data) {
-			  Object.assign(this.formData,data);
-            // this.formData = data;
+			  if(!data.icon.url){
+				  data.icon=null;
+			  }
+			  // Object.assign(this.formData,data);
+            this.formData = data;
           }
         }).catch((err) => {
           uni.showModal({
