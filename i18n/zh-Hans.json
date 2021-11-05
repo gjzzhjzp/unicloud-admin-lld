@@ -24,8 +24,8 @@
 	},
 	"index": {
 		"text": {
-			"prompt": "内容主体，可自定义内容及样式",
-			"vesion": "可在控制台和 package.json 中查看当前的版本"
+			"prompt": "",
+			"vesion": ""
 		}
 	},
 	"updatePwd": {
