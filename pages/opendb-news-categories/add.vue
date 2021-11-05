@@ -97,6 +97,9 @@
 		Object.assign(value,{
 			parent_flbm:this.formData.parent_flbm
 		});
+		if(!value.icon){
+			value.icon={url:""};
+		}
 		console.log("value",value);
         return db.collection(dbCollectionName).add(value).then((res) => {
           uni.showToast({

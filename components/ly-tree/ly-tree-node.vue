@@ -8,8 +8,8 @@
 			'is-hidden': !node.visible, 
 			'is-checked': !node.disabled && node.checked 
 		}"
-		role="treeitem" 
-		@tap.stop="handleClick" >
+		role="treeitem"
+		 >
 		<view class="ly-tree-node__content" 
 			:class="{
 				'is-current': node.isCurrent && highlightCurrent
@@ -56,10 +56,15 @@
 			</template>
 			
 			<text class="ly-tree-node__label">
-			{{node.label}}
+			{{node.label}}({{node.data.flbm}})
 			</text>
 			
 			<!-- 下面扩展了button和handleExtButtonClick事件。但不太通用，直接改组件源码了，应该给组件真正补充ExtButton -->
+			<view>
+				<text>【</text>
+				<text @tap.stop="handleClick()" class="ly-tree-node__extbutton">编辑</text>
+				<text>】</text>
+			</view>
 			<view>
 				<text>【</text>
 				<text @tap.stop="handleExtButtonClick('newchildren')" class="ly-tree-node__extbutton">新增子节点</text>
@@ -213,6 +218,7 @@
 			},
 			
 			handleClick() {
+				// debugger;
 				this.tree.store.setCurrentNode(this.node);
 				this.tree.$emit('current-change', {
 					node: this.node,

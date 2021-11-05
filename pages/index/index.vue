@@ -1,10 +1,6 @@
 <template>
 	<scroll-view style="padding: 15px;box-sizing: border-box;">
-		{{ $t("index.text.prompt") }}
-		<text style="color: #666; font-size: 15px;">（ v{{adminVersion}}, {{ $t("index.text.vesion") }}）</text>
-		<!-- #ifndef H5 -->
-		<fix-window />
-		<!-- #endif -->
+		
 	</scroll-view>
 </template>
 
