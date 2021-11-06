@@ -2,68 +2,13 @@
 
 
 const validator = {
-  "bannerfile": {
-    "rules": [
-      {
-        "required": true
-      },
-      {
-        "format": "file"
-      }
-    ],
-    "label": "图片文件"
-  },
-  "open_url": {
+  "value": {
     "rules": [
       {
         "format": "string"
       }
     ],
-    "label": "跳转地址"
-  },
-  "title": {
-    "rules": [
-      {
-        "format": "string"
-      },
-      {
-        "maxLength": 20
-      }
-    ],
-    "label": "标题"
-  },
-  "sort": {
-    "rules": [
-      {
-        "format": "int"
-      }
-    ],
-    "label": "排序"
-  },
-  "type": {
-    "rules": [
-      {
-        "format": "int"
-      },
-      {
-        "range": [
-          {
-            "value": 0,
-            "text": "首页"
-          },
-          {
-            "value": 1,
-            "text": "俊哲"
-          },
-          {
-            "value": 2,
-            "text": "山总"
-          }
-        ]
-      }
-    ],
-    "defaultValue": 0,
-    "label": "类型"
+    "label": "邀请码"
   },
   "status": {
     "rules": [
@@ -73,24 +18,10 @@ const validator = {
     ],
     "defaultValue": true,
     "label": "生效状态"
-  },
-  "description": {
-    "rules": [
-      {
-        "format": "string"
-      }
-    ],
-    "label": "备注"
   }
 }
 
-const enumConverter = {
-  "type_valuetotext": {
-    "0": "首页",
-    "1": "俊哲",
-    "2": "山总"
-  }
-}
+const enumConverter = {}
 
 function filterToWhere(filter, command) {
   let where = {}

@@ -67,7 +67,9 @@
 	onLoad(e) {
 	  if (e.parent_flbm) {
 	    const id = e.parent_flbm;
+		 const next_flbm = e.next_flbm;
 		this.formData.parent_flbm=id;
+		this.formData.flbm=next_flbm;
 	  }
 	},
     onReady() {

@@ -19,8 +19,14 @@
       <uni-forms-item name="article_status" label="文章状态">
         <uni-data-checkbox v-model="formData.article_status" :localdata="formOptions.article_status_localdata"></uni-data-checkbox>
       </uni-forms-item>
-      <uni-forms-item name="comment_status" label="开放评论">
-        <uni-data-checkbox v-model="formData.comment_status" :localdata="formOptions.comment_status_localdata"></uni-data-checkbox>
+      <uni-forms-item name="is_grant" label="是否授权">
+        <uni-data-checkbox v-model="formData.is_grant" :localdata="formOptions.is_grant_localdata"></uni-data-checkbox>
+      </uni-forms-item>
+      <uni-forms-item name="is_encryption" label="是否加密">
+        <uni-data-checkbox v-model="formData.is_encryption" :localdata="formOptions.is_encryption_localdata"></uni-data-checkbox>
+      </uni-forms-item>
+      <uni-forms-item name="is_login" label="是否登录">
+        <uni-data-checkbox v-model="formData.is_login" :localdata="formOptions.is_login_localdata"></uni-data-checkbox>
       </uni-forms-item>
       <uni-forms-item name="avatar" label="封面大图">
         <uni-file-picker file-mediatype="image" return-type="object" v-model="formData.avatar"></uni-file-picker>
@@ -73,7 +79,9 @@
         "author": "",
         "title": "",
         "article_status": 0,
-        "comment_status": 0,
+        "is_grant": 0,
+        "is_encryption": 0,
+        "is_login": 0,
         "avatar": null,
         "resources": [],
         "zy_gs": "",
@@ -93,14 +101,34 @@
               "text": "启用"
             }
           ],
-          "comment_status_localdata": [
+          "is_grant_localdata": [
             {
               "value": 0,
-              "text": "关闭"
+              "text": "未授权"
             },
             {
               "value": 1,
-              "text": "开放"
+              "text": "已授权"
+            }
+          ],
+          "is_encryption_localdata": [
+            {
+              "value": 0,
+              "text": "不加密"
+            },
+            {
+              "value": 1,
+              "text": "加密"
+            }
+          ],
+          "is_login_localdata": [
+            {
+              "value": 0,
+              "text": "不登录"
+            },
+            {
+              "value": 1,
+              "text": "登录"
             }
           ]
         },
@@ -162,7 +190,7 @@
         uni.showLoading({
           mask: true
         })
-        db.collection(dbCollectionName).doc(id).field("categories,categorieszw,labels,author,title,article_status,comment_status,avatar,resources,zy_gs,excerpt,content").get().then((res) => {
+        db.collection(dbCollectionName).doc(id).field("categories,categorieszw,labels,author,title,article_status,is_grant,is_encryption,is_login,avatar,resources,zy_gs,excerpt,content").get().then((res) => {
           const data = res.result.data[0]
           if (data) {
             this.formData = data

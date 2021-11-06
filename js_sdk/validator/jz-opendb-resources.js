@@ -69,7 +69,7 @@ const validator = {
     "defaultValue": 0,
     "label": "文章状态"
   },
-  "comment_status": {
+  "is_grant": {
     "rules": [
       {
         "format": "int"
@@ -78,17 +78,59 @@ const validator = {
         "range": [
           {
             "value": 0,
-            "text": "关闭"
+            "text": "未授权"
           },
           {
             "value": 1,
-            "text": "开放"
+            "text": "已授权"
           }
         ]
       }
     ],
     "defaultValue": 0,
-    "label": "开放评论"
+    "label": "是否授权"
+  },
+  "is_encryption": {
+    "rules": [
+      {
+        "format": "int"
+      },
+      {
+        "range": [
+          {
+            "value": 0,
+            "text": "不加密"
+          },
+          {
+            "value": 1,
+            "text": "加密"
+          }
+        ]
+      }
+    ],
+    "defaultValue": 0,
+    "label": "是否加密"
+  },
+  "is_login": {
+    "rules": [
+      {
+        "format": "int"
+      },
+      {
+        "range": [
+          {
+            "value": 0,
+            "text": "不登录"
+          },
+          {
+            "value": 1,
+            "text": "登录"
+          }
+        ]
+      }
+    ],
+    "defaultValue": 0,
+    "label": "是否登录"
   },
   "avatar": {
     "rules": [
@@ -140,9 +182,17 @@ const enumConverter = {
     "0": "锁定",
     "1": "启用"
   },
-  "comment_status_valuetotext": {
-    "0": "关闭",
-    "1": "开放"
+  "is_grant_valuetotext": {
+    "0": "未授权",
+    "1": "已授权"
+  },
+  "is_encryption_valuetotext": {
+    "0": "不加密",
+    "1": "加密"
+  },
+  "is_login_valuetotext": {
+    "0": "不登录",
+    "1": "登录"
   }
 }
 

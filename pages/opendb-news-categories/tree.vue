@@ -1,23 +1,19 @@
 <template>
 	<view>
 		<view class="uni-header">
-			<!-- <view class="uni-group">
-				<view class="uni-title"></view>
-				<view class="uni-sub-title"></view>
-			</view> -->
 			<view class="uni-group">
-				<input class="uni-search" type="text" v-model="query" @confirm="search" placeholder="请输入搜索内容" />
-				<button class="uni-button" type="default" size="mini" @click="search">搜索</button>
+				<!-- <input class="uni-search" type="text" v-model="query" @confirm="search" placeholder="请输入搜索内容" /> -->
+				<!-- <button class="uni-button" type="default" size="mini" @click="search">搜索</button> -->
 				<button class="uni-button" type="default" size="mini" @click="navigateTo('./add')">新增根数据</button>
-				<button class="uni-button" type="default" size="mini" @click="delTable">批量删除</button>
-				
+				<!-- <button class="uni-button" type="default" size="mini" @click="delTable">批量删除</button> -->
+
 			</view>
 		</view>
-		<ly-tree :tree-data="treeData" :ready="ready" :props="props" node-key="flbm" highlightCurrent showNodeIcon defaultExpandAll 
-			:expandOnClickNode="false" @node-expand="handleNodeExpand" @node-click="handleNodeClick" @node-extbutton-click="handleNodeExtButtonClick" 
-		>
+		<ly-tree :tree-data="treeData" :ready="ready" :props="props" node-key="flbm" highlightCurrent showNodeIcon
+			defaultExpandAll :expandOnClickNode="false" @node-expand="handleNodeExpand" @node-click="handleNodeClick"
+			@node-extbutton-click="handleNodeExtButtonClick">
 		</ly-tree>
-	</view>	
+	</view>
 </template>
 
 <script>
@@ -27,7 +23,7 @@
 
 	export default {
 		data() {
-			return {	
+			return {
 				query: '',
 				where: '',
 				treeData: [],
@@ -52,7 +48,7 @@
 		onLoad() {
 			this.loadData();
 		},
-		onShow(){
+		onShow() {
 			this.loadData();
 		},
 		methods: {
@@ -70,14 +66,14 @@
 				const isSameWhere = newWhere === this.where
 				this.where = newWhere
 				// if (isSameWhere) { // 相同条件时，手动强制刷新
-					this.loadData()
+				this.loadData()
 				// }
 			},
 			loadData() {
 				var that = this;
-				var dbw=db.collection("opendb-news-categories");
-				if(this.where){
-					dbw=db.collection("opendb-news-categories").where(this.where);
+				var dbw = db.collection("opendb-news-categories");
+				if (this.where) {
+					dbw = db.collection("opendb-news-categories").where(this.where);
 				}
 				dbw
 					.get({
@@ -134,7 +130,7 @@
 			},
 			handleNodeExtButtonClick(obj) {
 				var that = this;
-				
+
 				// console.log('handleNodeExtButtonClick', JSON.stringify(obj));
 				switch (obj.buttonvalue) {
 					case "del": //删除
@@ -147,10 +143,10 @@
 									uni.showLoading();
 									const dbCmd = db.command;
 									db.collection("opendb-news-categories").where(dbCmd.or({
-										      flbm:obj.data.flbm
-										    },{
-										      parent_flbm:obj.data.flbm
-										    })).remove()
+											flbm: obj.data.flbm
+										}, {
+											parent_flbm: obj.data.flbm
+										})).remove()
 										.then((res) => {
 											that.loadData()
 											//console.log("删除成功，删除条数为: ",res.deleted);
@@ -165,8 +161,21 @@
 							}
 						})
 						break;
-					case "newchildren": // 新增子女
+					case "newchildren": // 新增子节点
+						// debugger;
+						console.log("obj",obj);
+						var _children = obj.data.children;
+						var next_flbm = "";
+						if (_children && _children.length > 0) {
+							next_flbm = _children[_children.length - 1].flbm;
+						}
+						if(obj.level==1){
+							next_flbm = parseInt(next_flbm) + 10;
+						}else{
+							next_flbm = parseInt(next_flbm) + 1;
+						}
 						this.navigateTo('./add?parent_flbm=' + obj.data.flbm + '&parent_name=' + obj.data.name +
+							'&next_flbm=' + next_flbm +
 							'&parent_relationship=parent', true)
 						break;
 					default:

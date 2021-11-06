@@ -4,8 +4,8 @@
       <uni-forms-item name="bannerfile" label="图片文件" required>
         <uni-file-picker file-mediatype="image" return-type="object" v-model="formData.bannerfile"></uni-file-picker>
       </uni-forms-item>
-      <uni-forms-item name="open_url" label="点击目标地址">
-        <uni-easyinput placeholder="点击跳转目标地址。如果是web地址则使用内置web-view打开；如果是本地页面则跳转本地页面；如果是schema地址则打开本地的app" v-model="formData.open_url" trim="both"></uni-easyinput>
+      <uni-forms-item name="open_url" label="跳转地址">
+        <uni-easyinput placeholder="点击跳转目标地址" v-model="formData.open_url" trim="both"></uni-easyinput>
       </uni-forms-item>
       <uni-forms-item name="title" label="标题">
         <uni-easyinput placeholder="注意标题文字颜色和背景图靠色导致看不清的问题" v-model="formData.title" trim="both"></uni-easyinput>
@@ -13,8 +13,8 @@
       <uni-forms-item name="sort" label="排序">
         <uni-easyinput placeholder="数字越小，排序越前" type="number" v-model="formData.sort"></uni-easyinput>
       </uni-forms-item>
-      <uni-forms-item name="category_id" label="分类id">
-        <uni-easyinput placeholder="多个栏目的banner都存在一个表里时可用这个字段区分" v-model="formData.category_id"></uni-easyinput>
+      <uni-forms-item name="type" label="类型">
+        <uni-data-checkbox v-model="formData.type" :localdata="formOptions.type_localdata"></uni-data-checkbox>
       </uni-forms-item>
       <uni-forms-item name="status" label="生效状态">
         <switch @change="binddata('status', $event.detail.value)" :checked="formData.status"></switch>
@@ -56,13 +56,28 @@
         "open_url": "",
         "title": "",
         "sort": null,
-        "category_id": "",
+        "type": 0,
         "status": true,
         "description": ""
       }
       return {
         formData,
-        formOptions: {},
+        formOptions: {
+          "type_localdata": [
+            {
+              "value": 0,
+              "text": "首页"
+            },
+            {
+              "value": 1,
+              "text": "俊哲"
+            },
+            {
+              "value": 2,
+              "text": "山总"
+            }
+          ]
+        },
         rules: {
           ...getValidator(Object.keys(formData))
         }
@@ -121,7 +136,7 @@
         uni.showLoading({
           mask: true
         })
-        db.collection(dbCollectionName).doc(id).field("bannerfile,open_url,title,sort,category_id,status,description").get().then((res) => {
+        db.collection(dbCollectionName).doc(id).field("bannerfile,open_url,title,sort,type,status,description").get().then((res) => {
           const data = res.result.data[0]
           if (data) {
             this.formData = data

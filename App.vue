@@ -28,7 +28,6 @@
 			        'background:#007aff ;padding: 1px; border-radius: 0 3px 3px 0;  color: #fff; font-weight: bold;',
 			        'background:transparent'
 			      )
-			console.log('App Launch')
 			if (!this.isTokenValid) {
 				uni.redirectTo({
 					url: config.login.url

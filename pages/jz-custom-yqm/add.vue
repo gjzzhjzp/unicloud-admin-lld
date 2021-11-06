@@ -1,20 +1,11 @@
 <template>
   <view class="uni-container">
     <uni-forms ref="form" :value="formData" validateTrigger="bind">
-      <uni-forms-item name="name" label="名称" required>
-        <uni-easyinput placeholder="类别名称" v-model="formData.name" trim="both"></uni-easyinput>
+      <uni-forms-item name="value" label="邀请码">
+        <uni-easyinput placeholder="邀请码" v-model="formData.value" trim="both"></uni-easyinput>
       </uni-forms-item>
-     <!-- <uni-forms-item name="parent_id" label="父级id">
-        <uni-easyinput placeholder="父id" v-model="formData.parent_id"></uni-easyinput>
-      </uni-forms-item> -->
-      <uni-forms-item name="description" label="描述">
-        <uni-easyinput placeholder="类别描述" v-model="formData.description" trim="both"></uni-easyinput>
-      </uni-forms-item>
-      <uni-forms-item name="icon" label="图标地址">
-        <uni-file-picker file-mediatype="image" return-type="object" v-model="formData.icon"></uni-file-picker>
-      </uni-forms-item>
-      <uni-forms-item name="path" label="跳转地址">
-        <uni-easyinput placeholder="点击跳转地址" v-model="formData.path" trim="both"></uni-easyinput>
+      <uni-forms-item name="status" label="生效状态">
+        <switch @change="binddata('status', $event.detail.value)" :checked="formData.status"></switch>
       </uni-forms-item>
       <view class="uni-button-group">
         <button type="primary" class="uni-button" style="width: 100px;" @click="submit">提交</button>
@@ -27,11 +18,11 @@
 </template>
 
 <script>
-  import { validator } from '../../js_sdk/validator/opendb-news-categories.js';
+  import { validator } from '../../js_sdk/validator/jz-custom-yqm.js';
 
   const db = uniCloud.database();
   const dbCmd = db.command;
-  const dbCollectionName = 'opendb-news-categories';
+  const dbCollectionName = 'jz-custom-yqm';
 
   function getValidator(fields) {
     let result = {}
@@ -46,11 +37,8 @@
   export default {
     data() {
       let formData = {
-        "name": "",
-        "parent_id": "",
-        "description": "",
-        "icon": null,
-        "path": ""
+        "value": "",
+        "status": true
       }
       return {
         formData,
@@ -63,18 +51,11 @@
     onReady() {
       this.$refs.form.setRules(this.rules)
     },
-	onLoad(e) {
-	  if (e.parent_id) {
-	    const id = e.parent_id;
-		this.formData.parent_id=id;
-	  }
-	},
     methods: {
       /**
        * 验证表单并提交
        */
       submit() {
-		  // debugger;
         uni.showLoading({
           mask: true
         })
@@ -90,11 +71,10 @@
        * 提交表单
        */
       submitForm(value) {
+		  debugger;
+		  console.log("value",value);
+		  return;
         // 使用 clientDB 提交数据
-		Object.assign(value,{
-			parent_id:this.formData.parent_id
-		})
-		console.log("value",value);
         return db.collection(dbCollectionName).add(value).then((res) => {
           uni.showToast({
             title: '新增成功'

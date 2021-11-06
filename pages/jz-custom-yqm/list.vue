@@ -8,7 +8,7 @@
       <view class="uni-group">
         <input class="uni-search" type="text" v-model="query" @confirm="search" placeholder="请输入搜索内容" />
         <button class="uni-button" type="default" size="mini" @click="search">搜索</button>
-        <button class="uni-button" type="default" size="mini" @click="navigateTo('./add')">新增</button>
+        <button class="uni-button" type="default" size="mini" @click='adddYqm'>新增</button>
         <button class="uni-button" type="default" size="mini" :disabled="!selectedIndexs.length" @click="delTable">批量删除</button>
         <download-excel class="hide-on-phone" :fields="exportExcel.fields" :data="exportExcelData" :type="exportExcel.type" :name="exportExcel.filename">
           <button class="uni-button" type="primary" size="mini">导出 Excel</button>
@@ -16,36 +16,22 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="opendb-banner" field="bannerfile,open_url,title,sort,type,status,description" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="jz-custom-yqm" field="value,status" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
           <uni-tr>
-            <uni-th align="center" sortable @sort-change="sortChange($event, 'bannerfile')">图片文件</uni-th>
-            <!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'open_url')" sortable @sort-change="sortChange($event, 'open_url')">点击目标地址</uni-th> -->
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'title')" sortable @sort-change="sortChange($event, 'title')">标题</uni-th>
-            <uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'sort')" sortable @sort-change="sortChange($event, 'sort')">排序</uni-th>
-            <uni-th align="center" filter-type="select" :filter-data="options.filterData.type_localdata" @filter-change="filterChange($event, 'type')">类型</uni-th>
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'value')" sortable @sort-change="sortChange($event, 'value')">邀请码</uni-th>
             <uni-th align="center" sortable @sort-change="sortChange($event, 'status')">生效状态</uni-th>
-            <!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'description')" sortable @sort-change="sortChange($event, 'description')">备注</uni-th> -->
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
-            <uni-td align="center">
-              <uni-file-picker v-if="item.bannerfile && item.bannerfile.fileType == 'image'" :value="item.bannerfile" :file-mediatype="item.bannerfile && item.bannerfile.fileType" return-type="object" :imageStyles="imageStyles" readonly></uni-file-picker>
-              <uni-link v-else :href="item.bannerfile && item.bannerfile.url" :text="item.bannerfile && item.bannerfile.url"></uni-link>
-            </uni-td>
-           <!-- <uni-td align="center">
-              <uni-link :href="item.open_url" :download="item.open_url" :text="item.open_url"></uni-link>
-            </uni-td> -->
-            <uni-td align="center">{{item.title}}</uni-td>
-            <uni-td align="center">{{item.sort}}</uni-td>
-            <uni-td align="center">{{options.type_valuetotext[item.type]}}</uni-td>
-            <uni-td align="center">{{item.status == true ? '✅' : '❌'}}</uni-td>
-            <!-- <uni-td align="center">{{item.description}}</uni-td> -->
+            <uni-td align="center">{{item.value}}</uni-td>
+			
+            <uni-td align="center"><checkbox-group @change="change_data(item,'status')"><checkbox value="status" :checked="item.status == true" /></checkbox-group></uni-td>
             <uni-td align="center">
               <view class="uni-group">
-                <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
+                <!-- <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button> -->
                 <button @click="confirmDelete(item._id)" class="uni-button" size="mini" type="warn">删除</button>
               </view>
             </uni-td>
@@ -60,7 +46,7 @@
 </template>
 
 <script>
-  import { enumConverter, filterToWhere } from '../../js_sdk/validator/opendb-banner.js';
+  import { enumConverter, filterToWhere } from '../../js_sdk/validator/jz-custom-yqm.js';
 
   const db = uniCloud.database()
   // 表查询配置
@@ -69,6 +55,7 @@
   // 分页配置
   const pageSize = 20
   const pageCurrent = 1
+	  const dbCollectionName = 'jz-custom-yqm';
 
   const orderByMapping = {
     "ascending": "asc",
@@ -86,22 +73,7 @@
         options: {
           pageSize,
           pageCurrent,
-          filterData: {
-            "type_localdata": [
-              {
-                "value": 0,
-                "text": "首页"
-              },
-              {
-                "value": 1,
-                "text": "俊哲"
-              },
-              {
-                "value": 2,
-                "text": "山总"
-              }
-            ]
-          },
+          filterData: {},
           ...enumConverter
         },
         imageStyles: {
@@ -109,16 +81,11 @@
           height: 64
         },
         exportExcel: {
-          "filename": "opendb-banner.xls",
+          "filename": "jz-custom-yqm.xls",
           "type": "xls",
           "fields": {
-            "图片文件": "bannerfile",
-            "点击目标地址": "open_url",
-            "标题": "title",
-            "排序": "sort",
-            "类型": "type",
-            "生效状态": "status",
-            "备注": "description"
+            "邀请码": "value",
+            "生效状态": "status"
           }
         },
         exportExcelData: []
@@ -131,6 +98,50 @@
       this.$refs.udb.loadData()
     },
     methods: {
+		change_data(item,type){
+			// debugger;
+			var obj={};
+			obj[type]=item[type]==true?false:true;
+			console.log("obj",obj);
+			this.$set(item,type,obj[type]);
+			this.updateItem(item,obj);
+		},
+		updateItem(item,value){
+			return db.collection(dbCollectionName).doc(item._id).update(value).then((res) => {
+			  uni.showToast({
+			    title: '修改成功'
+			  });
+			  // console.log("修改成功");
+			  this.getOpenerEventChannel().emit('refreshData');
+			}).catch((err) => {
+			  uni.showModal({
+			    content: err.message || '请求服务失败',
+			    showCancel: false
+			  })
+			});
+		},
+		adddYqm(){
+			var value={
+				status:true,
+				value:Math.random().toString(36).substr(2)+Math.random().toString(36).substr(2)
+			};
+			return db.collection(dbCollectionName).add(value).then((res) => {
+			  uni.showToast({
+			    title: '新增成功'
+			  });
+			  if (this.$refs.udb) {
+			  	this.$refs.udb.loadData({
+			  		clear: true
+			  	}, () => {})
+			  }
+			  this.getOpenerEventChannel().emit('refreshData');
+			}).catch((err) => {
+			  uni.showModal({
+			    content: err.message || '请求服务失败',
+			    showCancel: false
+			  })
+			})
+		},
       onqueryload(data) {
         this.exportExcelData = data
       },
