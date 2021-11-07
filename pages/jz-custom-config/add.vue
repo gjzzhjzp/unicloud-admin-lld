@@ -1,0 +1,98 @@
+<template>
+  <view class="uni-container">
+    <uni-forms ref="form" :value="formData" validateTrigger="bind">
+      <uni-forms-item name="config_bm" label="配置项编码">
+        <uni-easyinput placeholder="配置项编码" v-model="formData.config_bm" trim="both"></uni-easyinput>
+      </uni-forms-item>
+      <uni-forms-item name="config_zw" label="配置项中文">
+        <uni-easyinput placeholder="配置项中文" v-model="formData.config_zw" trim="both"></uni-easyinput>
+      </uni-forms-item>
+      <uni-forms-item name="config_val" label="配置项值">
+        <uni-easyinput placeholder="配置项值" v-model="formData.config_val" trim="both"></uni-easyinput>
+      </uni-forms-item>
+      <uni-forms-item name="config_describe" label="描述">
+        <uni-easyinput placeholder="描述" v-model="formData.config_describe" trim="both"></uni-easyinput>
+      </uni-forms-item>
+      <view class="uni-button-group">
+        <button type="primary" class="uni-button" style="width: 100px;" @click="submit">提交</button>
+        <navigator open-type="navigateBack" style="margin-left: 15px;">
+          <button class="uni-button" style="width: 100px;">返回</button>
+        </navigator>
+      </view>
+    </uni-forms>
+  </view>
+</template>
+
+<script>
+  import { validator } from '../../js_sdk/validator/jz-custom-config.js';
+
+  const db = uniCloud.database();
+  const dbCmd = db.command;
+  const dbCollectionName = 'jz-custom-config';
+
+  function getValidator(fields) {
+    let result = {}
+    for (let key in validator) {
+      if (fields.includes(key)) {
+        result[key] = validator[key]
+      }
+    }
+    return result
+  }
+
+  export default {
+    data() {
+      let formData = {
+        "config_bm": "",
+        "config_zw": "",
+        "config_val": "",
+        "config_describe": ""
+      }
+      return {
+        formData,
+        formOptions: {},
+        rules: {
+          ...getValidator(Object.keys(formData))
+        }
+      }
+    },
+    onReady() {
+      this.$refs.form.setRules(this.rules)
+    },
+    methods: {
+      /**
+       * 验证表单并提交
+       */
+      submit() {
+        uni.showLoading({
+          mask: true
+        })
+        this.$refs.form.validate().then((res) => {
+          return this.submitForm(res)
+        }).catch(() => {
+        }).finally(() => {
+          uni.hideLoading()
+        })
+      },
+
+      /**
+       * 提交表单
+       */
+      submitForm(value) {
+        // 使用 clientDB 提交数据
+        return db.collection(dbCollectionName).add(value).then((res) => {
+          uni.showToast({
+            title: '新增成功'
+          })
+          this.getOpenerEventChannel().emit('refreshData')
+          setTimeout(() => uni.navigateBack(), 500)
+        }).catch((err) => {
+          uni.showModal({
+            content: err.message || '请求服务失败',
+            showCancel: false
+          })
+        })
+      }
+    }
+  }
+</script>

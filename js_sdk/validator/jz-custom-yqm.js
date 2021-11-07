@@ -2,6 +2,35 @@
 
 
 const validator = {
+  "user_name_type": {
+    "rules": [
+      {
+        "format": "int"
+      },
+      {
+        "range": [
+          {
+            "value": 0,
+            "text": "微博"
+          },
+          {
+            "value": 1,
+            "text": "抖音"
+          }
+        ]
+      }
+    ],
+    "defaultValue": 0,
+    "label": "账号平台"
+  },
+  "user_name": {
+    "rules": [
+      {
+        "format": "string"
+      }
+    ],
+    "label": "账号昵称"
+  },
   "value": {
     "rules": [
       {
@@ -16,12 +45,17 @@ const validator = {
         "format": "bool"
       }
     ],
-    "defaultValue": true,
+    "defaultValue": false,
     "label": "生效状态"
   }
 }
 
-const enumConverter = {}
+const enumConverter = {
+  "user_name_type_valuetotext": {
+    "0": "微博",
+    "1": "抖音"
+  }
+}
 
 function filterToWhere(filter, command) {
   let where = {}

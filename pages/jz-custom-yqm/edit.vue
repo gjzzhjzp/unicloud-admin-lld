@@ -1,6 +1,12 @@
 <template>
   <view class="uni-container">
     <uni-forms ref="form" :value="formData" validateTrigger="bind">
+      <uni-forms-item name="user_name_type" label="账号平台">
+        <uni-data-checkbox v-model="formData.user_name_type" :localdata="formOptions.user_name_type_localdata"></uni-data-checkbox>
+      </uni-forms-item>
+      <uni-forms-item name="user_name" label="账号昵称">
+        <uni-easyinput placeholder="账号昵称" v-model="formData.user_name" trim="both"></uni-easyinput>
+      </uni-forms-item>
       <uni-forms-item name="value" label="邀请码">
         <uni-easyinput placeholder="邀请码" v-model="formData.value" trim="both"></uni-easyinput>
       </uni-forms-item>
@@ -37,12 +43,25 @@
   export default {
     data() {
       let formData = {
+        "user_name_type": 0,
+        "user_name": "",
         "value": "",
-        "status": true
+        "status": false
       }
       return {
         formData,
-        formOptions: {},
+        formOptions: {
+          "user_name_type_localdata": [
+            {
+              "value": 0,
+              "text": "微博"
+            },
+            {
+              "value": 1,
+              "text": "抖音"
+            }
+          ]
+        },
         rules: {
           ...getValidator(Object.keys(formData))
         }
@@ -101,7 +120,7 @@
         uni.showLoading({
           mask: true
         })
-        db.collection(dbCollectionName).doc(id).field("value,status").get().then((res) => {
+        db.collection(dbCollectionName).doc(id).field("user_name_type,user_name,value,status").get().then((res) => {
           const data = res.result.data[0]
           if (data) {
             this.formData = data

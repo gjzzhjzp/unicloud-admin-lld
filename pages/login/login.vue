@@ -32,9 +32,9 @@
 						@click="submitForm">{{$t('login.button.login')}}</button>
 				</view>
 			</uni-forms>
-			<view class="uni-tips">
+			<!-- <view class="uni-tips">
 				<text class="uni-tips-text" @click="initAdmin">{{$t('login.text.prompt')}}...</text>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -291,7 +291,7 @@
 	}
 
 	.admin-logo image {
-		height: 40px;
+		height: 80px;
 	}
 
 	.admin-captcha-img {

@@ -1,10 +1,10 @@
 <template>
   <view class="uni-container">
     <uni-forms ref="form" :value="formData" validateTrigger="bind">
-      <uni-forms-item name="title" label="标题" required>
-        <uni-easyinput placeholder="标题（问题）" v-model="formData.title" trim="both"></uni-easyinput>
+      <uni-forms-item name="title" label="问题" required>
+        <uni-easyinput placeholder="问题" v-model="formData.title" trim="both"></uni-easyinput>
       </uni-forms-item>
-      <uni-forms-item name="answer" label="排序" required>
+      <uni-forms-item name="answer" label="答案" required>
         <uni-easyinput placeholder="答案" v-model="formData.answer"></uni-easyinput>
       </uni-forms-item>
       <uni-forms-item name="status" label="生效状态">

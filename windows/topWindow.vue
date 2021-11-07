@@ -11,7 +11,7 @@
 			<view class="navbar-left pointer">
 				<navigator class="logo" open-type="reLaunch" url="/">
 					<image :src="logo" mode="heightFix"></image>
-					<text>{{appName}}</text>
+					<text>俊哲宇宙--系统管理</text>
 				</navigator>
 				<uni-icons @click="toggleSidebar" type="bars" class="menu-icon" size="30" color="#999"></uni-icons>
 			</view>
@@ -26,17 +26,17 @@
 				<view class="uni-mask" @click="togglePopupMenu"></view>
 				<view class="navbar-menu">
 					<!-- #ifdef H5 -->
-					<view v-if="logs.length" @click="showErrorLogs" class="menu-item debug pointer">
+					<!-- <view v-if="logs.length" @click="showErrorLogs" class="menu-item debug pointer">
 						<svg class="svg-icon">
 							<use xlink:href="#icon-bug"></use>
 						</svg>
 						<uni-badge class="debug-badge" :text="logs.length" type="error"></uni-badge>
-					</view>
+					</view> -->
 					<!-- #endif -->
-					<view v-for="item in links" :key="item.text" class="menu-item">
+					<!-- <view v-for="item in links" :key="item.text" class="menu-item">
 						<view v-if="!item.url && item.lang" class="hover-highlight dlanguage-item" @click="changeLanguage(item.lang)">{{item.text}}</view>
 						<uni-link v-else :href="item.url" :text="$t(item.text)" color="#666" fontSize="13" style="font-size:12px;" />
-					</view>
+					</view> -->
 					<template v-if="userInfo.username">
 						<view class="menu-item username">
 							<uni-icons class="person" type="person" color="#666" size="13"></uni-icons>

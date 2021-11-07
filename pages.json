@@ -137,6 +137,21 @@
 			"style": {
 				"navigationBarTitleText": "列表"
 			}
+		}, {
+			"path": "pages/jz-custom-config/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/jz-custom-config/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/jz-custom-config/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
 		}
 	],
 	"subPackages": [{

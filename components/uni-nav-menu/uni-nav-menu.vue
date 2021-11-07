@@ -5,7 +5,6 @@
 		</slot>
 	</view>
 </template>
-
 <script>
 	export default {
 		name: 'uniNavMenu',

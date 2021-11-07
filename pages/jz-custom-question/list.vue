@@ -21,17 +21,17 @@
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
           <uni-tr>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'title')" sortable @sort-change="sortChange($event, 'title')">标题</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'answer')" sortable @sort-change="sortChange($event, 'answer')">排序</uni-th>
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'title')" sortable @sort-change="sortChange($event, 'title')">问题</uni-th>
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'answer')" sortable @sort-change="sortChange($event, 'answer')">答案</uni-th>
             <uni-th align="center" sortable @sort-change="sortChange($event, 'status')">生效状态</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'description')" sortable @sort-change="sortChange($event, 'description')">备注</uni-th>
+            <!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'description')" sortable @sort-change="sortChange($event, 'description')">备注</uni-th> -->
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
             <uni-td align="center">{{item.title}}</uni-td>
             <uni-td align="center">{{item.answer}}</uni-td>
             <uni-td align="center">{{item.status == true ? '✅' : '❌'}}</uni-td>
-            <uni-td align="center">{{item.description}}</uni-td>
+            <!-- <uni-td align="center">{{item.description}}</uni-td> -->
             <uni-td align="center">
               <view class="uni-group">
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>

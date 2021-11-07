@@ -3,7 +3,7 @@
 		<uni-nav-menu :active="value" activeKey="value" :activeTextColor="activeTextColor" :uniqueOpened="uniqueOpened"
 			@select="onSelect">
 			<uni-menu-sidebar :data="userMenu"></uni-menu-sidebar>
-			<uni-menu-sidebar :data="staticMenu"></uni-menu-sidebar>
+			<!-- <uni-menu-sidebar :data="staticMenu"></uni-menu-sidebar> -->
 		</uni-nav-menu>
 	</view>
 </template>
@@ -96,6 +96,7 @@
 				return Array.isArray(value) && value.length > 0
 			},
 			load() {
+				// debugger;
 				if (this.mixinDatacomLoading == true) {
 					return
 				}
@@ -110,8 +111,8 @@
 					this.menus = data
 					this.userMenu = this.getUserMenu(this.menus)
 				}).catch((err) => {
-					this.mixinDatacomLoading = false
-					this.mixinDatacomErrorMessage = err
+					this.mixinDatacomLoading = false;
+					this.mixinDatacomErrorMessage = err;
 				})
 			}
 		},
