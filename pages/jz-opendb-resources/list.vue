@@ -31,13 +31,7 @@
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.article_status_localdata" @filter-change="filterChange($event, 'article_status')">状态</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_grant_localdata" @filter-change="filterChange($event, 'is_grant')">授权</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_encryption_localdata" @filter-change="filterChange($event, 'is_encryption')">加密</uni-th>
-            <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_login_localdata" @filter-change="filterChange($event, 'is_login')">登录</uni-th>
-           
-            <!-- <uni-th align="center" sortable @sort-change="sortChange($event, 'resources')">附件资源</uni-th> -->
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'zy_gs')" sortable @sort-change="sortChange($event, 'zy_gs')">格式</uni-th>
-            <!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'excerpt')" sortable @sort-change="sortChange($event, 'excerpt')">摘要</uni-th> -->
-            <!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'content')" sortable @sort-change="sortChange($event, 'content')">内容</uni-th> -->
-            <uni-th align="center">操作</uni-th>
+              <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
 			  <uni-td align="center">
@@ -53,19 +47,7 @@
             <uni-td align="center">  <checkbox-group @change="change_data(item,'article_status')"><checkbox value="article_status" :checked="item.article_status==1" /></checkbox-group></uni-td>
 			<uni-td align="center"> <checkbox-group @change="change_data(item,'is_grant')"><checkbox value="is_grant" :checked="item.is_grant==1" /></checkbox-group></uni-td>
 			<uni-td align="center"> <checkbox-group @change="change_data(item,'is_encryption')"><checkbox value="is_encryption" :checked="item.is_encryption==1" /></checkbox-group></uni-td>
-			<uni-td align="center"><checkbox-group @change="change_data(item,'is_login')"><checkbox value="is_login" :checked="item.is_login==1" /></checkbox-group></uni-td>
-			<!-- {{options.article_status_valuetotext[item.article_status]}}</uni-td> -->
-            <!-- <uni-td align="center">{{options.is_grant_valuetotext[item.is_grant]}}</uni-td> -->
-            <!-- <uni-td align="center">{{options.is_encryption_valuetotext[item.is_encryption]}}</uni-td> -->
-            <!-- <uni-td align="center">{{options.is_login_valuetotext[item.is_login]}}</uni-td> -->
-           
-            <!-- <uni-td align="center">
-              <template v-for="(file, j) in item.resources">
-                <uni-file-picker v-if="file.fileType == 'image'" :value="file" :file-mediatype="file.fileType" :imageStyles="imageStyles" readonly></uni-file-picker>
-                <uni-link v-else :href="file.url" :text="file.url"></uni-link>
-              </template>
-            </uni-td> -->
-            <uni-td align="center">{{item.zy_gs}}</uni-td>
+			
             <!-- <uni-td align="center">{{item.excerpt}}</uni-td> -->
             <!-- <uni-td align="center">{{item.content}}</uni-td> -->
             <uni-td align="center">
@@ -141,16 +123,6 @@
                 "value": 1,
                 "text": "加密"
               }
-            ],
-            "is_login_localdata": [
-              {
-                "value": 0,
-                "text": "不登录"
-              },
-              {
-                "value": 1,
-                "text": "登录"
-              }
             ]
           },
           ...enumConverter
@@ -171,10 +143,8 @@
             "文章状态": "article_status",
             "是否授权": "is_grant",
             "是否加密": "is_encryption",
-            "是否登录": "is_login",
             "封面大图": "avatar",
             "附件资源": "resources",
-            "资源格式": "zy_gs",
             "摘要": "excerpt",
             "内容": "content"
           }

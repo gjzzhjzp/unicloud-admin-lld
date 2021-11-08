@@ -168,6 +168,8 @@
 						var next_flbm = "";
 						if (_children && _children.length > 0) {
 							next_flbm = _children[_children.length - 1].flbm;
+						}else{
+							next_flbm=obj.data.flbm;
 						}
 						if(obj.level==1){
 							next_flbm = parseInt(next_flbm) + 10;

@@ -2,6 +2,28 @@
 
 
 const validator = {
+  "title": {
+    "rules": [
+      {
+        "required": true
+      },
+      {
+        "format": "string"
+      }
+    ],
+    "label": "标题"
+  },
+  "author": {
+    "rules": [
+      {
+        "required": true
+      },
+      {
+        "format": "string"
+      }
+    ],
+    "label": "作者"
+  },
   "categories": {
     "rules": [
       {
@@ -26,28 +48,6 @@ const validator = {
     ],
     "label": "标签"
   },
-  "author": {
-    "rules": [
-      {
-        "required": true
-      },
-      {
-        "format": "string"
-      }
-    ],
-    "label": "作者"
-  },
-  "title": {
-    "rules": [
-      {
-        "required": true
-      },
-      {
-        "format": "string"
-      }
-    ],
-    "label": "标题"
-  },
   "article_status": {
     "rules": [
       {
@@ -68,6 +68,44 @@ const validator = {
     ],
     "defaultValue": 0,
     "label": "文章状态"
+  },
+  "avatar": {
+    "rules": [
+      {
+        "required": true
+      },
+      {
+        "format": "file"
+      }
+    ],
+    "label": "封面大图"
+  },
+  "resources": {
+    "rules": [
+      {
+        "format": "array"
+      },
+      {
+        "arrayType": "file"
+      }
+    ],
+    "label": "附件资源"
+  },
+  "aliyun_dz": {
+    "rules": [
+      {
+        "format": "string"
+      }
+    ],
+    "label": "外链"
+  },
+  "excerpt": {
+    "rules": [
+      {
+        "format": "string"
+      }
+    ],
+    "label": "内容"
   },
   "is_grant": {
     "rules": [
@@ -110,70 +148,6 @@ const validator = {
     ],
     "defaultValue": 0,
     "label": "是否加密"
-  },
-  "is_login": {
-    "rules": [
-      {
-        "format": "int"
-      },
-      {
-        "range": [
-          {
-            "value": 0,
-            "text": "不登录"
-          },
-          {
-            "value": 1,
-            "text": "登录"
-          }
-        ]
-      }
-    ],
-    "defaultValue": 0,
-    "label": "是否登录"
-  },
-  "avatar": {
-    "rules": [
-      {
-        "format": "file"
-      }
-    ],
-    "label": "封面大图"
-  },
-  "resources": {
-    "rules": [
-      {
-        "format": "array"
-      },
-      {
-        "arrayType": "file"
-      }
-    ],
-    "label": "附件资源"
-  },
-  "zy_gs": {
-    "rules": [
-      {
-        "format": "string"
-      }
-    ],
-    "label": "资源格式"
-  },
-  "excerpt": {
-    "rules": [
-      {
-        "format": "string"
-      }
-    ],
-    "label": "摘要"
-  },
-  "content": {
-    "rules": [
-      {
-        "format": "string"
-      }
-    ],
-    "label": "内容"
   }
 }
 
@@ -189,10 +163,6 @@ const enumConverter = {
   "is_encryption_valuetotext": {
     "0": "不加密",
     "1": "加密"
-  },
-  "is_login_valuetotext": {
-    "0": "不登录",
-    "1": "登录"
   }
 }
 
