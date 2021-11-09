@@ -2,14 +2,16 @@
   <view class="uni-container">
     <uni-forms ref="form" :value="formData" validateTrigger="bind">
       <uni-forms-item name="rili_date" label="日期">
-		 
-        <uni-datetime-picker return-type="date" type="date" v-model="formData.rili_date"></uni-datetime-picker>
+        <uni-datetime-picker type="date" return-type="string" placeholder="日期" v-model="formData.rili_date" trim="both"></uni-datetime-picker>
       </uni-forms-item>
       <uni-forms-item name="rili_title" label="标题">
         <uni-easyinput placeholder="标题" v-model="formData.rili_title" trim="both"></uni-easyinput>
       </uni-forms-item>
-      <uni-forms-item name="rili_events" label="事件">
-        <uni-data-checkbox :multiple="true" v-model="formData.rili_events"></uni-data-checkbox>
+      <uni-forms-item name="rili_images" label="图片">
+        <uni-file-picker file-mediatype="image" return-type="array" v-model="formData.rili_images"></uni-file-picker>
+      </uni-forms-item>
+      <uni-forms-item name="rili_content" label="内容">
+        <uni-easyinput type="textarea" placeholder="内容" v-model="formData.rili_content" trim="both"></uni-easyinput>
       </uni-forms-item>
       <view class="uni-button-group">
         <button type="primary" class="uni-button" style="width: 100px;" @click="submit">提交</button>
@@ -41,9 +43,10 @@
   export default {
     data() {
       let formData = {
-        "rili_date": null,
+        "rili_date": "",
         "rili_title": "",
-        "rili_events": []
+        "rili_images": [],
+        "rili_content": ""
       }
       return {
         formData,
@@ -106,12 +109,10 @@
         uni.showLoading({
           mask: true
         })
-        db.collection(dbCollectionName).doc(id).field("rili_date,rili_title,rili_events").get().then((res) => {
+        db.collection(dbCollectionName).doc(id).field("rili_date,rili_title,rili_images,rili_content").get().then((res) => {
           const data = res.result.data[0]
           if (data) {
-            this.formData = Object.assign(data,{
-				rili_date:data.rili_date.split("T")[0]
-			});
+            this.formData = data
           }
         }).catch((err) => {
           uni.showModal({

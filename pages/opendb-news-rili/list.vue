@@ -16,20 +16,27 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="opendb-news-rili" field="rili_date,rili_title,rili_events" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="opendb-news-rili" field="rili_date,rili_title,rili_images,rili_content" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
           <uni-tr>
-            <uni-th align="center" filter-type="date" @filter-change="filterChange($event, 'rili_date')" sortable @sort-change="sortChange($event, 'rili_date')">日期</uni-th>
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'rili_date')" sortable @sort-change="sortChange($event, 'rili_date')">日期</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'rili_title')" sortable @sort-change="sortChange($event, 'rili_title')">标题</uni-th>
-            <uni-th align="center" sortable @sort-change="sortChange($event, 'rili_events')">事件</uni-th>
+            <uni-th align="center" sortable @sort-change="sortChange($event, 'rili_images')">图片</uni-th>
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'rili_content')" sortable @sort-change="sortChange($event, 'rili_content')">内容</uni-th>
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
-            <uni-td align="center"><uni-dateformat :date="item.rili_date" format="yyyy-MM-dd" :threshold="[0,0]"></uni-dateformat></uni-td>
+            <uni-td align="center">{{item.rili_date}}</uni-td>
             <uni-td align="center">{{item.rili_title}}</uni-td>
-            <uni-td align="center">{{item.rili_events}}</uni-td>
+            <uni-td align="center">
+              <template v-for="(file, j) in item.rili_images">
+                <uni-file-picker v-if="file.fileType == 'image'" :value="file" :file-mediatype="file.fileType" :imageStyles="imageStyles" readonly></uni-file-picker>
+                <uni-link v-else :href="file.url" :text="file.url"></uni-link>
+              </template>
+            </uni-td>
+            <uni-td align="center">{{item.rili_content}}</uni-td>
             <uni-td align="center">
               <view class="uni-group">
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
@@ -86,7 +93,8 @@
           "fields": {
             "日期": "rili_date",
             "标题": "rili_title",
-            "事件": "rili_events"
+            "图片": "rili_images",
+            "内容": "rili_content"
           }
         },
         exportExcelData: []

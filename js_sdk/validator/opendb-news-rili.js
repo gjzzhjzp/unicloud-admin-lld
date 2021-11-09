@@ -5,7 +5,7 @@ const validator = {
   "rili_date": {
     "rules": [
       {
-        "format": "date"
+        "format": "string"
       }
     ],
     "label": "日期"
@@ -18,13 +18,24 @@ const validator = {
     ],
     "label": "标题"
   },
-  "rili_events": {
+  "rili_images": {
     "rules": [
       {
         "format": "array"
+      },
+      {
+        "arrayType": "file"
       }
     ],
-    "label": "事件"
+    "label": "图片"
+  },
+  "rili_content": {
+    "rules": [
+      {
+        "format": "string"
+      }
+    ],
+    "label": "内容"
   }
 }
 
