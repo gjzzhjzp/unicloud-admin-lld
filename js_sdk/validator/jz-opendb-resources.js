@@ -80,6 +80,35 @@ const validator = {
     ],
     "label": "封面大图"
   },
+  "zy_gs": {
+    "rules": [
+      {
+        "format": "int"
+      },
+      {
+        "range": [
+          {
+            "value": 0,
+            "text": "图片"
+          },
+          {
+            "value": 1,
+            "text": "视频"
+          },
+          {
+            "value": 2,
+            "text": "音乐"
+          },
+          {
+            "value": 3,
+            "text": "文章"
+          }
+        ]
+      }
+    ],
+    "defaultValue": 0,
+    "label": "资源类型"
+  },
   "resources": {
     "rules": [
       {
@@ -155,6 +184,12 @@ const enumConverter = {
   "article_status_valuetotext": {
     "0": "锁定",
     "1": "启用"
+  },
+  "zy_gs_valuetotext": {
+    "0": "图片",
+    "1": "视频",
+    "2": "音乐",
+    "3": "文章"
   },
   "is_grant_valuetotext": {
     "0": "未授权",
