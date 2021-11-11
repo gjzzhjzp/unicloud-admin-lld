@@ -1,0 +1,117 @@
+.u-relative,
+.u-rela {
+	position: relative;
+}
+
+.u-absolute,
+.u-abso {
+	position: absolute;
+}
+
+// nvue不能用标签命名样式，不能放在微信组件中，否则微信开发工具会报警告，无法使用标签名当做选择器
+/* #ifndef APP-NVUE */
+image {
+	display: inline-block;
+}
+
+// 在weex，也即nvue中，所有元素默认为border-box
+view,
+text {
+	box-sizing: border-box;
+}
+/* #endif */
+
+.u-font-xs {
+	font-size: 22rpx;
+}
+
+.u-font-sm {
+	font-size: 26rpx;
+}
+
+.u-font-md {
+	font-size: 28rpx;
+}
+
+.u-font-lg {
+	font-size: 30rpx;
+}
+
+.u-font-xl {
+	font-size: 34rpx;
+}
+
+.u-flex {
+	/* #ifndef APP-NVUE */
+	display: flex;
+	/* #endif */
+	flex-direction: row;
+	align-items: center;
+}
+
+.u-flex-wrap {
+	flex-wrap: wrap;
+}
+
+.u-flex-nowrap {
+	flex-wrap: nowrap;
+}
+
+.u-col-center {
+	align-items: center;
+}
+
+.u-col-top {
+	align-items: flex-start;
+}
+
+.u-col-bottom {
+	align-items: flex-end;
+}
+
+.u-row-center {
+	justify-content: center;
+}
+
+.u-row-left {
+	justify-content: flex-start;
+}
+
+.u-row-right {
+	justify-content: flex-end;
+}
+
+.u-row-between {
+	justify-content: space-between;
+}
+
+.u-row-around {
+	justify-content: space-around;
+}
+
+.u-text-left {
+	text-align: left;
+}
+
+.u-text-center {
+	text-align: center;
+}
+
+.u-text-right {
+	text-align: right;
+}
+
+.u-flex-col {
+	/* #ifndef APP-NVUE */
+	display: flex;
+	/* #endif */
+	flex-direction: column;
+}
+
+
+
+// 重置nvue的默认关于flex的样式
+.u-reset-nvue {
+	flex-direction: row;
+	align-items: center;
+}

@@ -48,4 +48,5 @@
 <style>
 	@import '@/common/uni.css';
 	@import '@/common/uni-icons.css';
+	@import 'uview-ui/index.scss';
 </style>
