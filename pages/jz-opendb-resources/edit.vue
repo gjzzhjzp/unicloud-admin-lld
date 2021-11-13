@@ -7,10 +7,10 @@
       <uni-forms-item name="author" label="作者" required>
         <uni-easyinput placeholder="请输入作者" v-model="formData.author" trim="both"></uni-easyinput>
       </uni-forms-item>
-      <uni-forms-item name="categories" label="分类">
+      <uni-forms-item name="categorieszw" label="分类">
 		  <uni-easyinput placeholder="请选择分类" v-model="formData.categorieszw" trim="both" @focus="opencategories">
 		  </uni-easyinput>
-		  <yunmiao-cascader ref="cascader" value-name="flbm" :cascaderData="cascaderData"
+		  <yunmiao-cascader  :select-value="formData.categories" ref="cascader" value-name="flbm" :cascaderData="cascaderData"
 		  	@confirem="cascaderConfirem"></yunmiao-cascader>
         <!-- <uni-easyinput placeholder="分类" v-model="formData.categories" trim="both"></uni-easyinput> -->
       </uni-forms-item>

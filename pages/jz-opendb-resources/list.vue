@@ -16,7 +16,7 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="jz-opendb-resources" field="categories,categorieszw,labels,author,title,article_status,is_grant,is_encryption,is_login,avatar,resources,zy_gs,excerpt,content" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="jz-opendb-resources,uni-id-users" field="categories,categorieszw,labels,author,title,article_status,is_grant,is_encryption,is_login,avatar,resources,zy_gs,excerpt,content,user_id{nickname}" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
@@ -28,6 +28,7 @@
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'categorieszw')" sortable @sort-change="sortChange($event, 'categorieszw')">分类</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'labels')" sortable @sort-change="sortChange($event, 'labels')">标签</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'author')" sortable @sort-change="sortChange($event, 'author')">作者</uni-th>
+			<uni-th align="center" width="80px">投稿人</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.article_status_localdata" @filter-change="filterChange($event, 'article_status')">状态</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_grant_localdata" @filter-change="filterChange($event, 'is_grant')">授权</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_encryption_localdata" @filter-change="filterChange($event, 'is_encryption')">加密</uni-th>
@@ -43,6 +44,8 @@
             <uni-td align="center">{{item.categorieszw}}</uni-td>
             <uni-td align="center">{{item.labels}}</uni-td>
             <uni-td align="center">{{item.author}}</uni-td>
+			<!-- {{item}} -->
+			 <uni-td align="center">{{item.user_id[0].nickname}}</uni-td>
             <!-- <uni-td align="center">{{options.article_status_valuetotext[item.article_status]}}</uni-td> -->
             <uni-td align="center">  <checkbox-group @change="change_data(item,'article_status')"><checkbox value="article_status" :checked="item.article_status==1" /></checkbox-group></uni-td>
 			<uni-td align="center"> <checkbox-group @change="change_data(item,'is_grant')"><checkbox value="is_grant" :checked="item.is_grant==1" /></checkbox-group></uni-td>

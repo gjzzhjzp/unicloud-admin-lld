@@ -7,11 +7,12 @@
 			<uni-forms-item name="author" label="作者" required>
 				<uni-easyinput placeholder="请输入作者" v-model="formData.author" trim="both"></uni-easyinput>
 			</uni-forms-item>
-			<uni-forms-item name="categories" label="分类">
+			<uni-forms-item name="categorieszw" label="分类">
+				<!-- formData.categories：{{formData.categories}} -->
 				<!-- <uni-easyinput placeholder="分类" v-model="formData.categories" trim="both"></uni-easyinput> -->
 				<uni-easyinput placeholder="请选择分类" v-model="formData.categorieszw" trim="both" @focus="opencategories">
 				</uni-easyinput>
-				<yunmiao-cascader ref="cascader" value-name="flbm" :cascaderData="cascaderData"
+				<yunmiao-cascader  :select-value="formData.categories" ref="cascader" value-name="flbm" :cascaderData="cascaderData"
 					@confirem="cascaderConfirem"></yunmiao-cascader>
 			</uni-forms-item>
 			<!-- <uni-forms-item name="categorieszw" label="分类中文">
@@ -184,6 +185,10 @@
 			 */
 			submitForm(value) {
 				// 使用 clientDB 提交数据
+				Object.assign(value,{
+					user_id: db.getCloudEnv('$cloudEnv_uid')
+				});
+				console.log("value",value);
 				return db.collection(dbCollectionName).add(value).then((res) => {
 					uni.showToast({
 						title: '新增成功'
