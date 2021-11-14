@@ -22,6 +22,8 @@
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
           <uni-tr>
 			   <uni-th align="center" sortable @sort-change="sortChange($event, 'avatar')">封面</uni-th>
+			   <uni-th align="center" filter-type="select" :filter-data="options.filterData.zy_gs_localdata" @filter-change="filterChange($event, 'zy_gs')">资源类型</uni-th>
+			   
 			  <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'title')" sortable @sort-change="sortChange($event, 'title')">标题</uni-th>
 			  
             <!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'categories')" sortable @sort-change="sortChange($event, 'categories')">分类</uni-th> -->
@@ -39,6 +41,7 @@
 			    <uni-file-picker v-if="item.avatar && item.avatar.fileType == 'image'" :value="item.avatar" :file-mediatype="item.avatar && item.avatar.fileType" return-type="object" :imageStyles="imageStyles" readonly></uni-file-picker>
 			    <uni-link v-else :href="item.avatar && item.avatar.url" :text="item.avatar && item.avatar.url"></uni-link>
 			  </uni-td>
+			   <uni-td align="center">{{options.zy_gs_valuetotext[item.zy_gs]}}</uni-td>
 			   <uni-td align="center">{{item.title}}</uni-td>
             <!-- <uni-td align="center">{{item.categories}}</uni-td> -->
             <uni-td align="center">{{item.categorieszw}}</uni-td>
@@ -107,6 +110,24 @@
                 "text": "启用"
               }
             ],
+			"zy_gs_localdata": [
+			  {
+			    "value": 0,
+			    "text": "图片"
+			  },
+			  {
+			    "value": 1,
+			    "text": "视频"
+			  },
+			  {
+			    "value": 2,
+			    "text": "音乐"
+			  },
+			  {
+			    "value": 3,
+			    "text": "文章"
+			  }
+			],
             "is_grant_localdata": [
               {
                 "value": 0,
@@ -147,6 +168,7 @@
             "是否授权": "is_grant",
             "是否加密": "is_encryption",
             "封面大图": "avatar",
+			            "资源类型": "zy_gs",
             "附件资源": "resources",
             "摘要": "excerpt",
             "内容": "content"

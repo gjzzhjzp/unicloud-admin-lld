@@ -16,7 +16,7 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="jz-opendb-resources" field="title,author,categories,categorieszw,labels,article_status,avatar,resources,aliyun_dz,excerpt,is_grant,is_encryption" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="jz-opendb-resources" field="title,author,categories,categorieszw,labels,article_status,avatar,zy_gs,resources,aliyun_dz,excerpt,is_grant,is_encryption" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
@@ -28,6 +28,7 @@
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'labels')" sortable @sort-change="sortChange($event, 'labels')">标签</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.article_status_localdata" @filter-change="filterChange($event, 'article_status')">文章状态</uni-th>
             <uni-th align="center" sortable @sort-change="sortChange($event, 'avatar')">封面大图</uni-th>
+            <uni-th align="center" filter-type="select" :filter-data="options.filterData.zy_gs_localdata" @filter-change="filterChange($event, 'zy_gs')">资源类型</uni-th>
             <uni-th align="center" sortable @sort-change="sortChange($event, 'resources')">附件资源</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'aliyun_dz')" sortable @sort-change="sortChange($event, 'aliyun_dz')">外链</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'excerpt')" sortable @sort-change="sortChange($event, 'excerpt')">内容</uni-th>
@@ -46,6 +47,7 @@
               <uni-file-picker v-if="item.avatar && item.avatar.fileType == 'image'" :value="item.avatar" :file-mediatype="item.avatar && item.avatar.fileType" return-type="object" :imageStyles="imageStyles" readonly></uni-file-picker>
               <uni-link v-else :href="item.avatar && item.avatar.url" :text="item.avatar && item.avatar.url"></uni-link>
             </uni-td>
+            <uni-td align="center">{{options.zy_gs_valuetotext[item.zy_gs]}}</uni-td>
             <uni-td align="center">
               <template v-for="(file, j) in item.resources">
                 <uni-file-picker v-if="file.fileType == 'image'" :value="file" :file-mediatype="file.fileType" :imageStyles="imageStyles" readonly></uni-file-picker>
@@ -110,6 +112,24 @@
                 "text": "启用"
               }
             ],
+            "zy_gs_localdata": [
+              {
+                "value": 0,
+                "text": "图片"
+              },
+              {
+                "value": 1,
+                "text": "视频"
+              },
+              {
+                "value": 2,
+                "text": "音乐"
+              },
+              {
+                "value": 3,
+                "text": "文章"
+              }
+            ],
             "is_grant_localdata": [
               {
                 "value": 0,
@@ -148,6 +168,7 @@
             "标签": "labels",
             "文章状态": "article_status",
             "封面大图": "avatar",
+            "资源类型": "zy_gs",
             "附件资源": "resources",
             "外链": "aliyun_dz",
             "内容": "excerpt",
