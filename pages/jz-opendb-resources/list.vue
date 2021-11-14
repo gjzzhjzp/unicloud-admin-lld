@@ -29,7 +29,7 @@
             <!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'categories')" sortable @sort-change="sortChange($event, 'categories')">分类</uni-th> -->
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'categorieszw')" sortable @sort-change="sortChange($event, 'categorieszw')">分类</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'labels')" sortable @sort-change="sortChange($event, 'labels')">标签</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'author')" sortable @sort-change="sortChange($event, 'author')">作者</uni-th>
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'author')" sortable @sort-change="sortChange($event, 'author')">来源</uni-th>
 			<uni-th align="center" width="80px">投稿人</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.article_status_localdata" @filter-change="filterChange($event, 'article_status')">状态</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_grant_localdata" @filter-change="filterChange($event, 'is_grant')">授权</uni-th>
@@ -162,7 +162,7 @@
             "分类": "categories",
             "分类中文": "categorieszw",
             "标签": "labels",
-            "作者": "author",
+            "来源": "author",
             "标题": "title",
             "文章状态": "article_status",
             "是否授权": "is_grant",

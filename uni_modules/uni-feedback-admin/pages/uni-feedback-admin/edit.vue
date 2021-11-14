@@ -7,12 +7,12 @@
 			<uni-forms-item name="imgs" label="图片列表">
 				<uni-file-picker file-mediatype="image" :limit="6" return-type="array" v-model="formData.imgs" />
 			</uni-forms-item>
-			<uni-forms-item name="is_reply" label="是否是回复类型">
+			<!-- <uni-forms-item name="is_reply" label="是否是回复类型">
 				<switch @change="binddata('is_reply', $event.detail.value)" :checked="formData.is_reply" />
 			</uni-forms-item>
 			<uni-forms-item name="feedback_id" label="被回复留言ID">
 				<uni-easyinput v-model="formData.feedback_id" />
-			</uni-forms-item>
+			</uni-forms-item> -->
 			<uni-forms-item name="contact" label="联系人">
 				<uni-easyinput v-model="formData.contact" trim="both" />
 			</uni-forms-item>
