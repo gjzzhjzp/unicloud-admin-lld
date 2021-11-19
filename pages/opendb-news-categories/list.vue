@@ -35,8 +35,10 @@
             <uni-td align="center">{{item.name}}</uni-td>
             <uni-td align="center">{{item.description}}</uni-td>
             <uni-td align="center">
-              <uni-file-picker v-if="item.icon && item.icon.fileType == 'image'" :value="item.icon" :file-mediatype="item.icon && item.icon.fileType" return-type="object" :imageStyles="imageStyles" readonly></uni-file-picker>
-              <uni-link v-else :href="item.icon && item.icon.url" :text="item.icon && item.icon.url"></uni-link>
+              <template v-for="(file, j) in item.icon">
+                <uni-file-picker v-if="file.fileType == 'image'" :value="file" :file-mediatype="file.fileType" :imageStyles="imageStyles" readonly></uni-file-picker>
+                <uni-link v-else :href="file.url" :text="file.url"></uni-link>
+              </template>
             </uni-td>
             <uni-td align="center">{{item.path}}</uni-td>
             <uni-td align="center">

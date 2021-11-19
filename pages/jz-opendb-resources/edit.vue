@@ -24,7 +24,7 @@
         <uni-data-checkbox v-model="formData.article_status" :localdata="formOptions.article_status_localdata"></uni-data-checkbox>
       </uni-forms-item>
       <uni-forms-item name="avatar" label="封面大图" required>
-        <uni-file-picker file-mediatype="image" return-type="object" v-model="formData.avatar"></uni-file-picker>
+        <uni-file-picker limit="1" file-mediatype="image" return-type="array" v-model="formData.avatar"></uni-file-picker>
       </uni-forms-item>
       <uni-forms-item name="zy_gs" label="资源类型">
         <uni-data-checkbox v-model="formData.zy_gs" :localdata="formOptions.zy_gs_localdata"></uni-data-checkbox>
@@ -210,9 +210,12 @@ import zycommon from "./zycommon.js"
           mask: true
         })
         db.collection(dbCollectionName).doc(id).field("title,author,categories,categorieszw,labels,article_status,avatar,zy_gs,resources,aliyun_dz,excerpt,is_grant,is_encryption").get().then((res) => {
-          const data = res.result.data[0]
+          const data = res.result.data[0];
+		  if(!Array.isArray(data.avatar)){
+		  			  data.avatar=[data.avatar];
+		  }
           if (data) {
-            this.formData = data
+            this.formData = data;
           }
         }).catch((err) => {
           uni.showModal({

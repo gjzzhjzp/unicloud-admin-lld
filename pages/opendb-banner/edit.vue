@@ -2,7 +2,7 @@
   <view class="uni-container">
     <uni-forms ref="form" :value="formData" validateTrigger="bind">
       <uni-forms-item name="bannerfile" label="图片文件" required>
-        <uni-file-picker file-mediatype="image" return-type="object" v-model="formData.bannerfile"></uni-file-picker>
+        <uni-file-picker limit="1" file-mediatype="image" return-type="array" v-model="formData.bannerfile"></uni-file-picker>
       </uni-forms-item>
       <uni-forms-item name="open_url" label="跳转地址">
         <uni-easyinput placeholder="点击跳转目标地址" v-model="formData.open_url" trim="both"></uni-easyinput>
@@ -52,7 +52,7 @@
   export default {
     data() {
       let formData = {
-        "bannerfile": null,
+        "bannerfile": [],
         "open_url": "",
         "title": "",
         "sort": null,

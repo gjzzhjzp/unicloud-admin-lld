@@ -8,7 +8,10 @@ const validator = {
         "required": true
       },
       {
-        "format": "file"
+        "format": "array"
+      },
+      {
+        "arrayType": "file"
       }
     ],
     "label": "图片文件"

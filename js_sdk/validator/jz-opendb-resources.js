@@ -70,14 +70,14 @@ const validator = {
     "label": "文章状态"
   },
   "avatar": {
-    "rules": [
-      {
-        "required": true
-      },
-      {
-        "format": "file"
-      }
-    ],
+   "rules": [
+     {
+       "format": "array"
+     },
+     {
+       "arrayType": "file"
+     }
+   ],
     "label": "封面大图"
   },
   "zy_gs": {

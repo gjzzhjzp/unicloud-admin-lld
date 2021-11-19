@@ -102,26 +102,6 @@
 			"style": {
 				"navigationBarTitleText": "列表"
 			}
-		},
-		{
-			"path": "pages/familytree/add",
-			"style": {
-				"navigationBarTitleText": "新增人员",
-				"navigationStyle": "default"
-			}
-		},
-		{
-			"path": "pages/familytree/edit",
-			"style": {
-				"navigationBarTitleText": "人员详情",
-				"navigationStyle": "default"
-			}
-		},
-		{
-			"path": "pages/familytree/tree",
-			"style": {
-				"navigationBarTitleText": "家谱管理"
-			}
 		}, {
 			"path": "pages/jz-custom-yqm/add",
 			"style": {
@@ -179,6 +159,21 @@
 			}
 		}, {
 			"path": "pages/jz-custom-language/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/opendb-news-appbb/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/opendb-news-appbb/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/opendb-news-appbb/list",
 			"style": {
 				"navigationBarTitleText": "列表"
 			}

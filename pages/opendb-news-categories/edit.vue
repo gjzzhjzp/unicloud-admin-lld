@@ -4,7 +4,7 @@
       <uni-forms-item name="flbm" label="分类编码" required>
         <uni-easyinput placeholder="分类编码" v-model="formData.flbm" trim="both"></uni-easyinput>
       </uni-forms-item>
-      <uni-forms-item name="parent_flbm" label="父级编码">
+      <uni-forms-item name="parent_flbm" label="父级分类编码">
         <uni-easyinput placeholder="父级分类编码" v-model="formData.parent_flbm"></uni-easyinput>
       </uni-forms-item>
       <uni-forms-item name="name" label="名称" required>
@@ -14,7 +14,7 @@
         <uni-easyinput placeholder="类别描述" v-model="formData.description" trim="both"></uni-easyinput>
       </uni-forms-item>
       <uni-forms-item name="icon" label="图标地址">
-        <uni-file-picker file-mediatype="image" return-type="object" v-model="formData.icon"></uni-file-picker>
+        <uni-file-picker limit="1" file-mediatype="image" return-type="array" v-model="formData.icon"></uni-file-picker>
       </uni-forms-item>
       <uni-forms-item name="path" label="点击跳转地址">
         <uni-easyinput placeholder="点击跳转地址" v-model="formData.path" trim="both"></uni-easyinput>
@@ -53,7 +53,7 @@
         "parent_flbm": "",
         "name": "",
         "description": "",
-        "icon": null,
+        "icon": [],
         "path": ""
       }
       return {
@@ -95,7 +95,6 @@
        */
       submitForm(value) {
         // 使用 clientDB 提交数据
-		console.log("value",value);
         return db.collection(dbCollectionName).doc(this.formDataId).update(value).then((res) => {
           uni.showToast({
             title: '修改成功'
@@ -119,13 +118,13 @@
           mask: true
         })
         db.collection(dbCollectionName).doc(id).field("flbm,parent_flbm,name,description,icon,path").get().then((res) => {
-          const data = res.result.data[0]
+          // debugger;
+		  const data = res.result.data[0];
+		  if(!Array.isArray(data.icon)){
+			  data.icon=[data.icon];
+		  }
           if (data) {
-			  if(!data.icon.url){
-				  data.icon=null;
-			  }
-			  // Object.assign(this.formData,data);
-            this.formData = data;
+            this.formData = data
           }
         }).catch((err) => {
           uni.showModal({

@@ -43,7 +43,10 @@ const validator = {
   "icon": {
     "rules": [
       {
-        "format": "file"
+        "format": "array"
+      },
+      {
+        "arrayType": "file"
       }
     ],
     "label": "图标地址"

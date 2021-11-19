@@ -26,7 +26,7 @@
 				</uni-data-checkbox>
 			</uni-forms-item>
 			<uni-forms-item name="avatar" label="封面大图" required>
-				<uni-file-picker file-mediatype="image" return-type="object" v-model="formData.avatar">
+				<uni-file-picker limit="1" file-mediatype="image" return-type="array" v-model="formData.avatar">
 				</uni-file-picker>
 			</uni-forms-item>
 			<uni-forms-item name="zy_gs" label="资源类型">

@@ -4,7 +4,7 @@
       <uni-forms-item name="flbm" label="分类编码" required>
         <uni-easyinput placeholder="分类编码" v-model="formData.flbm" trim="both"></uni-easyinput>
       </uni-forms-item>
-     <uni-forms-item name="parent_flbm" label="父级分类编码">
+      <uni-forms-item name="parent_flbm" label="父级分类编码">
         <uni-easyinput placeholder="父级分类编码" v-model="formData.parent_flbm"></uni-easyinput>
       </uni-forms-item>
       <uni-forms-item name="name" label="名称" required>
@@ -14,7 +14,7 @@
         <uni-easyinput placeholder="类别描述" v-model="formData.description" trim="both"></uni-easyinput>
       </uni-forms-item>
       <uni-forms-item name="icon" label="图标地址">
-        <uni-file-picker file-mediatype="image" return-type="object" v-model="formData.icon"></uni-file-picker>
+        <uni-file-picker limit="1" file-mediatype="image" return-type="array" v-model="formData.icon"></uni-file-picker>
       </uni-forms-item>
       <uni-forms-item name="path" label="点击跳转地址">
         <uni-easyinput placeholder="点击跳转地址" v-model="formData.path" trim="both"></uni-easyinput>
@@ -53,7 +53,7 @@
         "parent_flbm": "",
         "name": "",
         "description": "",
-        "icon": null,
+        "icon": [],
         "path": ""
       }
       return {
@@ -64,14 +64,6 @@
         }
       }
     },
-	onLoad(e) {
-	  if (e.parent_flbm) {
-	    const id = e.parent_flbm;
-		 const next_flbm = e.next_flbm;
-		this.formData.parent_flbm=id;
-		this.formData.flbm=next_flbm;
-	  }
-	},
     onReady() {
       this.$refs.form.setRules(this.rules)
     },
@@ -96,13 +88,6 @@
        */
       submitForm(value) {
         // 使用 clientDB 提交数据
-		Object.assign(value,{
-			parent_flbm:this.formData.parent_flbm
-		});
-		if(!value.icon){
-			value.icon={url:""};
-		}
-		console.log("value",value);
         return db.collection(dbCollectionName).add(value).then((res) => {
           uni.showToast({
             title: '新增成功'
