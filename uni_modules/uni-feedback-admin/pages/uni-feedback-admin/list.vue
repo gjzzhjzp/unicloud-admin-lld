@@ -25,8 +25,8 @@
 						<uni-th align="center">图片列表</uni-th>
 						<!-- <uni-th align="center">是否是回复类型</uni-th> -->
 						<!-- <uni-th align="center">被回复留言ID</uni-th> -->
-						<uni-th align="center">联系人</uni-th>
-						<uni-th align="center">联系电话</uni-th>
+						<uni-th align="center">微博/抖音昵称</uni-th>
+						<!-- <uni-th align="center">联系电话</uni-th> -->
 						<uni-th width="204" align="center">操作</uni-th>
 					</uni-tr>
 					<uni-tr v-for="(item,index) in data" :key="index">
@@ -36,11 +36,11 @@
 									:file-mediatype="file.fileType" :imageStyles="imageStyles" readonly>
 								</uni-file-picker>
 								<uni-link v-else :href="file.url" :text="file.url"></uni-link>
-							</template> </uni-td>
+							</template></uni-td>
 						<!-- <uni-td align="center"> {{item.is_reply == true ? '✅' : '❌'}} </uni-td> -->
 						<!-- <uni-td align="center"> {{item.feedback_id}} </uni-td> -->
 						<uni-td align="center"> {{item.contact}} </uni-td>
-						<uni-td align="center"> {{item.mobile}} </uni-td>
+						<!-- <uni-td align="center"> {{item.mobile}} </uni-td> -->
 						<uni-td align="center">
 							<view class="uni-group">
 								<button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini"

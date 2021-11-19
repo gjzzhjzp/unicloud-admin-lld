@@ -16,7 +16,7 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="jz-custom-yqm,uni-id-users" field="user_name_type,user_name,value,status,user_id.nickname,manager_id.username" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="jz-custom-yqm,uni-id-users" field="user_name_type,user_name,value,status,user_id.nickname" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
 		<uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
@@ -157,8 +157,8 @@
 		adddYqm(){
 			var value={
 				status:true,
-				value:Math.random().toString(36).substr(2)+Math.random().toString(36).substr(2),
-				manager_id:db.getCloudEnv('$cloudEnv_uid')
+				value:Math.random().toString(36).substr(2)+Math.random().toString(36).substr(2)
+				// manager_id:db.getCloudEnv('$cloudEnv_uid')
 			};
 			console.log(value)
 			return db.collection(dbCollectionName).add(value).then((res) => {
