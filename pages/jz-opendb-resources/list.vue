@@ -40,13 +40,11 @@
 			  <uni-td align="center">
 				  <template v-if="Array.isArray(item.avatar)">
 					  <template v-for="(file, j) in item.avatar">
-						  <uni-file-picker v-if="file.fileType == 'image'" :value="file" :file-mediatype="file.fileType" :imageStyles="imageStyles" readonly></uni-file-picker>
-						  <uni-link v-else :href="file.url" :text="file.url"></uni-link>
+						  <u-image width="100%" height="140rpx" mode="widthFix" border-radius="10" :src="file.url"></u-image>
 					  </template>
 				  </template>
 				  <template v-else>
-					  <uni-file-picker v-if="item.avatar && item.avatar.fileType == 'image'" :value="item.avatar" :file-mediatype="item.avatar && item.avatar.fileType" return-type="object" :imageStyles="imageStyles" readonly></uni-file-picker>
-					 <uni-link v-else :href="item.avatar && item.avatar.url" :text="item.avatar && item.avatar.url"></uni-link>
+					  <u-image width="100%" height="140rpx" mode="widthFix" border-radius="10" :src="item.avatar.url"></u-image>
 				  </template>
 			  </uni-td>
 			   <uni-td align="center">{{options.zy_gs_valuetotext[item.zy_gs]}}</uni-td>
