@@ -23,19 +23,19 @@
           <uni-tr>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'rili_date')" sortable @sort-change="sortChange($event, 'rili_date')">日期</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'rili_title')" sortable @sort-change="sortChange($event, 'rili_title')">标题</uni-th>
-            <uni-th align="center" sortable @sort-change="sortChange($event, 'rili_images')">图片</uni-th>
+            <!-- <uni-th align="center" sortable @sort-change="sortChange($event, 'rili_images')">图片</uni-th> -->
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'rili_content')" sortable @sort-change="sortChange($event, 'rili_content')">内容</uni-th>
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
             <uni-td align="center">{{item.rili_date}}</uni-td>
             <uni-td align="center">{{item.rili_title}}</uni-td>
-            <uni-td align="center">
+           <!-- <uni-td align="center">
               <template v-for="(file, j) in item.rili_images">
                 <uni-file-picker v-if="file.fileType == 'image'" :value="file" :file-mediatype="file.fileType" :imageStyles="imageStyles" readonly></uni-file-picker>
                 <uni-link v-else :href="file.url" :text="file.url"></uni-link>
               </template>
-            </uni-td>
+            </uni-td> -->
             <uni-td align="center">{{item.rili_content}}</uni-td>
             <uni-td align="center">
               <view class="uni-group">
