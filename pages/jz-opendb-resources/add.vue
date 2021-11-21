@@ -21,7 +21,7 @@
 			<uni-forms-item name="labels" label="标签">
 				<uni-easyinput placeholder="多个标签以逗号隔开" v-model="formData.labels" trim="both"></uni-easyinput>
 			</uni-forms-item>
-			<uni-forms-item name="article_status" label="文章状态">
+			<uni-forms-item name="article_status" label="状态">
 				<uni-data-checkbox v-model="formData.article_status" :localdata="formOptions.article_status_localdata">
 				</uni-data-checkbox>
 			</uni-forms-item>

@@ -170,7 +170,7 @@
             "标签": "labels",
             "来源": "author",
             "标题": "title",
-            "文章状态": "article_status",
+            "状态": "article_status",
             "是否授权": "is_grant",
             "是否加密": "is_encryption",
             "封面大图": "avatar",
