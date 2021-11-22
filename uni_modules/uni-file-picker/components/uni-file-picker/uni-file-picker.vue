@@ -124,7 +124,7 @@
 			// 最大选择个数 ，h5只能限制单选或是多选
 			limit: {
 				type: [Number, String],
-				default: 18
+				default: 30
 			},
 			// 列表样式 grid | list | list-card
 			mode: {
@@ -229,8 +229,8 @@
 				if (!this.limit) {
 					return 1
 				}
-				if (this.limit >= 18) {
-					return 18
+				if (this.limit >= 30) {
+					return 30
 				}
 				return this.limit
 			}
