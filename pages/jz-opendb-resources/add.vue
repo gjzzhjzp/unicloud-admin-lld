@@ -186,13 +186,15 @@
 			submitForm(value) {
 				// 使用 clientDB 提交数据
 				Object.assign(value,{
-					user_id: db.getCloudEnv('$cloudEnv_uid')
+					user_id: db.getCloudEnv('$cloudEnv_uid'),
+					categories:this.formData.categories
 				});
-				console.log("value",value);
+				// debugger;
+				// console.log("value1111111111",value);
 				return db.collection(dbCollectionName).add(value).then((res) => {
 					uni.showToast({
 						title: '新增成功'
-					})
+					});
 					this.getOpenerEventChannel().emit('refreshData')
 					setTimeout(() => uni.navigateBack(), 500)
 				}).catch((err) => {

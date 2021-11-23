@@ -16,6 +16,10 @@ const validator = {
           {
             "value": 1,
             "text": "山总"
+          },
+          {
+            "value": 2,
+            "text": "首页"
           }
         ]
       }
@@ -44,7 +48,8 @@ const validator = {
 const enumConverter = {
   "type_valuetotext": {
     "0": "俊哲",
-    "1": "山总"
+    "1": "山总",
+    "2": "首页"
   }
 }
 

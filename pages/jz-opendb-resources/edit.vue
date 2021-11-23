@@ -187,6 +187,10 @@ import zycommon from "./zycommon.js"
        */
       submitForm(value) {
         // 使用 clientDB 提交数据
+		// debugger;
+		Object.assign(value,{
+			categories:this.formData.categories
+		});
         return db.collection(dbCollectionName).doc(this.formDataId).update(value).then((res) => {
           uni.showToast({
             title: '修改成功'
