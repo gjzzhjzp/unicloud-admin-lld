@@ -16,7 +16,7 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="jz-opendb-resources,uni-id-users" field="categories,categorieszw,labels,author,title,article_status,is_recommend,is_grant,is_encryption,is_login,avatar,resources,zy_gs,excerpt,content,user_id{nickname}" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="jz-opendb-resources,uni-id-users" field="publish_date,last_modify_date,categories,categorieszw,labels,author,title,article_status,is_recommend,is_grant,is_encryption,is_login,avatar,resources,zy_gs,excerpt,content,user_id{nickname}" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
@@ -35,7 +35,9 @@
 			<uni-th align="center" filter-type="select" :filter-data="options.filterData.is_recommend_localdata" @filter-change="filterChange($event, 'is_recommend')">推荐</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_grant_localdata" @filter-change="filterChange($event, 'is_grant')">授权</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_encryption_localdata" @filter-change="filterChange($event, 'is_encryption')">加密</uni-th>
-              <uni-th align="center">操作</uni-th>
+              <uni-th align="center" >发表时间</uni-th>
+              <uni-th align="center" >更新时间</uni-th>
+			  <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
 			  <uni-td align="center">
@@ -65,6 +67,8 @@
 			
             <!-- <uni-td align="center">{{item.excerpt}}</uni-td> -->
             <!-- <uni-td align="center">{{item.content}}</uni-td> -->
+			<uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.publish_date"></uni-dateformat></uni-td>
+			<uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.last_modify_date"></uni-dateformat></uni-td>
             <uni-td align="center">
               <view class="uni-group">
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
