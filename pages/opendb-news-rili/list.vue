@@ -59,7 +59,7 @@
   const db = uniCloud.database()
   // 表查询配置
   const dbOrderBy = '' // 排序字段
-  const dbSearchFields = [] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
+  const dbSearchFields = ["rili_date","rili_title","rili_content"] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
   // 分页配置
   const pageSize = 20
   const pageCurrent = 1

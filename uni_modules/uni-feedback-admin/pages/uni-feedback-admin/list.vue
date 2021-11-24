@@ -68,7 +68,7 @@
 	const db = uniCloud.database()
 	// 表查询配置
 	const dbOrderBy = '' // 排序字段
-	const dbSearchFields = [] // 模糊搜索字段，支持模糊搜索的字段列表
+	const dbSearchFields = ["content","contact"] // 模糊搜索字段，支持模糊搜索的字段列表
 	// 分页配置
 	const pageSize = 20
 	const pageCurrent = 1
