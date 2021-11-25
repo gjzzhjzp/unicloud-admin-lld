@@ -178,7 +178,43 @@
 				"navigationBarTitleText": "列表"
 			}
 		}
-	],
+	,{
+    "path": "pages/jz-custom-weiboyz/add",
+    "style": {
+        "navigationBarTitleText": "新增"
+    }
+}
+,{
+    "path": "pages/jz-custom-weiboyz/edit",
+    "style": {
+        "navigationBarTitleText": "编辑"
+    }
+}
+,{
+    "path": "pages/jz-custom-weiboyz/list",
+    "style": {
+        "navigationBarTitleText": "列表"
+    }
+}
+,{
+    "path": "pages/jz-custom-gonggao/add",
+    "style": {
+        "navigationBarTitleText": "新增"
+    }
+}
+,{
+    "path": "pages/jz-custom-gonggao/edit",
+    "style": {
+        "navigationBarTitleText": "编辑"
+    }
+}
+,{
+    "path": "pages/jz-custom-gonggao/list",
+    "style": {
+        "navigationBarTitleText": "列表"
+    }
+}
+],
 	"subPackages": [{
 		"root": "pages/system",
 		"pages": [{

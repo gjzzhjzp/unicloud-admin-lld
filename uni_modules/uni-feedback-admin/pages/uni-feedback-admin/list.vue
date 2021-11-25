@@ -14,7 +14,7 @@
 			</view>
 		</view>
 		<view class="uni-container">
-			<unicloud-db ref="udb" collection="opendb-feedback" field="content,imgs,is_reply,feedback_id,contact,mobile"
+			<unicloud-db ref="udb" collection="opendb-feedback" field="content,imgs,is_reply,feedback_id,contact,mobile,create_date"
 				:where="where" page-data="replace" :orderby="orderby" :getcount="true" :page-size="options.pageSize"
 				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
 				:options="options">
@@ -26,6 +26,7 @@
 						<!-- <uni-th align="center">是否是回复类型</uni-th> -->
 						<!-- <uni-th align="center">被回复留言ID</uni-th> -->
 						<uni-th align="center">微博/抖音昵称</uni-th>
+						<uni-th align="center">留言时间</uni-th>
 						<!-- <uni-th align="center">联系电话</uni-th> -->
 						<uni-th width="204" align="center">操作</uni-th>
 					</uni-tr>
@@ -40,6 +41,7 @@
 						<!-- <uni-td align="center"> {{item.is_reply == true ? '✅' : '❌'}} </uni-td> -->
 						<!-- <uni-td align="center"> {{item.feedback_id}} </uni-td> -->
 						<uni-td align="center"> {{item.contact}} </uni-td>
+							<uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.create_date"></uni-dateformat></uni-td>
 						<!-- <uni-td align="center"> {{item.mobile}} </uni-td> -->
 						<uni-td align="center">
 							<view class="uni-group">
@@ -67,7 +69,7 @@
 
 	const db = uniCloud.database()
 	// 表查询配置
-	const dbOrderBy = '' // 排序字段
+	const dbOrderBy = 'create_date desc' // 排序字段
 	const dbSearchFields = ["content","contact"] // 模糊搜索字段，支持模糊搜索的字段列表
 	// 分页配置
 	const pageSize = 20
