@@ -8,15 +8,7 @@
 			<view class="uni-group">
 				<input class="uni-search" type="text" v-model="query" @confirm="search" :placeholder="$t('common.placeholder.query')" />
 				<button class="uni-button" type="default" size="mini" @click="search">{{$t('common.button.search')}}</button>
-				<button class="uni-button" type="primary" size="mini" @click="navigateTo('./add')">{{$t('common.button.add')}}</button>
-				<button class="uni-button" type="warn" size="mini" :disabled="!selectedIndexs.length"
-					@click="delTable">{{$t('common.button.batchDelete')}}</button>
-				<!-- #ifdef H5 -->
-					<download-excel class="hide-on-phone" :fields="exportExcel.fields" :data="exportExcelData"
-						:type="exportExcel.type" :name="exportExcel.filename">
-						<button class="uni-button" type="primary" size="mini">{{$t('common.button.exportExcel')}}</button>
-					</download-excel>
-				<!-- #endif -->
+				
 			</view>
 		</view>
 		<view class="uni-container">
@@ -35,11 +27,11 @@
 								sortable @sort-change="sortChange($event, 'nickname')">昵称</uni-th>
 						<!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'mobile')"
 							sortable @sort-change="sortChange($event, 'mobile')">手机号码</uni-th> -->
-						<uni-th align="center" filter-type="select" :filter-data="options.filterData.status_localdata"
-							@filter-change="filterChange($event, 'status')">用户状态</uni-th>
+						<!-- <uni-th align="center" filter-type="select" :filter-data="options.filterData.status_localdata"
+							@filter-change="filterChange($event, 'status')">用户状态</uni-th> -->
 						<!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'email')"
 							sortable @sort-change="sortChange($event, 'email')">邮箱</uni-th> -->
-						<uni-th align="center">角色</uni-th>
+						<!-- <uni-th align="center">角色</uni-th> -->
 						<uni-th align="center">微博主页地址</uni-th>
 						<uni-th align="center">微博验证</uni-th>
 						<uni-th align="center">微博验证状态</uni-th>
@@ -47,17 +39,17 @@
 						<uni-th align="center" filter-type="timestamp"
 							@filter-change="filterChange($event, 'register_date')" sortable
 							@sort-change="sortChange($event, 'register_date')">注册时间</uni-th>
-						<uni-th align="center">操作</uni-th>
+						<!-- <uni-th align="center">操作</uni-th> -->
 					</uni-tr>
 					<uni-tr v-for="(item,index) in data" :key="index">
 						<uni-td align="center">{{item.username}}</uni-td>
 						<uni-td align="center">{{item.nickname}}</uni-td>
 						<!-- <uni-td align="center">{{item.mobile}}</uni-td> -->
-						<uni-td align="center">{{options.status_valuetotext[item.status]}}</uni-td>
+						<!-- <uni-td align="center">{{options.status_valuetotext[item.status]}}</uni-td> -->
 					<!-- 	<uni-td align="center">
 							<uni-link :href="'mailto:'+item.email" :text="item.email"></uni-link>
 						</uni-td> -->
-						<uni-td align="center">{{item.role}}</uni-td>
+						<!-- <uni-td align="center">{{item.role}}</uni-td> -->
 						<!-- <uni-td align="center">
 							<uni-link v-if="item.dcloud_appid === undefined" :href="noAppidWhatShouldIDoLink">
 								未绑定可登录应用<view class="uni-icons-help"></view>
@@ -78,14 +70,14 @@
 						<uni-td align="center">
 							<uni-dateformat :threshold="[0, 0]" :date="item.register_date"></uni-dateformat>
 						</uni-td>
-						<uni-td align="center">
+						<!-- <uni-td align="center">
 							<view class="uni-group">
 								<button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini"
 									type="primary">{{$t('common.button.edit')}}</button>
 								<button @click="confirmDelete(item._id)" class="uni-button" size="mini"
 									type="warn">{{$t('common.button.delete')}}</button>
 							</view>
-						</uni-td>
+						</uni-td> -->
 					</uni-tr>
 				</uni-table>
 				<view class="uni-pagination-box">

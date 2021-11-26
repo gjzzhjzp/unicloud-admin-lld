@@ -213,7 +213,17 @@
     "style": {
         "navigationBarTitleText": "列表"
     }
-}
+}, {
+			"path": "pages/system/user/list-shy",
+			"style": {
+				"navigationBarTitleText": "审核员审核人员"
+			}
+		}, {
+			"path": "pages/jz-opendb-resources/list-shy",
+			"style": {
+				"navigationBarTitleText": "资源审核员"
+			}
+		}
 ],
 	"subPackages": [{
 		"root": "pages/system",
