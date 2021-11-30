@@ -21,10 +21,10 @@
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
           <uni-tr>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'config_bm')" sortable @sort-change="sortChange($event, 'config_bm')">配置项编码</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'config_zw')" sortable @sort-change="sortChange($event, 'config_zw')">配置项中文</uni-th>
+            <uni-th align="center" width="120" filter-type="search" @filter-change="filterChange($event, 'config_bm')" sortable @sort-change="sortChange($event, 'config_bm')">配置项编码</uni-th>
+            <uni-th align="center" width="200" filter-type="search" @filter-change="filterChange($event, 'config_zw')" sortable @sort-change="sortChange($event, 'config_zw')">配置项中文</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'config_val')" sortable @sort-change="sortChange($event, 'config_val')">配置项值</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'config_describe')" sortable @sort-change="sortChange($event, 'config_describe')">描述</uni-th>
+            <uni-th align="center" width="200" filter-type="search" @filter-change="filterChange($event, 'config_describe')" sortable @sort-change="sortChange($event, 'config_describe')">描述</uni-th>
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">

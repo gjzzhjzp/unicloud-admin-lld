@@ -1,17 +1,17 @@
 <template>
   <view class="uni-container">
     <uni-forms ref="form" :value="formData" validateTrigger="bind">
-      <uni-forms-item name="number" label="公告编号" required>
-        <uni-easyinput placeholder="公告编号" v-model="formData.number"></uni-easyinput>
+      <uni-forms-item name="type" label="留言类型" required>
+        <uni-data-checkbox v-model="formData.type" :localdata="formOptions.type_localdata"></uni-data-checkbox>
       </uni-forms-item>
-      <uni-forms-item name="title" label="标题" required>
-        <uni-easyinput placeholder="标题" v-model="formData.title"></uni-easyinput>
+      <uni-forms-item name="content" label="留言内容/回复内容" required>
+        <textarea @input="binddata('content', $event.detail.value)" class="uni-textarea-border" v-model="formData.content" trim="right"></textarea>
       </uni-forms-item>
-      <uni-forms-item name="content" label="公告内容" required>
-        <uni-easyinput type="textarea" autoHeight="true" maxlength="1000" placeholder="公告内容" v-model="formData.content"></uni-easyinput>
+      <uni-forms-item name="imgs" label="图片列表">
+        <uni-file-picker file-mediatype="image" return-type="array" v-model="formData.imgs"></uni-file-picker>
       </uni-forms-item>
-      <uni-forms-item name="status" label="生效状态">
-        <switch @change="binddata('status', $event.detail.value)" :checked="formData.status"></switch>
+      <uni-forms-item name="contact" label="联系人">
+        <uni-easyinput v-model="formData.contact" trim="both"></uni-easyinput>
       </uni-forms-item>
       <view class="uni-button-group">
         <button type="primary" class="uni-button" style="width: 100px;" @click="submit">提交</button>
@@ -24,11 +24,11 @@
 </template>
 
 <script>
-  import { validator } from '../../js_sdk/validator/jz-custom-gonggao.js';
+  import { validator } from '../../js_sdk/validator/opendb-feedback.js';
 
   const db = uniCloud.database();
   const dbCmd = db.command;
-  const dbCollectionName = 'jz-custom-gonggao';
+  const dbCollectionName = 'opendb-feedback';
 
   function getValidator(fields) {
     let result = {}
@@ -43,24 +43,32 @@
   export default {
     data() {
       let formData = {
-        "number": "",
-        "title": "",
+        "type": 0,
         "content": "",
-        "status": true
+        "imgs": [],
+        "contact": ""
       }
       return {
         formData,
-        formOptions: {},
+        formOptions: {
+          "type_localdata": [
+            {
+              "value": 0,
+              "text": "系统bug"
+            },
+            {
+              "value": 1,
+              "text": "意见建议"
+            },
+            {
+              "value": 2,
+              "text": "我有话说"
+            }
+          ]
+        },
         rules: {
           ...getValidator(Object.keys(formData))
         }
-      }
-    },
-    onLoad(e) {
-      if (e.id) {
-        const id = e.id
-        this.formDataId = id
-        this.getDetail(id)
       }
     },
     onReady() {
@@ -87,9 +95,9 @@
        */
       submitForm(value) {
         // 使用 clientDB 提交数据
-        return db.collection(dbCollectionName).doc(this.formDataId).update(value).then((res) => {
+        return db.collection(dbCollectionName).add(value).then((res) => {
           uni.showToast({
-            title: '修改成功'
+            title: '新增成功'
           })
           this.getOpenerEventChannel().emit('refreshData')
           setTimeout(() => uni.navigateBack(), 500)
@@ -98,29 +106,6 @@
             content: err.message || '请求服务失败',
             showCancel: false
           })
-        })
-      },
-
-      /**
-       * 获取表单数据
-       * @param {Object} id
-       */
-      getDetail(id) {
-        uni.showLoading({
-          mask: true
-        })
-        db.collection(dbCollectionName).doc(id).field("number,title,content,status").get().then((res) => {
-          const data = res.result.data[0]
-          if (data) {
-            this.formData = data
-          }
-        }).catch((err) => {
-          uni.showModal({
-            content: err.message || '请求服务失败',
-            showCancel: false
-          })
-        }).finally(() => {
-          uni.hideLoading()
         })
       }
     }

@@ -8,7 +8,7 @@
         <uni-easyinput placeholder="配置项中文" v-model="formData.config_zw" trim="both"></uni-easyinput>
       </uni-forms-item>
       <uni-forms-item name="config_val" label="配置项值">
-        <uni-easyinput placeholder="配置项值" v-model="formData.config_val" trim="both"></uni-easyinput>
+        <uni-easyinput type="textarea" autoHeight="true" maxlength="1000" placeholder="配置项值" v-model="formData.config_val" trim="both"></uni-easyinput>
       </uni-forms-item>
       <uni-forms-item name="config_describe" label="描述">
         <uni-easyinput placeholder="描述" v-model="formData.config_describe" trim="both"></uni-easyinput>

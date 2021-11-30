@@ -31,10 +31,6 @@
 				ready: false, // 这里用于自主控制LyTree 的 loading加载状态，避免异步正在加载数据的空档显示“暂无数据”
 				props: function() {
 					return {
-						// 这里的label就可以使用函数进行自定义的渲染了
-						// label(data, node) {
-						// 	return (node.data.parent_relationship=="partner"?"配偶：":"") + node.data.name ;
-						// },
 						label: 'name', // 指把数据中的‘personName’当做label也就是节点名称
 						icon(data, node) { // 设置夫妻子女的图标
 							if (node.data.parent_id == "") {
@@ -75,7 +71,7 @@
 				if (this.where) {
 					dbw = db.collection("opendb-news-categories").where(this.where);
 				}
-				dbw
+				dbw.orderBy("sort","asc")
 					.get({
 						getTree: true
 					})

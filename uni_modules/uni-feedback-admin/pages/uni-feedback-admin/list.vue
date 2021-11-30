@@ -21,6 +21,7 @@
 				<uni-table :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection"
 					@selection-change="selectionChange">
 					<uni-tr>
+						<uni-th align="center">类型</uni-th>
 						<uni-th align="center">留言内容/回复内容</uni-th>
 						<uni-th align="center">图片列表</uni-th>
 						<!-- <uni-th align="center">是否是回复类型</uni-th> -->

@@ -58,6 +58,14 @@ const validator = {
       }
     ],
     "label": "点击跳转地址"
+  },
+  "sort": {
+    "rules": [
+      {
+        "format": "int"
+      }
+    ],
+    "label": "排序"
   }
 }
 

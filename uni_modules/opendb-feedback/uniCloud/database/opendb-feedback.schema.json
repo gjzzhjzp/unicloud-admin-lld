@@ -1,0 +1,69 @@
+{
+	"bsonType": "object",
+	"required": ["content","type"],
+	"permission": {
+		"create": "auth.uid != null",
+		"read": true,
+		"delete": false,
+		"update": false
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"type": {
+			"bsonType": "int",
+			"title": "留言类型",
+			"description": "留言类型：0 系统bug 1 意见建议 2 我有话说",
+			"defaultValue": 0,
+			"enum": [{
+					"value": 0,
+					"text": "系统bug"
+				},
+				{
+					"value": 1,
+					"text": "意见建议"
+				},
+				{
+					"value": 2,
+					"text": "我有话说"
+				}
+			]
+		},
+		"user_id": {
+			"bsonType": "string",
+			"description": "留言反馈用户ID\/回复留言用户ID，参考uni-id-users表",
+			"foreignKey": "uni-id-users._id",
+			"forceDefaultValue": {
+				"$env": "uid"
+			}
+		},
+		"create_date": {
+			"bsonType": "timestamp",
+			"title": "留言时间\/回复留言时间",
+			"forceDefaultValue": {
+				"$env": "now"
+			}
+		},
+		"content": {
+			"bsonType": "string",
+			"title": "留言内容\/回复内容",
+			"componentForEdit": {
+				"name": "textarea"
+			},
+			"trim": "right"
+		},
+		"imgs": {
+			"bsonType": "array",
+			"arrayType": "file",
+			"maxLength": 6,
+			"fileMediaType": "image",
+			"title": "图片列表"
+		},
+		"contact": {
+			"bsonType": "string",
+			"title": "联系人",
+			"trim": "both"
+		}
+	}
+}

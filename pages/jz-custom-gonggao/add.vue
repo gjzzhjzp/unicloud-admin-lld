@@ -4,8 +4,11 @@
       <uni-forms-item name="number" label="公告编号" required>
         <uni-easyinput placeholder="公告编号" v-model="formData.number"></uni-easyinput>
       </uni-forms-item>
+      <uni-forms-item name="title" label="标题" required>
+        <uni-easyinput placeholder="标题" v-model="formData.title"></uni-easyinput>
+      </uni-forms-item>
       <uni-forms-item name="content" label="公告内容" required>
-        <uni-easyinput type="textarea" :autoHeight="true" :maxlength="1000" placeholder="公告内容" v-model="formData.content"></uni-easyinput>
+        <uni-easyinput type="textarea" autoHeight="true" maxlength="1000" placeholder="公告内容" v-model="formData.content"></uni-easyinput>
       </uni-forms-item>
       <uni-forms-item name="status" label="生效状态">
         <switch @change="binddata('status', $event.detail.value)" :checked="formData.status"></switch>
@@ -41,6 +44,7 @@
     data() {
       let formData = {
         "number": "",
+        "title": "",
         "content": "",
         "status": true
       }

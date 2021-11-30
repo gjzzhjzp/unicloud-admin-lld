@@ -2,27 +2,33 @@
 
 
 const validator = {
-  "number": {
+  "type": {
     "rules": [
       {
         "required": true
       },
       {
-        "format": "string"
-      }
-    ],
-    "label": "公告编号"
-  },
-  "title": {
-    "rules": [
-      {
-        "required": true
+        "format": "int"
       },
       {
-        "format": "string"
+        "range": [
+          {
+            "value": 0,
+            "text": "系统bug"
+          },
+          {
+            "value": 1,
+            "text": "意见建议"
+          },
+          {
+            "value": 2,
+            "text": "我有话说"
+          }
+        ]
       }
     ],
-    "label": "标题"
+    "defaultValue": 0,
+    "label": "留言类型"
   },
   "content": {
     "rules": [
@@ -33,20 +39,39 @@ const validator = {
         "format": "string"
       }
     ],
-    "label": "公告内容"
+    "label": "留言内容/回复内容"
   },
-  "status": {
+  "imgs": {
     "rules": [
       {
-        "format": "bool"
+        "format": "array"
+      },
+      {
+        "arrayType": "file"
+      },
+      {
+        "maxLength": 6
       }
     ],
-    "defaultValue": true,
-    "label": "生效状态"
+    "label": "图片列表"
+  },
+  "contact": {
+    "rules": [
+      {
+        "format": "string"
+      }
+    ],
+    "label": "联系人"
   }
 }
 
-const enumConverter = {}
+const enumConverter = {
+  "type_valuetotext": {
+    "0": "系统bug",
+    "1": "意见建议",
+    "2": "我有话说"
+  }
+}
 
 function filterToWhere(filter, command) {
   let where = {}

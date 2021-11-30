@@ -16,7 +16,7 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="opendb-news-categories" field="flbm,parent_flbm,name,description,icon,path" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="opendb-news-categories" field="flbm,parent_flbm,name,description,icon,path,sort" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
@@ -27,6 +27,7 @@
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'description')" sortable @sort-change="sortChange($event, 'description')">描述</uni-th>
             <uni-th align="center" sortable @sort-change="sortChange($event, 'icon')">图标地址</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'path')" sortable @sort-change="sortChange($event, 'path')">点击跳转地址</uni-th>
+            <uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'sort')" sortable @sort-change="sortChange($event, 'sort')">排序</uni-th>
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
@@ -41,6 +42,7 @@
               </template>
             </uni-td>
             <uni-td align="center">{{item.path}}</uni-td>
+            <uni-td align="center">{{item.sort}}</uni-td>
             <uni-td align="center">
               <view class="uni-group">
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
@@ -100,7 +102,8 @@
             "名称": "name",
             "描述": "description",
             "图标地址": "icon",
-            "点击跳转地址": "path"
+            "点击跳转地址": "path",
+            "排序": "sort"
           }
         },
         exportExcelData: []

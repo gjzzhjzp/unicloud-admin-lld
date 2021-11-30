@@ -177,43 +177,37 @@
 			"style": {
 				"navigationBarTitleText": "列表"
 			}
-		}
-	,{
-    "path": "pages/jz-custom-weiboyz/add",
-    "style": {
-        "navigationBarTitleText": "新增"
-    }
-}
-,{
-    "path": "pages/jz-custom-weiboyz/edit",
-    "style": {
-        "navigationBarTitleText": "编辑"
-    }
-}
-,{
-    "path": "pages/jz-custom-weiboyz/list",
-    "style": {
-        "navigationBarTitleText": "列表"
-    }
-}
-,{
-    "path": "pages/jz-custom-gonggao/add",
-    "style": {
-        "navigationBarTitleText": "新增"
-    }
-}
-,{
-    "path": "pages/jz-custom-gonggao/edit",
-    "style": {
-        "navigationBarTitleText": "编辑"
-    }
-}
-,{
-    "path": "pages/jz-custom-gonggao/list",
-    "style": {
-        "navigationBarTitleText": "列表"
-    }
-}, {
+		}, {
+			"path": "pages/jz-custom-weiboyz/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/jz-custom-weiboyz/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/jz-custom-weiboyz/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
+			"path": "pages/jz-custom-gonggao/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "pages/jz-custom-gonggao/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "pages/jz-custom-gonggao/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
+		}, {
 			"path": "pages/system/user/list-shy",
 			"style": {
 				"navigationBarTitleText": "审核员审核人员"
@@ -223,8 +217,23 @@
 			"style": {
 				"navigationBarTitleText": "资源审核员"
 			}
+		}, {
+			"path": "uni_modules/opendb-feedback/pages/opendb-feedback/add",
+			"style": {
+				"navigationBarTitleText": "新增"
+			}
+		}, {
+			"path": "uni_modules/opendb-feedback/pages/opendb-feedback/edit",
+			"style": {
+				"navigationBarTitleText": "编辑"
+			}
+		}, {
+			"path": "uni_modules/opendb-feedback/pages/opendb-feedback/list",
+			"style": {
+				"navigationBarTitleText": "列表"
+			}
 		}
-],
+	],
 	"subPackages": [{
 		"root": "pages/system",
 		"pages": [{
