@@ -57,7 +57,7 @@
             <uni-td align="center">{{item.labels}}</uni-td>
             <uni-td align="center">{{item.author}}</uni-td>
 			<!-- {{item}} -->
-			 <uni-td align="center">{{item.user_id[0].nickname}}</uni-td>
+			 <uni-td align="center">{{item.user_id[0]?item.user_id[0].nickname:''}}</uni-td>
             <!-- <uni-td align="center">{{options.article_status_valuetotext[item.article_status]}}</uni-td> -->
             <uni-td align="center">  <checkbox-group @change="change_data(item,'article_status')"><checkbox value="article_status" :checked="item.article_status==1" /></checkbox-group></uni-td>
 			<uni-td align="center"> <checkbox-group @change="change_data(item,'is_recommend')"><checkbox value="is_recommend" :checked="item.is_recommend==1" /></checkbox-group></uni-td>
