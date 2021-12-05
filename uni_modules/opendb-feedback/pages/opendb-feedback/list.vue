@@ -16,7 +16,7 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="opendb-feedback" field="type,content,imgs,contact,create_date" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="opendb-feedback" field="type,content,imgs,contact" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
@@ -25,8 +25,7 @@
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'content')" sortable @sort-change="sortChange($event, 'content')">留言内容/回复内容</uni-th>
             <uni-th align="center" sortable @sort-change="sortChange($event, 'imgs')">图片列表</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'contact')" sortable @sort-change="sortChange($event, 'contact')">联系人</uni-th>
-            <uni-th align="center" width="200">时间</uni-th>
-			<uni-th align="center">操作</uni-th>
+            <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
             <uni-td align="center">{{options.type_valuetotext[item.type]}}</uni-td>
@@ -38,8 +37,6 @@
               </template>
             </uni-td>
             <uni-td align="center">{{item.contact}}</uni-td>
-			<uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.create_date"></uni-dateformat></uni-td>
-			
             <uni-td align="center">
               <view class="uni-group">
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
@@ -95,6 +92,10 @@
               },
               {
                 "value": 2,
+                "text": "版权质疑"
+              },
+              {
+                "value": 3,
                 "text": "我有话说"
               }
             ]

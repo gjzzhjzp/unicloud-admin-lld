@@ -23,6 +23,27 @@ const validator = {
     "defaultValue": 0,
     "label": "账号平台"
   },
+  "user_type": {
+    "rules": [
+      {
+        "format": "int"
+      },
+      {
+        "range": [
+          {
+            "value": 0,
+            "text": "资源"
+          },
+          {
+            "value": 1,
+            "text": "平台"
+          }
+        ]
+      }
+    ],
+    "defaultValue": 0,
+    "label": "使用状态"
+  },
   "user_name": {
     "rules": [
       {
@@ -47,6 +68,14 @@ const validator = {
     ],
     "defaultValue": false,
     "label": "生效状态"
+  },
+  "date": {
+    "rules": [
+      {
+        "format": "string"
+      }
+    ],
+    "label": "创建时间"
   }
 }
 
@@ -54,6 +83,10 @@ const enumConverter = {
   "user_name_type_valuetotext": {
     "0": "微博",
     "1": "抖音"
+  },
+  "user_type_valuetotext": {
+    "0": "资源",
+    "1": "平台"
   }
 }
 

@@ -16,13 +16,13 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="jz-custom-yqm,uni-id-users" field="user_name_type,user_name,date,value,status,user_id.nickname" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="jz-custom-yqm,uni-id-users" field="user_type,user_name_type,user_name,date,value,status,user_id.nickname" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
 		<uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
           <uni-tr>
 			<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'user_id')" sortable @sort-change="sortChange($event, 'user_id')">申请人</uni-th>
-            <!-- <uni-th align="center" filter-type="select" :filter-data="options.filterData.user_name_type_localdata" @filter-change="filterChange($event, 'user_name_type')">账号平台</uni-th> -->
+            <uni-th align="center" filter-type="select" :filter-data="options.filterData.user_type_localdata" @filter-change="filterChange($event, 'user_type')">使用状态</uni-th>
             <!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'user_name')" sortable @sort-change="sortChange($event, 'user_name')">账号昵称</uni-th> -->
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'value')" sortable @sort-change="sortChange($event, 'value')">邀请码</uni-th>
             <uni-th align="center" sortable @sort-change="sortChange($event, 'status')">生效状态</uni-th>
@@ -32,12 +32,16 @@
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
 			    <uni-td align="center">{{(item.user_id&&item.user_id.length)>0?item.user_id[0].nickname:''}}</uni-td>
+				 <uni-td align="center">{{options.user_type_valuetotext[item.user_type]}}</uni-td>
             <!-- <uni-td align="center">{{options.user_name_type_valuetotext[item.user_name_type]}}</uni-td> -->
             <!-- <uni-td align="center">{{item.user_name}}</uni-td> -->
             <uni-td align="center">{{item.value}}</uni-td>
 			<uni-td align="center"><checkbox-group @change="change_data(item,'status')"><checkbox value="status" :checked="item.status == true" /></checkbox-group></uni-td>
 			<!-- <uni-td align="center">{{(item.manager_id&&item.manager_id.length)>0?item.manager_id[0].username:''}}</uni-td> -->
-            <uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.date"></uni-dateformat></uni-td>
+            <uni-td align="center">
+				{{item.date}}
+				<!-- <uni-dateformat :threshold="[0, 0]" :date="item.date"></uni-dateformat> -->
+				</uni-td>
 			<uni-td align="center">
               <view class="uni-group">
                 <button v-show="!item.value" @click="createQym(item)" class="uni-button" size="mini" type="primary">生成邀请码</button>
@@ -91,7 +95,17 @@
                 "value": 1,
                 "text": "抖音"
               }
-            ]
+            ],
+			"user_type_localdata": [
+			  {
+			    "value": 0,
+			    "text": "资源"
+			  },
+			  {
+			    "value": 1,
+			    "text": "平台"
+			  }
+			]
           },
           ...enumConverter
         },
@@ -104,6 +118,7 @@
           "type": "xls",
           "fields": {
             "账号平台": "user_name_type",
+			"使用状态": "user_type",
             "账号昵称": "user_name",
             "邀请码": "value",
             "生效状态": "status"
@@ -159,10 +174,9 @@
 		adddYqm(){
 			var value={
 				status:true,
+				user_type:1,
 				value:Math.random().toString(36).substr(2)+Math.random().toString(36).substr(2)
-				// manager_id:db.getCloudEnv('$cloudEnv_uid')
 			};
-			console.log(value)
 			return db.collection(dbCollectionName).add(value).then((res) => {
 			  uni.showToast({
 			    title: '新增成功'

@@ -22,6 +22,10 @@ const validator = {
           },
           {
             "value": 2,
+            "text": "版权质疑"
+          },
+          {
+            "value": 3,
             "text": "我有话说"
           }
         ]
@@ -48,9 +52,6 @@ const validator = {
       },
       {
         "arrayType": "file"
-      },
-      {
-        "maxLength": 6
       }
     ],
     "label": "图片列表"
@@ -69,7 +70,8 @@ const enumConverter = {
   "type_valuetotext": {
     "0": "系统bug",
     "1": "意见建议",
-    "2": "我有话说"
+    "2": "版权质疑",
+    "3": "我有话说"
   }
 }
 

@@ -76,7 +76,8 @@
 							<!-- {{item.isbdwb}} -->
 						</uni-td>
 						<uni-td align="center">
-							<uni-dateformat :threshold="[0, 0]" :date="item.register_date"></uni-dateformat>
+							{{item.register_date}}
+							<!-- <uni-dateformat :threshold="[0, 0]" :date="item.register_date"></uni-dateformat> -->
 						</uni-td>
 						<uni-td align="center">
 							<view class="uni-group">
