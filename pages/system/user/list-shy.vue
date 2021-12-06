@@ -32,9 +32,11 @@
 						<!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'email')"
 							sortable @sort-change="sortChange($event, 'email')">邮箱</uni-th> -->
 						<!-- <uni-th align="center">角色</uni-th> -->
-						<uni-th align="center">微博主页地址</uni-th>
+						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'weiboname')"
+							sortable @sort-change="sortChange($event, 'weiboname')">微博主页地址</uni-th>
 						<uni-th align="center">微博验证</uni-th>
-						<uni-th align="center">微博验证状态</uni-th>
+						<uni-th align="center" filter-type="select" :filter-data="options.filterData.isbdwb_localdata"
+							@filter-change="filterChange($event, 'isbdwb')">微博验证状态</uni-th>
 						<!-- <uni-th align="center">可登录应用</uni-th> -->
 						<uni-th align="center" filter-type="timestamp"
 							@filter-change="filterChange($event, 'register_date')" sortable
@@ -149,6 +151,15 @@
 							{
 								"text": "审核拒绝",
 								"value": 3
+							}
+						],
+						"isbdwb_localdata": [{
+								"text": "不通过",
+								"value": false||null
+							},
+							{
+								"text": "通过",
+								"value": true
 							}
 						]
 					},

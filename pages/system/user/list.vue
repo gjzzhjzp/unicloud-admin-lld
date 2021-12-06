@@ -6,33 +6,35 @@
 				<view class="uni-sub-title"></view>
 			</view>
 			<view class="uni-group">
-				<input class="uni-search" type="text" v-model="query" @confirm="search" :placeholder="$t('common.placeholder.query')" />
-				<button class="uni-button" type="default" size="mini" @click="search">{{$t('common.button.search')}}</button>
-				<button class="uni-button" type="primary" size="mini" @click="navigateTo('./add')">{{$t('common.button.add')}}</button>
+				<input class="uni-search" type="text" v-model="query" @confirm="search"
+					:placeholder="$t('common.placeholder.query')" />
+				<button class="uni-button" type="default" size="mini"
+					@click="search">{{$t('common.button.search')}}</button>
+				<button class="uni-button" type="primary" size="mini"
+					@click="navigateTo('./add')">{{$t('common.button.add')}}</button>
 				<button class="uni-button" type="warn" size="mini" :disabled="!selectedIndexs.length"
 					@click="delTable">{{$t('common.button.batchDelete')}}</button>
 				<!-- #ifdef H5 -->
-					<download-excel class="hide-on-phone" :fields="exportExcel.fields" :data="exportExcelData"
-						:type="exportExcel.type" :name="exportExcel.filename">
-						<button class="uni-button" type="primary" size="mini">{{$t('common.button.exportExcel')}}</button>
-					</download-excel>
+				<download-excel class="hide-on-phone" :fields="exportExcel.fields" :data="exportExcelData"
+					:type="exportExcel.type" :name="exportExcel.filename">
+					<button class="uni-button" type="primary" size="mini">{{$t('common.button.exportExcel')}}</button>
+				</download-excel>
 				<!-- #endif -->
 			</view>
 		</view>
 		<view class="uni-container">
 			<unicloud-db ref="udb" collection="uni-id-users,uni-id-roles"
-				field="username,nickname,weiboname,weibocontent,isbdwb,status,role{role_name},dcloud_appid,register_date" :where="where" page-data="replace"
-				:orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
-				v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual"
-				@load="onqueryload">
+				field="username,nickname,weiboname,weibocontent,isbdwb,status,role{role_name},dcloud_appid,register_date"
+				:where="where" page-data="replace" :orderby="orderby" :getcount="true" :page-size="options.pageSize"
+				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
+				:options="options" loadtime="manual" @load="onqueryload">
 				<uni-table ref="table" :loading="loading" :emptyText="error.message || $t('common.empty')" border stripe
-					type="selection" @selection-change="selectionChange"
-					class="table-pc">
+					type="selection" @selection-change="selectionChange" class="table-pc">
 					<uni-tr>
 						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'username')"
 							sortable @sort-change="sortChange($event, 'username')">用户名</uni-th>
-							<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'nickname')"
-								sortable @sort-change="sortChange($event, 'nickname')">昵称</uni-th>
+						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'nickname')"
+							sortable @sort-change="sortChange($event, 'nickname')">昵称</uni-th>
 						<!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'mobile')"
 							sortable @sort-change="sortChange($event, 'mobile')">手机号码</uni-th> -->
 						<uni-th align="center" filter-type="select" :filter-data="options.filterData.status_localdata"
@@ -40,9 +42,11 @@
 						<!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'email')"
 							sortable @sort-change="sortChange($event, 'email')">邮箱</uni-th> -->
 						<uni-th align="center">角色</uni-th>
-						<uni-th align="center">微博主页地址</uni-th>
+						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'weiboname')"
+							sortable @sort-change="sortChange($event, 'weiboname')">微博主页地址</uni-th>
 						<uni-th align="center">微博验证</uni-th>
-						<uni-th align="center">微博验证状态</uni-th>
+						<uni-th align="center" filter-type="select" :filter-data="options.filterData.isbdwb_localdata"
+							@filter-change="filterChange($event, 'isbdwb')">微博验证状态</uni-th>
 						<!-- <uni-th align="center">可登录应用</uni-th> -->
 						<uni-th align="center" filter-type="timestamp"
 							@filter-change="filterChange($event, 'register_date')" sortable
@@ -54,7 +58,7 @@
 						<uni-td align="center">{{item.nickname}}</uni-td>
 						<!-- <uni-td align="center">{{item.mobile}}</uni-td> -->
 						<uni-td align="center">{{options.status_valuetotext[item.status]}}</uni-td>
-					<!-- 	<uni-td align="center">
+						<!-- 	<uni-td align="center">
 							<uni-link :href="'mailto:'+item.email" :text="item.email"></uni-link>
 						</uni-td> -->
 						<uni-td align="center">{{item.role}}</uni-td>
@@ -71,8 +75,12 @@
 							{{item.weibocontent}}
 						</uni-td>
 						<uni-td align="center">
-							<uni-td align="center"> <checkbox-group @change="change_data(item,'isbdwb')"><checkbox value="isbdwb" :checked="item.isbdwb" /></checkbox-group></uni-td>
-							
+							<uni-td align="center">
+								<checkbox-group @change="change_data(item,'isbdwb')">
+									<checkbox value="isbdwb" :checked="item.isbdwb" />
+								</checkbox-group>
+							</uni-td>
+
 							<!-- {{item.isbdwb}} -->
 						</uni-td>
 						<uni-td align="center">
@@ -99,8 +107,8 @@
 						</button>
 					</picker>
 					<!-- #endif -->
-					<uni-pagination  :page-size="pagination.size" v-model="pagination.current"
-						:total="pagination.count" @change="onPageChanged" />
+					<uni-pagination :page-size="pagination.size" v-model="pagination.current" :total="pagination.count"
+						@change="onPageChanged" />
 				</view>
 			</unicloud-db>
 		</view>
@@ -119,7 +127,7 @@
 	const db = uniCloud.database()
 	// 表查询配置
 	const dbOrderBy = 'register_date desc' // 排序字段
-	const dbSearchFields = ['username',"nickname", 'role.role_name', 'mobile', 'email'] // 支持模糊搜索的字段列表
+	const dbSearchFields = ['username', "nickname", 'role.role_name', 'mobile', 'email'] // 支持模糊搜索的字段列表
 	// 分页配置
 	const pageSize = 20
 	const pageCurrent = 1
@@ -158,6 +166,15 @@
 							{
 								"text": "审核拒绝",
 								"value": 3
+							}
+						],
+						"isbdwb_localdata": [{
+								"text": "不通过",
+								"value": false||null
+							},
+							{
+								"text": "通过",
+								"value": true
 							}
 						]
 					},
@@ -202,26 +219,26 @@
 			}
 		},
 		methods: {
-			change_data(item,type){
+			change_data(item, type) {
 				// debugger;
-				var obj={};
-				obj[type]=item[type]==true?false:true;
-				console.log("obj",obj);
-				this.$set(item,type,obj[type]);
-				this.updateItem(item,obj);
+				var obj = {};
+				obj[type] = item[type] == true ? false : true;
+				console.log("obj", obj);
+				this.$set(item, type, obj[type]);
+				this.updateItem(item, obj);
 			},
-			updateItem(item,value){
+			updateItem(item, value) {
 				return db.collection('uni-id-users').doc(item._id).update(value).then((res) => {
-				  uni.showToast({
-				    title: '修改成功'
-				  });
-				  // console.log("修改成功");
-				  this.getOpenerEventChannel().emit('refreshData');
+					uni.showToast({
+						title: '修改成功'
+					});
+					// console.log("修改成功");
+					this.getOpenerEventChannel().emit('refreshData');
 				}).catch((err) => {
-				  uni.showModal({
-				    content: err.message || '请求服务失败',
-				    showCancel: false
-				  })
+					uni.showModal({
+						content: err.message || '请求服务失败',
+						showCancel: false
+					})
 				});
 			},
 			onqueryload(data) {
