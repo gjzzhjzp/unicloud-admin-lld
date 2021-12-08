@@ -37,7 +37,7 @@
 							sortable @sort-change="sortChange($event, 'nickname')">昵称</uni-th>
 						<!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'mobile')"
 							sortable @sort-change="sortChange($event, 'mobile')">手机号码</uni-th> -->
-						<uni-th align="center" filter-type="select" :filter-data="options.filterData.status_localdata"
+						<uni-th align="center" width="100" filter-type="select" :filter-data="options.filterData.status_localdata"
 							@filter-change="filterChange($event, 'status')">用户状态</uni-th>
 						<!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'email')"
 							sortable @sort-change="sortChange($event, 'email')">邮箱</uni-th> -->
@@ -69,7 +69,9 @@
 							{{item.dcloud_appid}}
 						</uni-td> -->
 						<uni-td align="center">
-							{{item.weiboname}}
+							<view style="max-width: 400px;">
+								{{item.weiboname}}
+							</view>
 						</uni-td>
 						<uni-td align="center">
 							{{item.weibocontent}}

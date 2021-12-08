@@ -13,7 +13,7 @@
 		},
 		methods: {
 			...mapActions({
-				init: 'app/init'
+				init: 'app/init'  
 			})
 		},
 		onPageNotFound(msg) {
