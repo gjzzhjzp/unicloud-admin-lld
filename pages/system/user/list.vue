@@ -14,6 +14,10 @@
 					@click="navigateTo('./add')">{{$t('common.button.add')}}</button>
 				<button class="uni-button" type="warn" size="mini" :disabled="!selectedIndexs.length"
 					@click="delTable">{{$t('common.button.batchDelete')}}</button>
+					<button class="uni-button" type="default" size="mini"
+						@click="searchweibo">仅显示微博审核</button>
+						<button class="uni-button" type="default" size="mini"
+							@click="searchweibono">仅显示未审核</button>
 				<!-- #ifdef H5 -->
 				<download-excel class="hide-on-phone" :fields="exportExcel.fields" :data="exportExcelData"
 					:type="exportExcel.type" :name="exportExcel.filename">
@@ -24,7 +28,7 @@
 		</view>
 		<view class="uni-container">
 			<unicloud-db ref="udb" collection="uni-id-users,uni-id-roles"
-				field="username,nickname,weiboname,weibocontent,isbdwb,status,role{role_name},dcloud_appid,register_date"
+				field="username,nickname,weiboname,beizhu,weibocontent,isbdwb,status,role{role_name},dcloud_appid,register_date"
 				:where="where" page-data="replace" :orderby="orderby" :getcount="true" :page-size="options.pageSize"
 				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
 				:options="options" loadtime="manual" @load="onqueryload">
@@ -41,14 +45,15 @@
 							@filter-change="filterChange($event, 'status')">用户状态</uni-th>
 						<!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'email')"
 							sortable @sort-change="sortChange($event, 'email')">邮箱</uni-th> -->
-						<uni-th align="center">角色</uni-th>
+						<uni-th align="center" width="100">角色</uni-th>
 						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'weiboname')"
 							sortable @sort-change="sortChange($event, 'weiboname')">微博主页地址</uni-th>
 						<uni-th align="center">微博验证</uni-th>
-						<uni-th align="center" filter-type="select" :filter-data="options.filterData.isbdwb_localdata"
+						<uni-th align="center" width="100" filter-type="select" :filter-data="options.filterData.isbdwb_localdata"
 							@filter-change="filterChange($event, 'isbdwb')">微博验证状态</uni-th>
+							<uni-th align="center" width="100">备注</uni-th>
 						<!-- <uni-th align="center">可登录应用</uni-th> -->
-						<uni-th align="center" filter-type="timestamp"
+						<uni-th align="center"  filter-type="timestamp"
 							@filter-change="filterChange($event, 'register_date')" sortable
 							@sort-change="sortChange($event, 'register_date')">注册时间</uni-th>
 						<uni-th align="center">操作</uni-th>
@@ -76,6 +81,7 @@
 						<uni-td align="center">
 							{{item.weibocontent}}
 						</uni-td>
+						
 						<uni-td align="center">
 							<uni-td align="center">
 								<checkbox-group @change="change_data(item,'isbdwb')">
@@ -84,6 +90,9 @@
 							</uni-td>
 
 							<!-- {{item.isbdwb}} -->
+						</uni-td>
+						<uni-td align="center">
+							{{item.beizhu}}
 						</uni-td>
 						<uni-td align="center">
 							{{item.register_date}}
@@ -191,11 +200,13 @@
 					"type": "xls",
 					"fields": {
 						"用户名": "username",
-						"手机号码": "mobile",
+						"昵称":"nickname",
 						"用户状态": "status",
-						"邮箱": "email",
 						"角色": "role",
-						"register_date": "register_date"
+						"微博主页地址":"weiboname",
+						"微博验证":"weibocontent",
+						"备注":"beizhu",
+						"注册时间": "register_date"
 					}
 				},
 				exportExcelData: [],
@@ -221,6 +232,22 @@
 			}
 		},
 		methods: {
+			searchweibo(){
+				const newWhere = "weiboname!=''&&weiboname!=null";
+				this.where = newWhere
+				// 下一帧拿到查询条件
+				this.$nextTick(() => {
+					this.loadData()
+				})
+			},
+			searchweibono(){
+				const newWhere = "weiboname!=''&&weiboname!=null&&isbdwb!=true";
+				this.where = newWhere
+				// 下一帧拿到查询条件
+				this.$nextTick(() => {
+					this.loadData()
+				})
+			},
 			change_data(item, type) {
 				// debugger;
 				var obj = {};

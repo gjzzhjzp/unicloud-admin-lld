@@ -10,13 +10,13 @@
         <button class="uni-button" type="default" size="mini" @click="search">搜索</button>
         <button class="uni-button" type="default" size="mini" @click="navigateTo('./add')">新增</button>
         <button class="uni-button" type="default" size="mini" :disabled="!selectedIndexs.length" @click="delTable">批量删除</button>
-        <download-excel class="hide-on-phone" :fields="exportExcel.fields" :data="exportExcelData" :type="exportExcel.type" :name="exportExcel.filename">
+        <download-excel v-if="isManger" class="hide-on-phone" :fields="exportExcel.fields" :data="exportExcelData" :type="exportExcel.type" :name="exportExcel.filename">
           <button class="uni-button" type="primary" size="mini">导出 Excel</button>
         </download-excel>
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="jz-opendb-resources,uni-id-users" field="publish_date,last_modify_date,categories,categorieszw,labels,author,title,article_status,is_recommend,is_grant,is_encryption,is_login,avatar,resources,zy_gs,excerpt,content,user_id{nickname}" :where="where" page-data="replace"
+      <unicloud-db ref="udb" :collection="collection" :field="field" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
@@ -30,9 +30,9 @@
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'categorieszw')" sortable @sort-change="sortChange($event, 'categorieszw')">分类</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'labels')" sortable @sort-change="sortChange($event, 'labels')">标签</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'author')" sortable @sort-change="sortChange($event, 'author')">来源</uni-th>
-			<uni-th align="center" width="80px">投稿人</uni-th>
+			<uni-th align="center" v-if="isManger" width="80px">投稿人</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.article_status_localdata" @filter-change="filterChange($event, 'article_status')">状态</uni-th>
-			<uni-th align="center" filter-type="select" :filter-data="options.filterData.is_recommend_localdata" @filter-change="filterChange($event, 'is_recommend')">推荐</uni-th>
+			<uni-th align="center" v-if="isManger" filter-type="select" :filter-data="options.filterData.is_recommend_localdata" @filter-change="filterChange($event, 'is_recommend')">推荐</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_grant_localdata" @filter-change="filterChange($event, 'is_grant')">授权</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_encryption_localdata" @filter-change="filterChange($event, 'is_encryption')">加密</uni-th>
               <uni-th align="center" >发表时间</uni-th>
@@ -56,17 +56,14 @@
             <uni-td align="center">{{item.categorieszw}}</uni-td>
             <uni-td align="center">{{item.labels}}</uni-td>
             <uni-td align="center">{{item.author}}</uni-td>
-			<!-- {{item}} -->
-			 <uni-td align="center">{{item.user_id[0]?item.user_id[0].nickname:''}}</uni-td>
-            <!-- <uni-td align="center">{{options.article_status_valuetotext[item.article_status]}}</uni-td> -->
+			 <uni-td v-if="isManger" align="center">{{item.user_id[0]?item.user_id[0].nickname:''}}</uni-td>
+			 
             <uni-td align="center">  <checkbox-group @change="change_data(item,'article_status')"><checkbox value="article_status" :checked="item.article_status==1" /></checkbox-group></uni-td>
-			<uni-td align="center"> <checkbox-group @change="change_data(item,'is_recommend')"><checkbox value="is_recommend" :checked="item.is_recommend==1" /></checkbox-group></uni-td>
+			<uni-td align="center" v-if="isManger"> <checkbox-group @change="change_data(item,'is_recommend')"><checkbox value="is_recommend" :checked="item.is_recommend==1" /></checkbox-group></uni-td>
 			
 			<uni-td align="center"> <checkbox-group @change="change_data(item,'is_grant')"><checkbox value="is_grant" :checked="item.is_grant==1" /></checkbox-group></uni-td>
 			<uni-td align="center"> <checkbox-group @change="change_data(item,'is_encryption')"><checkbox value="is_encryption" :checked="item.is_encryption==1" /></checkbox-group></uni-td>
-			
-            <!-- <uni-td align="center">{{item.excerpt}}</uni-td> -->
-            <!-- <uni-td align="center">{{item.content}}</uni-td> -->
+		
 			<uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.publish_date"></uni-dateformat></uni-td>
 			<uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.last_modify_date"></uni-dateformat></uni-td>
             <uni-td align="center">
@@ -88,7 +85,8 @@
 <script>
   import { enumConverter, filterToWhere } from '../../js_sdk/validator/jz-opendb-resources.js';
 
-  const db = uniCloud.database()
+  const db = uniCloud.database();
+  const BASE64 = require("../system/common/base64.js")
   // 表查询配置
   const dbOrderBy = 'last_modify_date desc' // 排序字段
   const dbSearchFields = ["title","categorieszw","labels"] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
@@ -109,6 +107,8 @@
         orderby: dbOrderBy,
         orderByFieldName: "",
         selectedIndexs: [],
+		collection:"jz-opendb-resources,uni-id-users",
+		field:"publish_date,last_modify_date,categories,categorieszw,labels,author,title,article_status,is_recommend,is_grant,is_encryption,is_login,avatar,resources,zy_gs,excerpt,content,user_id{nickname}",
         options: {
           pageSize,
           pageCurrent,
@@ -196,18 +196,42 @@
             "内容": "content"
           }
         },
-        exportExcelData: []
+        exportExcelData: [],
+		isManger:true
       }
     },
     onLoad() {
       this._filter = {}
     },
     onReady() {
-      this.$refs.udb.loadData()
+		var roles=this.getUserRole();
+		// 如果仅是上传资源
+		if(roles.indexOf('only_zylist')!=-1){
+			this.isManger=false;
+			this.collection="jz-opendb-resources",
+			this.field="publish_date,last_modify_date,categories,categorieszw,labels,author,title,article_status,is_recommend,is_grant,is_encryption,is_login,avatar,resources,zy_gs,excerpt,content",
+			
+			this.where="user_id==$cloudEnv_uid";
+			this.$nextTick(() => {
+				this.loadData()
+			})
+		}else{
+			this.isManger=true;
+			this.$refs.udb.loadData()
+		}
     },
     methods: {
+		getUserRole() {
+			var _token = uni.getStorageSync("uni_id_token");
+			var __token = {};
+			if (_token) {
+				_token = _token.split(".")[1];
+				var __token = BASE64.decode(_token);
+				__token = JSON.parse(__token.split("}")[0] + "}");
+			}
+			return __token.role;
+		},
 		change_data(item,type){
-			// debugger;
 			var obj={};
 			obj[type]=item[type]==1?0:1;
 			console.log("obj",obj);
@@ -220,7 +244,7 @@
 			    title: '修改成功'
 			  });
 			  // console.log("修改成功");
-			  this.getOpenerEventChannel().emit('refreshData');
+			  // this.getOpenerEventChannel().emit('refreshData');
 			}).catch((err) => {
 			  uni.showModal({
 			    content: err.message || '请求服务失败',
@@ -241,7 +265,12 @@
       },
       search() {
         const newWhere = this.getWhere()
-        this.where = newWhere
+        this.where = newWhere;
+		if(this.where){
+			this.where="("+this.where+")&& user_id == $cloudEnv_uid";
+		}else{
+			this.where+="user_id == $cloudEnv_uid";
+		}
         this.$nextTick(() => {
           this.loadData()
         })

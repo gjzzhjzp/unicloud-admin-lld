@@ -59,7 +59,7 @@
 				<uni-data-checkbox v-model="formData.is_encryption" :localdata="formOptions.is_encryption_localdata">
 				</uni-data-checkbox>
 			</uni-forms-item>
-			<uni-forms-item name="is_off" label="是否下架">
+			<uni-forms-item v-if="isManger" name="is_off" label="是否下架">
 				<uni-data-checkbox v-model="formData.is_off" :localdata="formOptions.is_off_localdata">
 				</uni-data-checkbox>
 			</uni-forms-item>
@@ -77,7 +77,7 @@
 	import {
 		validator
 	} from '../../js_sdk/validator/jz-opendb-resources.js';
-
+const BASE64 = require("../system/common/base64.js")
 	const db = uniCloud.database();
 	const dbCmd = db.command;
 	const dbCollectionName = 'jz-opendb-resources';
@@ -171,7 +171,8 @@
 				},
 				rules: {
 					...getValidator(Object.keys(formData))
-				}
+				},
+				isManger:true
 			}
 		},
 		onLoad(e) {
@@ -182,9 +183,26 @@
 			}
 		},
 		onReady() {
+			var roles=this.getUserRole();
+			// 如果仅是上传资源
+			if(roles.indexOf('only_zylist')!=-1){
+				this.isManger=false;
+			}else{
+				this.isManger=true;
+			}
 			this.$refs.form.setRules(this.rules)
 		},
 		methods: {
+			getUserRole() {
+				var _token = uni.getStorageSync("uni_id_token");
+				var __token = {};
+				if (_token) {
+					_token = _token.split(".")[1];
+					var __token = BASE64.decode(_token);
+					__token = JSON.parse(__token.split("}")[0] + "}");
+				}
+				return __token.role;
+			},
 			/**
 			 * 验证表单并提交
 			 */

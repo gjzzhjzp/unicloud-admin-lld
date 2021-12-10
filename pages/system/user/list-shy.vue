@@ -6,11 +6,16 @@
 				<view class="uni-sub-title"></view>
 			</view>
 			<view class="uni-group">
-				<input class="uni-search" type="text" v-model="query" @confirm="search"
-					:placeholder="$t('common.placeholder.query')" />
-				<button class="uni-button" type="default" size="mini"
-					@click="search">{{$t('common.button.search')}}</button>
-
+				<template v-if="isManager">
+					<input class="uni-search" type="text" v-model="query" @confirm="search"
+						:placeholder="$t('common.placeholder.query')" />
+					<button class="uni-button" type="default" size="mini"
+						@click="search">{{$t('common.button.search')}}</button>
+					<button class="uni-button" type="default" size="mini"
+						@click="searchweibo">仅显示微博审核</button>
+						<button class="uni-button" type="default" size="mini"
+							@click="searchweibono">仅显示未审核</button>
+				</template>
 			</view>
 		</view>
 		<view class="uni-container">
@@ -37,7 +42,7 @@
 						<uni-th align="center" filter-type="timestamp"
 							@filter-change="filterChange($event, 'register_date')" sortable
 							@sort-change="sortChange($event, 'register_date')">注册时间</uni-th>
-						<uni-th align="center">操作</uni-th>
+						<uni-th  v-if="isManager" align="center">操作</uni-th>
 					</uni-tr>
 					<uni-tr v-for="(item,index) in data" :key="index">
 						<uni-td align="center">{{item.username}}</uni-td>
@@ -77,7 +82,7 @@
 						<uni-td align="center">
 							<uni-dateformat :threshold="[0, 0]" :date="item.register_date"></uni-dateformat>
 						</uni-td>
-						<uni-td align="center">
+						<uni-td align="center"  v-if="isManager">
 							<view class="uni-group">
 								<button @click="navigateTo('./edit-shy?id='+item._id, false)" class="uni-button" size="mini"
 									type="primary">{{$t('common.button.edit')}}</button>
@@ -113,7 +118,7 @@
 		enumConverter,
 		filterToWhere
 	} from '../../../js_sdk/validator/uni-id-users.js';
-
+	const BASE64 = require("../common/base64.js")
 	const db = uniCloud.database()
 	// 表查询配置
 	const dbOrderBy = 'register_date desc' // 排序字段
@@ -187,14 +192,27 @@
 					}
 				},
 				exportExcelData: [],
-				noAppidWhatShouldIDoLink: 'https://uniapp.dcloud.net.cn/uniCloud/uni-id?id=makeup-dcloud-appid'
+				noAppidWhatShouldIDoLink: 'https://uniapp.dcloud.net.cn/uniCloud/uni-id?id=makeup-dcloud-appid',
+				roles:[],///角色
+				isManager:true
 			}
 		},
 		onLoad() {
 			this._filter = {}
 		},
-		onReady() {
-			this.$refs.udb.loadData()
+		onReady() {	
+			this.roles=this.getUserRole();
+			// 如果仅是上传资源
+			if(this.roles.indexOf('only_zylist')!=-1){
+				this.isManager=false;
+				this.where="_id==$cloudEnv_uid";
+				this.$nextTick(() => {
+					this.loadData()
+				})
+			}else{
+				this.isManager=true;
+				this.$refs.udb.loadData()
+			}
 		},
 		watch: {
 			pageSizeIndex: {
@@ -209,6 +227,16 @@
 			}
 		},
 		methods: {
+		    getUserRole() {
+				var _token = uni.getStorageSync("uni_id_token");
+				var __token = {};
+				if (_token) {
+					_token = _token.split(".")[1];
+					var __token = BASE64.decode(_token);
+					__token = JSON.parse(__token.split("}")[0] + "}");
+				}
+				return __token.role;
+			},
 			change_data(item, type) {
 				// debugger;
 				var obj = {};
@@ -247,6 +275,7 @@
 				this.pageSizeIndex = e.detail.value
 			},
 			getWhere() {
+				// debugger;
 				const query = this.query.trim()
 				if (!query) {
 					return ''
@@ -256,6 +285,22 @@
 			},
 			search() {
 				const newWhere = this.getWhere()
+				this.where = newWhere;
+				// 下一帧拿到查询条件
+				this.$nextTick(() => {
+					this.loadData();
+				});
+			},
+			searchweibo(){
+				const newWhere = "weiboname!=''&&weiboname!=null";
+				this.where = newWhere
+				// 下一帧拿到查询条件
+				this.$nextTick(() => {
+					this.loadData()
+				})
+			},
+			searchweibono(){
+				const newWhere = "weiboname!=''&&weiboname!=null&&isbdwb!=true";
 				this.where = newWhere
 				// 下一帧拿到查询条件
 				this.$nextTick(() => {
