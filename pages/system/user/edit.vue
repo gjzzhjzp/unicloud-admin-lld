@@ -31,6 +31,9 @@
 				<switch v-if="Number(formData.status) < 2" @change="binddata('status', $event.detail.value)" :checked="formData.status" />
 				<view v-else class="uni-form-item-empty">{{parseUserStatus(formData.status)}}</view>
 			</uni-forms-item>
+			<uni-forms-item name="original" label="是否原创">
+				<switch  :checked="formData.original" />
+			</uni-forms-item>
 			<view class="uni-button-group">
 				<button style="width: 100px;" type="primary" class="uni-button" @click="submitForm">{{$t('common.button.submit')}}</button>
 				<navigator open-type="navigateBack" style="margin-left: 15px;"><button style="width: 100px;" class="uni-button">{{$t('common.button.back')}}</button></navigator>
@@ -68,11 +71,17 @@
 					"mobile": "",
 					"email": "",
 					"weiboname":"",
-					"status": false //默认禁用
+					"status": false, //默认禁用
+					"original":false///是否是原创
 				},
 				rules: {
 					...getValidator(["username", "password", "role", "mobile", "email","weiboname"]),
 					"status": {
+						"rules": [{
+							"format": "bool"
+						}]
+					},
+					"original":{
 						"rules": [{
 							"format": "bool"
 						}]
@@ -133,7 +142,11 @@
 				if (typeof value.status === "boolean") {
 					value.status = Number(!value.status)
 				}
-				value.id = this.formDataId
+				if (typeof value.original === "boolean") {
+					value.original = Number(!value.original)
+				}
+				value.id = this.formDataId;
+				console.log("value",value);
 				this.$request('updateUser', value, {
 					functionName: 'uni-id-cf'
 				}).then(res => {
@@ -171,7 +184,7 @@
 				})
 				db.collection(dbCollectionName)
 					.doc(id)
-					.field('username,role,dcloud_appid,mobile,email,status,weiboname')
+					.field('username,role,dcloud_appid,mobile,email,status,weiboname,original')
 					.get()
 					.then((res) => {
 						const data = res.result.data[0]
@@ -184,6 +197,15 @@
 							}
 							if (data.status === 1) {
 								data.status = false
+							}
+							if (data.original === undefined) {
+								data.original = false
+							}
+							if (data.original === 0) {
+								data.original = false
+							}
+							if (data.original === 1) {
+								data.original = true
 							}
 							this.formData = Object.assign(this.formData, data)
 						}
@@ -232,6 +254,16 @@
 					return '审核拒绝'
 				} else {
 					return '启用'
+				}
+			},
+			// original 对应文字显示
+			parseUseroriginal(original) {
+				if (original === 0) {
+					return '否'
+				} else if (status === 1) {
+					return '是'
+				} else {
+					return '否'
 				}
 			}
 		}
