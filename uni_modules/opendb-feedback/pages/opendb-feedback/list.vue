@@ -16,18 +16,24 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="opendb-feedback" field="type,content,imgs,contact" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="opendb-feedback,uni-id-users" field="type,content,imgs,contact,create_date,user_id{nickname,username}" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
+		<!-- data：{{data}} -->
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
           <uni-tr>
+			  <uni-th align="center">用户昵称</uni-th>
+			  <uni-th align="center">用户名</uni-th>
             <uni-th align="center" width="100" filter-type="select" :filter-data="options.filterData.type_localdata" @filter-change="filterChange($event, 'type')">留言类型</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'content')" sortable @sort-change="sortChange($event, 'content')">留言内容/回复内容</uni-th>
             <uni-th align="center" sortable @sort-change="sortChange($event, 'imgs')">图片列表</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'contact')" sortable @sort-change="sortChange($event, 'contact')">联系人</uni-th>
-            <uni-th align="center">操作</uni-th>
+             <uni-th align="center">时间</uni-th>
+			<uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
+			   <uni-td align="center">{{item.user_id[0].nickname}}</uni-td>
+			   <uni-td align="center">{{item.user_id[0].username}}</uni-td>
             <uni-td align="center">{{options.type_valuetotext[item.type]}}</uni-td>
             <uni-td align="center">{{item.content}}</uni-td>
             <uni-td align="center">
@@ -37,6 +43,8 @@
               </template>
             </uni-td>
             <uni-td align="center">{{item.contact}}</uni-td>
+			<uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.create_date"></uni-dateformat></uni-td>
+			
             <uni-td align="center">
               <view class="uni-group">
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
