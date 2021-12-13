@@ -215,6 +215,9 @@
 			this.updateItem(item,obj);
 		},
 		updateItem(item,value){
+			Object.assign(value,{
+				last_modify_date:db.env.now
+			});
 			return db.collection('jz-opendb-resources').doc(item._id).update(value).then((res) => {
 			  uni.showToast({
 			    title: '修改成功'

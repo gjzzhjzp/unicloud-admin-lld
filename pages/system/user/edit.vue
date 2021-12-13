@@ -32,7 +32,10 @@
 				<view v-else class="uni-form-item-empty">{{parseUserStatus(formData.status)}}</view>
 			</uni-forms-item>
 			<uni-forms-item name="original" label="是否原创">
-				<switch  :checked="formData.original" />
+				<switch  :checked="formData.original" @change="binddata('original', $event.detail.value)"/>
+			</uni-forms-item>
+			<uni-forms-item name="forbiddenwords" label="是否禁言">
+				<switch  :checked="formData.forbiddenwords" @change="binddata('forbiddenwords', $event.detail.value)"/>
 			</uni-forms-item>
 			<view class="uni-button-group">
 				<button style="width: 100px;" type="primary" class="uni-button" @click="submitForm">{{$t('common.button.submit')}}</button>
@@ -72,7 +75,8 @@
 					"email": "",
 					"weiboname":"",
 					"status": false, //默认禁用
-					"original":false///是否是原创
+					"original":false,///是否是原创
+					"forbiddenwords":false//是否禁言
 				},
 				rules: {
 					...getValidator(["username", "password", "role", "mobile", "email","weiboname"]),
@@ -82,6 +86,11 @@
 						}]
 					},
 					"original":{
+						"rules": [{
+							"format": "bool"
+						}]
+					},
+					"forbiddenwords":{
 						"rules": [{
 							"format": "bool"
 						}]
@@ -125,6 +134,7 @@
 			 * @param {Object} event 回调参数 Function(callback:{value,errors})
 			 */
 			submit(event) {
+				// debugger;
 				const {
 					value,
 					errors
@@ -141,9 +151,6 @@
 				// 是否启用功能的数据类型转换， 0 正常， 1 禁用
 				if (typeof value.status === "boolean") {
 					value.status = Number(!value.status)
-				}
-				if (typeof value.original === "boolean") {
-					value.original = Number(!value.original)
 				}
 				value.id = this.formDataId;
 				console.log("value",value);
@@ -184,11 +191,12 @@
 				})
 				db.collection(dbCollectionName)
 					.doc(id)
-					.field('username,role,dcloud_appid,mobile,email,status,weiboname,original')
+					.field('username,role,dcloud_appid,mobile,email,status,weiboname,original,forbiddenwords')
 					.get()
 					.then((res) => {
 						const data = res.result.data[0]
 						if (data) {
+							console.log("222222222222",data);	
 							if (data.status === undefined) {
 								data.status = true
 							}
@@ -201,13 +209,11 @@
 							if (data.original === undefined) {
 								data.original = false
 							}
-							if (data.original === 0) {
-								data.original = false
+							if (data.forbiddenwords === undefined) {
+								data.forbiddenwords = false
 							}
-							if (data.original === 1) {
-								data.original = true
-							}
-							this.formData = Object.assign(this.formData, data)
+							this.formData = Object.assign(this.formData, data);
+							console.log("222222222222",this.formData);	
 						}
 					}).catch((err) => {
 						uni.showModal({
@@ -254,16 +260,6 @@
 					return '审核拒绝'
 				} else {
 					return '启用'
-				}
-			},
-			// original 对应文字显示
-			parseUseroriginal(original) {
-				if (original === 0) {
-					return '否'
-				} else if (status === 1) {
-					return '是'
-				} else {
-					return '否'
 				}
 			}
 		}

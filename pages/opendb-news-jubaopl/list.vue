@@ -16,30 +16,20 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="opendb-news-comments" field="article_id,comment_content,like_count,comment_type,reply_user_id,reply_comment_id,all_reply_comment_id,comment_cj" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="opendb-news-jubaopl" field="article_id,comment_id,jubao_content" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
           <uni-tr>
             <uni-th align="center" sortable @sort-change="sortChange($event, 'article_id')">文章ID</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'comment_content')" sortable @sort-change="sortChange($event, 'comment_content')">评论内容</uni-th>
-            <uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'like_count')" sortable @sort-change="sortChange($event, 'like_count')">评论喜欢数、点赞数</uni-th>
-            <uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'comment_type')" sortable @sort-change="sortChange($event, 'comment_type')">回复类型</uni-th>
-            <uni-th align="center" sortable @sort-change="sortChange($event, 'reply_user_id')">评论用户ID</uni-th>
-            <uni-th align="center" sortable @sort-change="sortChange($event, 'reply_comment_id')">被回复的评论ID</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'all_reply_comment_id')" sortable @sort-change="sortChange($event, 'all_reply_comment_id')">所有被回复的评论ID</uni-th>
-            <uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'comment_cj')" sortable @sort-change="sortChange($event, 'comment_cj')">评论层级</uni-th>
+            <uni-th align="center" sortable @sort-change="sortChange($event, 'comment_id')">comment_id</uni-th>
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'jubao_content')" sortable @sort-change="sortChange($event, 'jubao_content')">举报原因</uni-th>
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
             <uni-td align="center">{{item.article_id}}</uni-td>
-            <uni-td align="center">{{item.comment_content}}</uni-td>
-            <uni-td align="center">{{item.like_count}}</uni-td>
-            <uni-td align="center">{{item.comment_type}}</uni-td>
-            <uni-td align="center">{{item.reply_user_id}}</uni-td>
-            <uni-td align="center">{{item.reply_comment_id}}</uni-td>
-            <uni-td align="center">{{item.all_reply_comment_id}}</uni-td>
-            <uni-td align="center">{{item.comment_cj}}</uni-td>
+            <uni-td align="center">{{item.comment_id}}</uni-td>
+            <uni-td align="center">{{item.jubao_content}}</uni-td>
             <uni-td align="center">
               <view class="uni-group">
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
@@ -57,7 +47,7 @@
 </template>
 
 <script>
-  import { enumConverter, filterToWhere } from '../../js_sdk/validator/opendb-news-comments.js';
+  import { enumConverter, filterToWhere } from '../../js_sdk/validator/opendb-news-jubaopl.js';
 
   const db = uniCloud.database()
   // 表查询配置
@@ -91,17 +81,12 @@
           height: 64
         },
         exportExcel: {
-          "filename": "opendb-news-comments.xls",
+          "filename": "opendb-news-jubaopl.xls",
           "type": "xls",
           "fields": {
             "文章ID": "article_id",
-            "评论内容": "comment_content",
-            "评论喜欢数、点赞数": "like_count",
-            "回复类型": "comment_type",
-            "评论用户ID": "reply_user_id",
-            "被回复的评论ID": "reply_comment_id",
-            "所有被回复的评论ID": "all_reply_comment_id",
-            "评论层级": "comment_cj"
+            "comment_id": "comment_id",
+            "举报原因": "jubao_content"
           }
         },
         exportExcelData: []

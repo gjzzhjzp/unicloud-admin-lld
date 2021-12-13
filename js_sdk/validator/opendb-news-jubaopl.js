@@ -13,7 +13,17 @@ const validator = {
     ],
     "label": "文章ID"
   },
-  "comment_content": {
+  "comment_id": {
+    "rules": [
+      {
+        "required": true
+      },
+      {
+        "format": "string"
+      }
+    ]
+  },
+  "jubao_content": {
     "rules": [
       {
         "required": true
@@ -22,67 +32,7 @@ const validator = {
         "format": "string"
       }
     ],
-    "label": "评论内容"
-  },
-  "like_count": {
-    "rules": [
-      {
-        "required": true
-      },
-      {
-        "format": "int"
-      }
-    ],
-    "label": "评论喜欢数、点赞数"
-  },
-  "comment_type": {
-    "rules": [
-      {
-        "required": true
-      },
-      {
-        "format": "int"
-      }
-    ],
-    "label": "回复类型"
-  },
-  "reply_user_id": {
-    "rules": [
-      {
-        "required": true
-      },
-      {
-        "format": "string"
-      }
-    ],
-    "label": "评论用户ID"
-  },
-  "reply_comment_id": {
-    "rules": [
-      {
-        "required": true
-      },
-      {
-        "format": "string"
-      }
-    ],
-    "label": "被回复的评论ID"
-  },
-  "all_reply_comment_id": {
-    "rules": [
-      {
-        "format": "string"
-      }
-    ],
-    "label": "所有被回复的评论ID"
-  },
-  "comment_cj": {
-    "rules": [
-      {
-        "format": "int"
-      }
-    ],
-    "label": "评论层级"
+    "label": "举报原因"
   }
 }
 

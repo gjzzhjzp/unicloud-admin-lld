@@ -239,17 +239,21 @@
 			this.updateItem(item,obj);
 		},
 		updateItem(item,value){
+			Object.assign(value,{
+				last_modify_date:db.env.now
+			})
 			return db.collection('jz-opendb-resources').doc(item._id).update(value).then((res) => {
 			  uni.showToast({
 			    title: '修改成功'
 			  });
 			  // console.log("修改成功");
-			  // this.getOpenerEventChannel().emit('refreshData');
+			  this.getOpenerEventChannel().emit('refreshData');
+			  // this.search();
 			}).catch((err) => {
 			  uni.showModal({
 			    content: err.message || '请求服务失败',
 			    showCancel: false
-			  })
+			  });
 			});
 		},
       onqueryload(data) {
@@ -264,16 +268,21 @@
         return dbSearchFields.map(name => queryRe + '.test(' + name + ')').join(' || ')
       },
       search() {
+		  // debugger;
         const newWhere = this.getWhere()
         this.where = newWhere;
-		if(this.where){
-			this.where="("+this.where+")&& user_id == $cloudEnv_uid";
-		}else{
-			this.where+="user_id == $cloudEnv_uid";
+		var roles=this.getUserRole();
+		// 如果仅是上传资源
+		if(roles.indexOf('only_zylist')!=-1){
+			if(this.where){
+				this.where="("+this.where+")&& user_id == $cloudEnv_uid";
+			}else{
+				this.where+="user_id == $cloudEnv_uid";
+			}
 		}
         this.$nextTick(() => {
           this.loadData()
-        })
+        });
       },
       loadData(clear = true) {
         this.$refs.udb.loadData({

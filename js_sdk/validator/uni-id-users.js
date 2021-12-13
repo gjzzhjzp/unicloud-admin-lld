@@ -65,6 +65,22 @@ const validator = {
 		"defaultValue": 0,
 		"label": "用户状态"
 	},
+	"original": {
+		"rules": [{
+				"format": "bool"
+			}
+		],
+		"defaultValue": false,
+		"label": "是否是原创"
+	},
+	"forbiddenwords": {
+		"rules": [{
+				"format": "bool"
+			}
+		],
+		"defaultValue": false,
+		"label": "是否禁言"
+	},
 	"email": {
 		"rules": [{
 				"format": "string"

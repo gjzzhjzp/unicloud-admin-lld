@@ -19,6 +19,12 @@
       <uni-forms-item name="reply_comment_id" label="被回复的评论ID" required>
         <uni-easyinput placeholder="被回复的评论ID，comment_type为1时有效" v-model="formData.reply_comment_id"></uni-easyinput>
       </uni-forms-item>
+      <uni-forms-item name="all_reply_comment_id" label="所有被回复的评论ID">
+        <uni-easyinput placeholder="所有被回复的评论ID，comment_type为1时有效" v-model="formData.all_reply_comment_id"></uni-easyinput>
+      </uni-forms-item>
+      <uni-forms-item name="comment_cj" label="评论层级">
+        <uni-easyinput placeholder="评论层级" type="number" v-model="formData.comment_cj"></uni-easyinput>
+      </uni-forms-item>
       <view class="uni-button-group">
         <button type="primary" class="uni-button" style="width: 100px;" @click="submit">提交</button>
         <navigator open-type="navigateBack" style="margin-left: 15px;">
@@ -54,7 +60,9 @@
         "like_count": null,
         "comment_type": null,
         "reply_user_id": "",
-        "reply_comment_id": ""
+        "reply_comment_id": "",
+        "all_reply_comment_id": "",
+        "comment_cj": null
       }
       return {
         formData,
@@ -117,7 +125,7 @@
         uni.showLoading({
           mask: true
         })
-        db.collection(dbCollectionName).doc(id).field("article_id,comment_content,like_count,comment_type,reply_user_id,reply_comment_id").get().then((res) => {
+        db.collection(dbCollectionName).doc(id).field("article_id,comment_content,like_count,comment_type,reply_user_id,reply_comment_id,all_reply_comment_id,comment_cj").get().then((res) => {
           const data = res.result.data[0]
           if (data) {
             this.formData = data
