@@ -70,6 +70,7 @@
               <view class="uni-group">
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
                 <button @click="confirmDelete(item._id)" class="uni-button" size="mini" type="warn">删除</button>
+				<button v-if="item.zy_gs==1" @click="importExcel(item._id)" class="uni-button" size="mini" type="warn">导入弹幕Excel</button>
               </view>
             </uni-td>
           </uni-tr>
@@ -88,7 +89,7 @@
   const db = uniCloud.database();
   const BASE64 = require("../system/common/base64.js")
   // 表查询配置
-  const dbOrderBy = 'last_modify_date desc' // 排序字段
+  const dbOrderBy = 'publish_date desc' // 排序字段
   const dbSearchFields = ["title","categorieszw","labels"] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
   // 分页配置
   const pageSize = 20
@@ -221,6 +222,55 @@
 		}
     },
     methods: {
+		// 导入excel
+		importExcel(id) {
+			// debugger;
+			uni.chooseFile({
+				count: 1,
+				extension: ['.xls', '.xlsx', '.csv'],
+				success: res => {
+					//此处是我将上一步的文件转base64做了全局
+					this.urlTobase64(res.tempFilePaths[0], base => {
+						// debugger;
+						uniCloud.callFunction({
+							name: 'jzfunction',
+							data: {
+								action: 'excel/importExcel',
+								data:{
+									base:base,
+									id:id
+								}
+							},
+						}).then((res) => {
+							console.log("resaaaaaaaaaaaaaaaaa",res);
+							if(res.result.state=="0000"){
+								uni.showToast({
+									title:"导入成功"
+								})
+							}else{
+								uni.showToast({
+									title:"导入失败",
+									icon:"none"
+								})
+							}
+						});
+					});
+				}
+			});
+		},
+		urlTobase64(url, callback) {
+		    uni.request({
+		        url: url,
+		        method: 'GET',
+		        responseType: 'arraybuffer',
+		        success: res => {
+		            let base64 = uni.arrayBufferToBase64(res.data); //把arraybuffer转成base64
+		            // var _base=BASE64.decode(base64);
+					// console.log("_base",_base);
+					callback(base64);
+		        }
+		    });
+		},
 		getUserRole() {
 			var _token = uni.getStorageSync("uni_id_token");
 			var __token = {};

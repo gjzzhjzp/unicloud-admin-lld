@@ -90,7 +90,7 @@
 
   const db = uniCloud.database()
   // 表查询配置
-  const dbOrderBy = 'last_modify_date desc' // 排序字段
+  const dbOrderBy = 'publish_date desc' // 排序字段
   const dbSearchFields = ["title","categorieszw","labels"] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
   // 分页配置
   const pageSize = 20

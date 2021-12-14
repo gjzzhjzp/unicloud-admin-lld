@@ -224,7 +224,8 @@ const BASE64 = require("../system/common/base64.js")
 				// 使用 clientDB 提交数据
 				// debugger;
 				Object.assign(value, {
-					categories: this.formData.categories
+					categories: this.formData.categories,
+					last_modify_date:db.env.now
 				});
 				return db.collection(dbCollectionName).doc(this.formDataId).update(value).then((res) => {
 					uni.showToast({
