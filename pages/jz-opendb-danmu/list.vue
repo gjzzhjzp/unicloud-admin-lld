@@ -20,14 +20,14 @@
 			</view>
 		</view>
 		<view class="uni-container">
-			<unicloud-db ref="udb" collection="jz-opendb-danmu" field="resource_id,danmu_time,danmu_color,danmu_text"
+			<unicloud-db ref="udb" collection="jz-opendb-danmu,jz-opendb-resources" field="resource_id{title},danmu_time,danmu_color,danmu_text"
 				:where="where" page-data="replace" :orderby="orderby" :getcount="true" :page-size="options.pageSize"
 				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
 				:options="options" loadtime="manual" @load="onqueryload">
 				<uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe
 					type="selection" @selection-change="selectionChange">
 					<uni-tr>
-						<uni-th align="center" sortable @sort-change="sortChange($event, 'resource_id')">资源id</uni-th>
+						<uni-th align="center" sortable @sort-change="sortChange($event, 'resource_id')">资源名称</uni-th>
 						<uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'danmu_time')"
 							sortable @sort-change="sortChange($event, 'danmu_time')">弹幕时间</uni-th>
 						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'danmu_color')"
@@ -37,7 +37,8 @@
 						<uni-th align="center">操作</uni-th>
 					</uni-tr>
 					<uni-tr v-for="(item,index) in data" :key="index">
-						<uni-td align="center">{{item.resource_id}}</uni-td>
+						<!-- item.resource_id:{{item.resource_id}} -->
+						<uni-td align="center">{{item.resource_id[0].title}}</uni-td>
 						<uni-td align="center">{{item.danmu_time}}</uni-td>
 						<uni-td align="center">{{item.danmu_color}}</uni-td>
 						<uni-td align="center">{{item.danmu_text}}</uni-td>
