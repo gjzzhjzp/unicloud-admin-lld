@@ -278,7 +278,43 @@
 				"navigationBarTitleText": "列表"
 			}
 		}
-	],
+	,{
+    "path": "pages/jz-custom-systeminfo/add",
+    "style": {
+        "navigationBarTitleText": "新增"
+    }
+}
+,{
+    "path": "pages/jz-custom-systeminfo/edit",
+    "style": {
+        "navigationBarTitleText": "编辑"
+    }
+}
+,{
+    "path": "pages/jz-custom-systeminfo/list",
+    "style": {
+        "navigationBarTitleText": "列表"
+    }
+}
+,{
+    "path": "pages/jz-custom-gechi/add",
+    "style": {
+        "navigationBarTitleText": "新增"
+    }
+}
+,{
+    "path": "pages/jz-custom-gechi/edit",
+    "style": {
+        "navigationBarTitleText": "编辑"
+    }
+}
+,{
+    "path": "pages/jz-custom-gechi/list",
+    "style": {
+        "navigationBarTitleText": "列表"
+    }
+}
+],
 	"subPackages": [{
 		"root": "pages/system",
 		"pages": [{

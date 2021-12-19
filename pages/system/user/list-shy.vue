@@ -86,6 +86,8 @@
 							<view class="uni-group">
 								<button @click="navigateTo('./edit-shy?id='+item._id, false)" class="uni-button" size="mini"
 									type="primary">{{$t('common.button.edit')}}</button>
+									<button @click="sendinfo(item._id)" class="uni-button" size="mini"
+										type="warn">发送消息</button>
 								<!-- <button @click="confirmDelete(item._id)" class="uni-button" size="mini"
 									type="warn">{{$t('common.button.delete')}}</button> -->
 							</view>
@@ -227,6 +229,40 @@
 			}
 		},
 		methods: {
+			sendinfo(id){
+				uni.showModal({
+					editable: true,
+					title: "输入内容",
+					success: (res)=> {
+						// debugger;
+						if (res.confirm) {
+							var content = res.content;
+							var add_value={
+								user_id:id,
+								comment:content
+							}
+							return db.collection("jz-custom-systeminfo").add(add_value).then((res) => {
+								uni.showToast({
+									title: '发送成功'
+								});
+								// if (this.$refs.udb) {
+								// 	this.$refs.udb.loadData({
+								// 		clear: false
+								// 	}, () => {})
+								// }
+								// this.getOpenerEventChannel().emit('refreshData');
+							}).catch((err) => {
+								uni.showModal({
+									content: err.message || '请求服务失败',
+									showCancel: false
+								})
+							})
+						} else if (res.cancel) {
+							console.log("取消");
+						}
+					}
+				});
+			},
 		    getUserRole() {
 				var _token = uni.getStorageSync("uni_id_token");
 				var __token = {};
