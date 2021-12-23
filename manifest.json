@@ -37,7 +37,10 @@
                 ]
             },
             "ios" : {},
-            "sdkConfigs" : {}
+            "sdkConfigs" : {},
+            "splashscreen" : {
+                "androidStyle" : "default"
+            }
         }
     },
     "quickapp" : {},
