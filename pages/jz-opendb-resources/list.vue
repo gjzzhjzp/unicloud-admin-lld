@@ -71,6 +71,7 @@
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
                 <button @click="confirmDelete(item._id)" class="uni-button" size="mini" type="warn">删除</button>
 				<button v-if="item.zy_gs==1" @click="importExcel(item._id)" class="uni-button" size="mini" type="warn">导入弹幕Excel</button>
+				<button v-if="item.zy_gs==2" @click="importGechi(item._id)" class="uni-button" size="mini" type="warn">输入歌词</button>
               </view>
             </uni-td>
           </uni-tr>
@@ -80,6 +81,12 @@
         </view>
       </unicloud-db>
     </view>
+	<u-modal v-model="showgechi" :show-cancel-button="true" title="输入歌词" @confirm="confirmGechi">
+		<view style="padding: 10px;">
+			<u-input type="textarea" v-model="gechi"></u-input>
+		</view>
+		
+	</u-modal>
   </view>
 </template>
 
@@ -103,6 +110,9 @@
   export default {
     data() {
       return {
+		  currentId:"",
+		  showgechi:false,
+		  gechi:"",
         query: '',
         where: '',
         orderby: dbOrderBy,
@@ -222,6 +232,17 @@
 		}
     },
     methods: {
+		// 输入歌词
+		importGechi(id){
+			this.currentId=id;
+			this.showgechi=true;
+		},
+		// 确认输入歌词（可编辑歌词）
+		confirmGechi(){
+			// db.collection("jz-custom-gechi").add({
+				
+			// });
+		},
 		// 导入excel
 		importExcel(id) {
 			// debugger;
@@ -242,7 +263,6 @@
 								}
 							},
 						}).then((res) => {
-							console.log("resaaaaaaaaaaaaaaaaa",res);
 							if(res.result.state=="0000"){
 								uni.showToast({
 									title:"导入成功"

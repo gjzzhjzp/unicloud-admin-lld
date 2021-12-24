@@ -18,6 +18,8 @@
 						@click="searchweibo">仅显示微博审核</button>
 						<button class="uni-button" type="default" size="mini"
 							@click="searchweibono">仅显示未审核</button>
+							<button class="uni-button" type="default" size="mini"
+								@click="ceratedYqm">批量生成邀请码</button>
 				<!-- #ifdef H5 -->
 				<download-excel class="hide-on-phone" :fields="exportExcel.fields" :data="exportExcelData"
 					:type="exportExcel.type" :name="exportExcel.filename">
@@ -232,6 +234,32 @@
 			}
 		},
 		methods: {
+			////生成邀请码
+			async ceratedYqm(){
+				uni.showLoading({
+					title:"正在操作..."
+				})
+				var userlist=await db.collection("uni-id-users").where("weiboname!=''&&weiboname!=null&&isbdwb==true").limit(10000).get();
+				console.log("userlist",userlist);
+				var yqms=[];
+				if(userlist.result.data&&userlist.result.data.length>0){
+					var rows=userlist.result.data;
+					rows.forEach((item)=>{
+						yqms.push({
+							status: true,
+							user_type: 1,
+							value: item.username
+						});
+					})
+				}
+				uni.hideLoading();
+				console.log("yqms",yqms);
+				// await db.collection("jz-custom-yqm").add(yqms).then((res) => {
+				// 	uni.showToast({
+				// 		title: '新增成功'
+				// 	});
+				// })
+			},
 			searchweibo(){
 				const newWhere = "weiboname!=''&&weiboname!=null";
 				this.where = newWhere
