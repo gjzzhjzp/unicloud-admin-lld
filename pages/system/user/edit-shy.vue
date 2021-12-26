@@ -4,36 +4,26 @@
 			<uni-forms-item name="username" label="用户名" required>
 				<uni-easyinput :disabled="true" v-model="formData.username" :clearable="false" placeholder="请输入用户名" />
 			</uni-forms-item>
-			<!-- <uni-forms-item :name="showPassword ? 'password' : ''" label="重置密码">
-				<span v-show="!showPassword" class="reset-password-btn" @click="trigger">点击重置密码</span>
-				<uni-easyinput v-show="showPassword" v-model="formData.password" :clearable="false" placeholder="请输入重置密码">
-					<view slot="right" class="cancel-reset-password-btn" @click="trigger">取消</view>
-				</uni-easyinput>
-			</uni-forms-item> -->
-			<!-- <uni-forms-item name="role" label="角色列表" class="flex-center-x">
-				<uni-data-checkbox multiple :localdata="roles" v-model="formData.role" />
-			</uni-forms-item> -->
-			<!-- <uni-forms-item name="dcloud_appid" label="可登录应用" class="flex-center-x">
-				<uni-data-checkbox :multiple="true" v-model="formData.dcloud_appid" collection="opendb-app-list"
-					field="appid as value, name as text"></uni-data-checkbox>
-				<span class="link-btn" @click="gotoAppList">管理</span>
-			</uni-forms-item> -->
 			<uni-forms-item name="weiboname" label="微博主页地址">
 				<uni-easyinput v-model="formData.weiboname" :clearable="false" placeholder="请输入微博主页地址" />
 			</uni-forms-item>
 			<uni-forms-item name="beizhu" label="备注">
 				<uni-easyinput v-model="formData.beizhu" :clearable="false" placeholder="备注" />
 			</uni-forms-item>
-			<!-- <uni-forms-item name="mobile" label="手机号">
-				<uni-easyinput v-model="formData.mobile" :clearable="false" placeholder="请输入手机号" />
-			</uni-forms-item>
-			<uni-forms-item name="email" label="邮箱">
-				<uni-easyinput v-model="formData.email" :clearable="false" placeholder="请输入邮箱" />
-			</uni-forms-item> -->
-			<!-- <uni-forms-item name="status" label="用户状态">
+			<uni-forms-item name="status" label="用户状态">
 				<switch v-if="Number(formData.status) < 2" @change="binddata('status', $event.detail.value)" :checked="formData.status" />
 				<view v-else class="uni-form-item-empty">{{parseUserStatus(formData.status)}}</view>
-			</uni-forms-item> -->
+			</uni-forms-item>
+			<uni-forms-item name="original" label="是否原创">
+				<switch  :checked="formData.original" @change="binddata('original', $event.detail.value)"/>
+			</uni-forms-item>
+			<uni-forms-item name="forbiddenwords" label="是否禁言">
+				<switch  :checked="formData.forbiddenwords" @change="binddata('forbiddenwords', $event.detail.value)"/>
+			</uni-forms-item>
+			<uni-forms-item name="fanSx" label="粉丝属性">
+				<uni-data-checkbox v-model="formData.fanSx" :localdata="fanSx_localdata">
+				</uni-data-checkbox>
+			</uni-forms-item>
 			<view class="uni-button-group">
 				<button style="width: 100px;" type="primary" class="uni-button" @click="submitForm">{{$t('common.button.submit')}}</button>
 				<navigator open-type="navigateBack" style="margin-left: 15px;"><button style="width: 100px;" class="uni-button">{{$t('common.button.back')}}</button></navigator>
@@ -72,7 +62,10 @@
 					"email": "",
 					"weiboname":"",
 					"beizhu":"",
-					"status": false //默认禁用
+					"fanSx":0,
+					"status": false ,//默认禁用
+					"original":false,///是否是原创
+					"forbiddenwords":false//是否禁言
 				},
 				rules: {
 					...getValidator(["username", "password", "role", "mobile", "email","weiboname","beizhu"]),
@@ -80,9 +73,32 @@
 						"rules": [{
 							"format": "bool"
 						}]
+					},
+					"original":{
+						"rules": [{
+							"format": "bool"
+						}]
+					},
+					"forbiddenwords":{
+						"rules": [{
+							"format": "bool"
+						}]
 					}
 				},
-				roles: []
+				roles: [],
+				"fanSx_localdata": [{
+					"value": 0,
+					"text": "山总"
+				},
+				{
+					"value": 1,
+					"text": "海哲"
+				},
+				{
+					"value": 2,
+					"text": "俊味仙"
+				}
+				]
 			}
 		},
 		onLoad(e) {
@@ -138,8 +154,8 @@
 					value.status = Number(!value.status)
 				}
 				// value.id = this.formDataId;
-				// console.log("value",value);
 				delete value.username;
+				console.log("value",value);
 				return db.collection('uni-id-users').doc(this.formDataId).update(value).then((res) => {
 					uni.showToast({
 						title: '修改成功'
@@ -189,7 +205,7 @@
 				})
 				db.collection(dbCollectionName)
 					.doc(id)
-					.field('username,role,dcloud_appid,mobile,email,status,weiboname,beizhu')
+					.field('username,role,dcloud_appid,mobile,email,status,weiboname,beizhu,original,forbiddenwords,fanSx')
 					.get()
 					.then((res) => {
 						const data = res.result.data[0]
@@ -202,6 +218,12 @@
 							}
 							if (data.status === 1) {
 								data.status = false
+							}
+							if (data.original === undefined) {
+								data.original = false
+							}
+							if (data.forbiddenwords === undefined) {
+								data.forbiddenwords = false
 							}
 							this.formData = Object.assign(this.formData, data)
 						}

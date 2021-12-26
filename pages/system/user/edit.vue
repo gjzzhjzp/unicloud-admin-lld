@@ -37,6 +37,10 @@
 			<uni-forms-item name="forbiddenwords" label="是否禁言">
 				<switch  :checked="formData.forbiddenwords" @change="binddata('forbiddenwords', $event.detail.value)"/>
 			</uni-forms-item>
+			<uni-forms-item name="fanSx" label="粉丝属性">
+				<uni-data-checkbox v-model="formData.fanSx" :localdata="fanSx_localdata">
+				</uni-data-checkbox>
+			</uni-forms-item>
 			<view class="uni-button-group">
 				<button style="width: 100px;" type="primary" class="uni-button" @click="submitForm">{{$t('common.button.submit')}}</button>
 				<navigator open-type="navigateBack" style="margin-left: 15px;"><button style="width: 100px;" class="uni-button">{{$t('common.button.back')}}</button></navigator>
@@ -96,7 +100,20 @@
 						}]
 					}
 				},
-				roles: []
+				roles: [],
+				"fanSx_localdata": [{
+					"value": 0,
+					"text": "山总"
+				},
+				{
+					"value": 1,
+					"text": "海哲"
+				},
+				{
+					"value": 2,
+					"text": "俊味仙"
+				}
+				]
 			}
 		},
 		onLoad(e) {
@@ -191,7 +208,7 @@
 				})
 				db.collection(dbCollectionName)
 					.doc(id)
-					.field('username,role,dcloud_appid,mobile,email,status,weiboname,original,forbiddenwords')
+					.field('username,role,dcloud_appid,mobile,email,status,weiboname,original,forbiddenwords,fanSx')
 					.get()
 					.then((res) => {
 						const data = res.result.data[0]

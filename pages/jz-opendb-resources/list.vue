@@ -29,7 +29,7 @@
             <!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'categories')" sortable @sort-change="sortChange($event, 'categories')">分类</uni-th> -->
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'categorieszw')" sortable @sort-change="sortChange($event, 'categorieszw')">分类</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'labels')" sortable @sort-change="sortChange($event, 'labels')">标签</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'author')" sortable @sort-change="sortChange($event, 'author')">来源</uni-th>
+            <uni-th align="center" width="200" filter-type="search" @filter-change="filterChange($event, 'author')" sortable @sort-change="sortChange($event, 'author')">来源</uni-th>
 			<uni-th align="center" v-if="isManger" width="80px">投稿人</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.article_status_localdata" @filter-change="filterChange($event, 'article_status')">状态</uni-th>
 			<uni-th align="center" v-if="isManger" filter-type="select" :filter-data="options.filterData.is_recommend_localdata" @filter-change="filterChange($event, 'is_recommend')">推荐</uni-th>
@@ -55,7 +55,7 @@
             <!-- <uni-td align="center">{{item.categories}}</uni-td> -->
             <uni-td align="center">{{item.categorieszw}}</uni-td>
             <uni-td align="center">{{item.labels}}</uni-td>
-            <uni-td align="center">{{item.author}}</uni-td>
+            <uni-td align="center"><view style="width: 200px;">{{item.author}}</view></uni-td>
 			 <uni-td v-if="isManger" align="center">{{item.user_id[0]?item.user_id[0].nickname:''}}</uni-td>
 			 
             <uni-td align="center">  <checkbox-group @change="change_data(item,'article_status')"><checkbox value="article_status" :checked="item.article_status==1" /></checkbox-group></uni-td>
@@ -81,9 +81,11 @@
         </view>
       </unicloud-db>
     </view>
-	<u-modal v-model="showgechi" :show-cancel-button="true" title="输入歌词" @confirm="confirmGechi">
-		<view style="padding: 10px;">
-			<u-input type="textarea" v-model="gechi"></u-input>
+	<u-modal v-model="showgechi" width="500px" @cancel="gechi==''" :show-cancel-button="true" title="输入歌词" @confirm="confirmGechi">
+		<view style="padding: 10px;" class="slot-gonggao_content">
+			<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" >
+				<u-input :maxlength="10000" type="textarea" v-model="gechi"></u-input>
+			</scroll-view>
 		</view>
 		
 	</u-modal>
@@ -110,6 +112,8 @@
   export default {
     data() {
       return {
+		  gechiiscz:false,////歌词是否存在
+		  scrollTop:0,
 		  currentId:"",
 		  showgechi:false,
 		  gechi:"",
@@ -233,15 +237,41 @@
     },
     methods: {
 		// 输入歌词
-		importGechi(id){
+		async importGechi(id){
+			// debugger;
 			this.currentId=id;
 			this.showgechi=true;
+			// 获取歌词
+			var _gechi=await db.collection("jz-custom-gechi").where({
+				resources_id:id
+			}).get();
+			console.log("_gechi",_gechi);
+			if(_gechi.result.data&&_gechi.result.data.length>0){
+				this.gechiiscz=true;
+				this.gechi=_gechi.result.data[0].comment;
+			}else{
+				this.gechiiscz=false;
+				this.gechi="";
+			}
 		},
 		// 确认输入歌词（可编辑歌词）
-		confirmGechi(){
-			// db.collection("jz-custom-gechi").add({
-				
-			// });
+		async confirmGechi(){
+			if(this.gechiiscz){
+				await db.collection("jz-custom-gechi").where({
+					resources_id:this.currentId
+				}).update({
+					comment:this.gechi
+				});
+			}else{
+				await db.collection("jz-custom-gechi").add({
+					resources_id:this.currentId,
+					comment:this.gechi
+				});
+			}
+			this.gechi="";
+			uni.showToast({
+				title:"操作成功"
+			})
 		},
 		// 导入excel
 		importExcel(id) {
@@ -433,4 +463,13 @@
 </script>
 
 <style>
+	.slot-gonggao_content {
+		
+		overflow: auto;
+		/* padding: 10px; */
+	}
+	.slot-gonggao_content>uni-scroll-view{
+		max-height: 50vh;
+		
+	}
 </style>

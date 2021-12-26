@@ -20,14 +20,15 @@
 			</view>
 		</view>
 		<view class="uni-container">
-			<unicloud-db ref="udb" collection="jz-opendb-danmu,jz-opendb-resources" field="resource_id{title},danmu_time,danmu_color,danmu_text"
+			<unicloud-db ref="udb" collection="jz-opendb-danmu,jz-opendb-resources" field="resource_id{title,_id},danmu_time,danmu_color,danmu_text"
 				:where="where" page-data="replace" :orderby="orderby" :getcount="true" :page-size="options.pageSize"
 				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
 				:options="options" loadtime="manual" @load="onqueryload">
 				<uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe
 					type="selection" @selection-change="selectionChange">
 					<uni-tr>
-						<uni-th align="center" sortable @sort-change="sortChange($event, 'resource_id')">资源名称</uni-th>
+						<uni-th align="center" sortable>资源名称</uni-th>
+						<uni-th align="center" sortable @sort-change="sortChange($event, 'resource_id')">资源id</uni-th>
 						<uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'danmu_time')"
 							sortable @sort-change="sortChange($event, 'danmu_time')">弹幕时间</uni-th>
 						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'danmu_color')"
@@ -39,6 +40,7 @@
 					<uni-tr v-for="(item,index) in data" :key="index">
 						<!-- item.resource_id:{{item.resource_id}} -->
 						<uni-td align="center">{{item.resource_id[0].title}}</uni-td>
+						<uni-td align="center">{{item.resource_id[0]._id}}</uni-td>
 						<uni-td align="center">{{item.danmu_time}}</uni-td>
 						<uni-td align="center">{{item.danmu_color}}</uni-td>
 						<uni-td align="center">{{item.danmu_text}}</uni-td>
@@ -70,7 +72,7 @@
 	const db = uniCloud.database()
 	// 表查询配置
 	const dbOrderBy = '' // 排序字段
-	const dbSearchFields = [] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
+	const dbSearchFields = ["resource_id"] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
 	// 分页配置
 	const pageSize = 20
 	const pageCurrent = 1

@@ -16,20 +16,20 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="jz-custom-gechi" field="resources_id,comment" :where="where" page-data="replace"
+      <unicloud-db ref="udb" collection="jz-custom-gechi,jz-opendb-resources" field="resources_id{title},comment" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
           <uni-tr>
-            <uni-th align="center" sortable @sort-change="sortChange($event, 'resources_id')">资源ID</uni-th>
+            <uni-th width="200" align="center" sortable @sort-change="sortChange($event, 'resources_id')">资源名称</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'comment')" sortable @sort-change="sortChange($event, 'comment')">歌词内容</uni-th>
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
-            <uni-td align="center">{{item.resources_id}}</uni-td>
+            <uni-td align="center">{{item.resources_id[0].title}}</uni-td>
             <uni-td align="center">{{item.comment}}</uni-td>
             <uni-td align="center">
-              <view class="uni-group">
+              <view class="uni-group">	
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
                 <button @click="confirmDelete(item._id)" class="uni-button" size="mini" type="warn">删除</button>
               </view>
