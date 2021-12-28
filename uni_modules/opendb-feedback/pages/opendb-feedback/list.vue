@@ -32,8 +32,8 @@
 			<uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
-			   <uni-td align="center">{{item.user_id[0].nickname}}</uni-td>
-			   <uni-td align="center">{{item.user_id[0].username}}</uni-td>
+			   <uni-td align="center">{{item.user_id[0]?item.user_id[0].nickname:''}}</uni-td>
+			   <uni-td align="center">{{item.user_id[0]?item.user_id[0].username:''}}</uni-td>
             <uni-td align="center">{{options.type_valuetotext[item.type]}}</uni-td>
             <uni-td align="center">{{item.content}}</uni-td>
             <uni-td align="center">

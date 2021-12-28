@@ -11,10 +11,9 @@
 						:placeholder="$t('common.placeholder.query')" />
 					<button class="uni-button" type="default" size="mini"
 						@click="search">{{$t('common.button.search')}}</button>
-					<button class="uni-button" type="default" size="mini"
-						@click="searchweibo">仅显示微博审核</button>
-						<button class="uni-button" type="default" size="mini"
-							@click="searchweibono">仅显示未审核</button>
+					<button class="uni-button" type="default" size="mini" @click="searchweibo">仅显示微博审核</button>
+					<button class="uni-button" type="default" size="mini" @click="searchweibono">仅显示未审核</button>
+					<button class="uni-button" type="default" size="mini" @click="createdYqm">生成邀请码</button>
 				</template>
 			</view>
 		</view>
@@ -27,8 +26,9 @@
 				<uni-table ref="table" :loading="loading" :emptyText="error.message || $t('common.empty')" border stripe
 					type="selection" @selection-change="selectionChange" class="table-pc">
 					<uni-tr>
-						<uni-th width="50" align="center" filter-type="search" @filter-change="filterChange($event, 'username')"
-							sortable @sort-change="sortChange($event, 'username')">用户名</uni-th>
+						<uni-th width="50" align="center" filter-type="search"
+							@filter-change="filterChange($event, 'username')" sortable
+							@sort-change="sortChange($event, 'username')">用户名</uni-th>
 						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'nickname')"
 							sortable @sort-change="sortChange($event, 'nickname')">昵称</uni-th>
 						<uni-th width="250" align="center" filter-type="search"
@@ -37,12 +37,12 @@
 						<uni-th align="center">微博验证</uni-th>
 						<uni-th align="center" filter-type="select" :filter-data="options.filterData.isbdwb_localdata"
 							@filter-change="filterChange($event, 'isbdwb')">微博验证状态</uni-th>
-							<uni-th align="center" width="100">备注</uni-th>
+						<uni-th align="center" width="100">备注</uni-th>
 						<!-- <uni-th align="center">可登录应用</uni-th> -->
 						<uni-th align="center" filter-type="timestamp"
 							@filter-change="filterChange($event, 'register_date')" sortable
 							@sort-change="sortChange($event, 'register_date')">注册时间</uni-th>
-						<uni-th  v-if="isManager" align="center">操作</uni-th>
+						<uni-th v-if="isManager" align="center">操作</uni-th>
 					</uni-tr>
 					<uni-tr v-for="(item,index) in data" :key="index">
 						<uni-td align="center">{{item.username}}</uni-td>
@@ -82,12 +82,12 @@
 						<uni-td align="center">
 							<uni-dateformat :threshold="[0, 0]" :date="item.register_date"></uni-dateformat>
 						</uni-td>
-						<uni-td align="center"  v-if="isManager">
+						<uni-td align="center" v-if="isManager">
 							<view class="uni-group">
-								<button @click="navigateTo('./edit-shy?id='+item._id, false)" class="uni-button" size="mini"
-									type="primary">{{$t('common.button.edit')}}</button>
-									<button @click="sendinfo(item._id)" class="uni-button" size="mini"
-										type="warn">发送消息</button>
+								<button @click="navigateTo('./edit-shy?id='+item._id, false)" class="uni-button"
+									size="mini" type="primary">{{$t('common.button.edit')}}</button>
+								<button @click="sendinfo(item._id)" class="uni-button" size="mini"
+									type="warn">发送消息</button>
 								<!-- <button @click="confirmDelete(item._id)" class="uni-button" size="mini"
 									type="warn">{{$t('common.button.delete')}}</button> -->
 							</view>
@@ -124,7 +124,7 @@
 	const db = uniCloud.database()
 	// 表查询配置
 	const dbOrderBy = 'register_date desc' // 排序字段
-	const dbSearchFields = ['username', "nickname", 'role.role_name','weiboname'] // 支持模糊搜索的字段列表
+	const dbSearchFields = ['username', "nickname", 'role.role_name', 'weiboname'] // 支持模糊搜索的字段列表
 	// 分页配置
 	const pageSize = 20
 	const pageCurrent = 1
@@ -195,24 +195,24 @@
 				},
 				exportExcelData: [],
 				noAppidWhatShouldIDoLink: 'https://uniapp.dcloud.net.cn/uniCloud/uni-id?id=makeup-dcloud-appid',
-				roles:[],///角色
-				isManager:true
+				roles: [], ///角色
+				isManager: true
 			}
 		},
 		onLoad() {
 			this._filter = {}
 		},
-		onReady() {	
-			this.roles=this.getUserRole();
+		onReady() {
+			this.roles = this.getUserRole();
 			// 如果仅是上传资源
-			if(this.roles.indexOf('only_zylist')!=-1){
-				this.isManager=false;
-				this.where="_id==$cloudEnv_uid";
+			if (this.roles.indexOf('only_zylist') != -1) {
+				this.isManager = false;
+				this.where = "_id==$cloudEnv_uid";
 				this.$nextTick(() => {
 					this.loadData()
 				})
-			}else{
-				this.isManager=true;
+			} else {
+				this.isManager = true;
 				this.$refs.udb.loadData()
 			}
 		},
@@ -229,17 +229,67 @@
 			}
 		},
 		methods: {
-			sendinfo(id){
+			// 生成邀请码
+			createdYqm(){
+				uni.showModal({
+					editable: true,
+					title: "请输入尾号",
+					success: (res) => {
+						if (res.confirm) {
+							// debugger;
+							var content = res.content;
+							var selects=this.selectedsUser();
+							// var number = parseInt(res.content);
+							var add_value = [];
+							for (var i = 0; i < selects.length; i++) {
+								add_value.push({
+									status: true,
+									user_type: 1,
+									value: selects[i]+content
+								})
+							}
+							return db.collection("jz-custom-yqm").add(add_value).then((res) => {
+								uni.showToast({
+									title: '新增成功'
+								});
+								
+							}).catch((err) => {
+								uni.showModal({
+									content: err.message || '请求服务失败',
+									showCancel: false
+								})
+							})
+							// var add_value = {
+							// 	user_id: id,
+							// 	comment: content
+							// }
+							// return db.collection("jz-custom-systeminfo").add(add_value).then((res) => {
+							// 	uni.showToast({
+							// 		title: '发送成功'
+							// 	});
+							// }).catch((err) => {
+							// 	uni.showModal({
+							// 		content: err.message || '请求服务失败',
+							// 		showCancel: false
+							// 	})
+							// })
+						} else if (res.cancel) {
+							console.log("取消");
+						}
+					}
+				});
+			},
+			sendinfo(id) {
 				uni.showModal({
 					editable: true,
 					title: "输入内容",
-					success: (res)=> {
+					success: (res) => {
 						// debugger;
 						if (res.confirm) {
 							var content = res.content;
-							var add_value={
-								user_id:id,
-								comment:content
+							var add_value = {
+								user_id: id,
+								comment: content
 							}
 							return db.collection("jz-custom-systeminfo").add(add_value).then((res) => {
 								uni.showToast({
@@ -263,7 +313,7 @@
 					}
 				});
 			},
-		    getUserRole() {
+			getUserRole() {
 				var _token = uni.getStorageSync("uni_id_token");
 				var __token = {};
 				if (_token) {
@@ -327,7 +377,7 @@
 					this.loadData();
 				});
 			},
-			searchweibo(){
+			searchweibo() {
 				const newWhere = "weiboname!=''&&weiboname!=null";
 				this.where = newWhere
 				// 下一帧拿到查询条件
@@ -335,7 +385,7 @@
 					this.loadData()
 				})
 			},
-			searchweibono(){
+			searchweibono() {
 				const newWhere = "weiboname!=''&&weiboname!=null&&isbdwb!=true";
 				this.where = newWhere
 				// 下一帧拿到查询条件
@@ -370,6 +420,10 @@
 			selectedItems() {
 				var dataList = this.$refs.udb.dataList
 				return this.selectedIndexs.map(i => dataList[i]._id)
+			},
+			selectedsUser() {
+				var dataList = this.$refs.udb.dataList
+				return this.selectedIndexs.map(i => dataList[i].username)
 			},
 			// 批量删除
 			delTable() {
@@ -422,7 +476,7 @@
 </script>
 
 <style>
-	th{
+	th {
 		max-width: 300px;
 	}
 </style>
