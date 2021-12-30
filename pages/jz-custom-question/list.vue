@@ -24,14 +24,14 @@
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'title')" sortable @sort-change="sortChange($event, 'title')">问题</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'answer')" sortable @sort-change="sortChange($event, 'answer')">答案</uni-th>
             <uni-th align="center" sortable @sort-change="sortChange($event, 'status')">生效状态</uni-th>
-            <!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'description')" sortable @sort-change="sortChange($event, 'description')">备注</uni-th> -->
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'description')" sortable @sort-change="sortChange($event, 'description')">备注</uni-th>
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
             <uni-td align="center">{{item.title}}</uni-td>
             <uni-td align="center">{{item.answer}}</uni-td>
             <uni-td align="center">{{item.status == true ? '✅' : '❌'}}</uni-td>
-            <!-- <uni-td align="center">{{item.description}}</uni-td> -->
+            <uni-td align="center">{{item.description}}</uni-td>
             <uni-td align="center">
               <view class="uni-group">
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
@@ -54,7 +54,7 @@
   const db = uniCloud.database()
   // 表查询配置
   const dbOrderBy = '' // 排序字段
-  const dbSearchFields = ["title","answer"] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
+  const dbSearchFields = [] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
   // 分页配置
   const pageSize = 20
   const pageCurrent = 1
@@ -86,8 +86,8 @@
           "filename": "jz-custom-question.xls",
           "type": "xls",
           "fields": {
-            "标题": "title",
-            "排序": "answer",
+            "问题": "title",
+            "答案": "answer",
             "生效状态": "status",
             "备注": "description"
           }

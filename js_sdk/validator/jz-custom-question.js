@@ -11,10 +11,10 @@ const validator = {
         "format": "string"
       },
       {
-        "maxLength": 20
+        "maxLength": 100
       }
     ],
-    "label": "标题"
+    "label": "问题"
   },
   "answer": {
     "rules": [
@@ -25,7 +25,7 @@ const validator = {
         "format": "string"
       }
     ],
-    "label": "排序"
+    "label": "答案"
   },
   "status": {
     "rules": [
