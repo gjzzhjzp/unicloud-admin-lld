@@ -108,6 +108,29 @@
 						@change="onPageChanged" />
 				</view>
 			</unicloud-db>
+			<u-modal v-model="showinfo" width="40%" title="发送消息" @confirm="confirminfo" :show-cancel-button="true">
+				<view class="slot-content" style="padding: 10px;">
+					<u-form  ref="uForm" :label-width="160">
+						<u-form-item label="消息类型">
+							<u-radio-group v-model="radioinfo" @change="changexxtype">
+								<u-radio v-for="(item, index) in radioList" :key="index" :name="item.value">
+									{{ item.name }}
+								</u-radio>
+							</u-radio-group>
+						</u-form-item>
+						<u-form-item label="审核类型" v-if="showshType" >
+							<u-radio-group v-model="radioshinfo" @change="changeshtype">
+								<u-radio v-for="(item, index) in radioshList" :key="index" :name="item.value">
+									{{ item.name }}
+								</u-radio>
+							</u-radio-group>
+						</u-form-item>
+						<u-form-item label="内容">
+							<u-input v-model="infoconent" type="textarea" :maxlength="1000" />
+						</u-form-item>
+					</u-form>
+				</view>
+			</u-modal>
 		</view>
 		<!-- #ifndef H5 -->
 		<fix-window />
@@ -137,6 +160,46 @@
 	export default {
 		data() {
 			return {
+				showshType:true,//显示审核类型
+				currentId:"",
+				radioinfo: 0,
+				infoconent: "",
+				radioList: [{
+						name: '系统消息',
+						value: 1
+					},
+					{
+						name: '审核消息',
+						value: 0
+					}
+				],
+				radioshinfo:"",//审核信息
+				radioshList:[{
+					name: '微博链接不正确',
+					value: "宝，你的微博主页链接地址不对，请带上自己的APP用户名和微博的主页链接发送至审核邮箱：jzszd921129910511@163.com"
+				},{
+					name: '内容少和疑似小号',
+					value: "宝，请带上自己的APP用户名和你的他俩尽可能多的痕迹截图（氪金、相册、云盘、其他平台的~均可），发送至审核邮箱：jzszd921129910511@163.com"
+				},{
+					name: '疑似唯粉',
+					value: "宝，我们发现你比较关注他俩中的某一个人，请你跟我们发邮件说明一下，并带上用户名和关于他俩尽可能多的痕迹截图（氪金、相册、云盘、其他平台的~均可）。如果确实是唯粉，带单人痕迹也可。审核邮箱：jzszd921129910511@163.com"
+				},{
+					name: '关注/点赞/转发对家或雷点、头像昵称疑似对家（含各种有毒cp）',
+					value: "宝，你的微博审核未通过，请带上自己的APP用户名（字母+数字），通过邮箱：jzszd921129910511@163.com与我们取得联系"
+				},{
+					name: '疑似仰卧起坐',
+					value: "宝，你的微博审核出现了一些问题，请带上自己的APP用户名（字母+数字），通过邮箱：jzszd921129910511@163.com与我们取得联系"
+				},{
+					name: '言论过激',
+					value: "宝，你的微博审核出现了一些问题，请带上自己APP的用户名，通过邮箱：jzszd921129910511@163.com与我们取得联系"
+				},{
+					name: '未发送验证微博',
+					value: "宝，请尽快发送微博验证内容，发送完成后，请带上自己的APP用户名和发送微博验证内容的截图，发送至审核邮箱：jzszd921129910511@163.com"
+				},{
+					name: '特别明显的对家,不通过',
+					value: "宝，很抱歉，你的微博审核未通过"
+				}],
+				showinfo: false,
 				query: '',
 				where: '',
 				orderby: dbOrderBy,
@@ -229,8 +292,23 @@
 			}
 		},
 		methods: {
+			// 改变消息类型
+			changexxtype(name){
+				// debugger;
+				if(name==1){
+					this.infoconent="";
+					this.showshType=false;
+				}else{
+					this.showshType=true;
+				}
+			},
+			// 改变消息类型
+			changeshtype(name){
+				// debugger;
+				this.infoconent=name;
+			},
 			// 生成邀请码
-			createdYqm(){
+			createdYqm() {
 				uni.showModal({
 					editable: true,
 					title: "请输入尾号",
@@ -238,21 +316,21 @@
 						if (res.confirm) {
 							// debugger;
 							var content = res.content;
-							var selects=this.selectedsUser();
+							var selects = this.selectedsUser();
 							// var number = parseInt(res.content);
 							var add_value = [];
 							for (var i = 0; i < selects.length; i++) {
 								add_value.push({
 									status: true,
 									user_type: 1,
-									value: selects[i]+content
+									value: selects[i] + content
 								})
 							}
 							return db.collection("jz-custom-yqm").add(add_value).then((res) => {
 								uni.showToast({
 									title: '新增成功'
 								});
-								
+
 							}).catch((err) => {
 								uni.showModal({
 									content: err.message || '请求服务失败',
@@ -280,38 +358,69 @@
 				});
 			},
 			sendinfo(id) {
-				uni.showModal({
-					editable: true,
-					title: "输入内容",
-					success: (res) => {
-						// debugger;
-						if (res.confirm) {
-							var content = res.content;
-							var add_value = {
-								user_id: id,
-								comment: content
-							}
-							return db.collection("jz-custom-systeminfo").add(add_value).then((res) => {
-								uni.showToast({
-									title: '发送成功'
-								});
-								// if (this.$refs.udb) {
-								// 	this.$refs.udb.loadData({
-								// 		clear: false
-								// 	}, () => {})
-								// }
-								// this.getOpenerEventChannel().emit('refreshData');
-							}).catch((err) => {
-								uni.showModal({
-									content: err.message || '请求服务失败',
-									showCancel: false
-								})
-							})
-						} else if (res.cancel) {
-							console.log("取消");
-						}
-					}
-				});
+				this.showinfo = true;
+				this.currentId=id;
+				// uni.showModal({
+				// 	editable: true,
+				// 	title: "输入内容",
+				// 	success: (res) => {
+				// 		// debugger;
+				// 		if (res.confirm) {
+				// 			var content = res.content;
+				// 			var add_value = {
+				// 				user_id: id,
+				// 				comment: content
+				// 			}
+				// 			return db.collection("jz-custom-systeminfo").add(add_value).then((res) => {
+				// 				uni.showToast({
+				// 					title: '发送成功'
+				// 				});
+				// 				// if (this.$refs.udb) {
+				// 				// 	this.$refs.udb.loadData({
+				// 				// 		clear: false
+				// 				// 	}, () => {})
+				// 				// }
+				// 				// this.getOpenerEventChannel().emit('refreshData');
+				// 			}).catch((err) => {
+				// 				uni.showModal({
+				// 					content: err.message || '请求服务失败',
+				// 					showCancel: false
+				// 				})
+				// 			})
+				// 		} else if (res.cancel) {
+				// 			console.log("取消");
+				// 		}
+				// 	}
+				// });
+			},
+			confirminfo() {
+				// debugger;
+				if(!this.infoconent){
+					uni.showToast({
+						title:"请输入内容",
+						icon:"none"
+					});
+					this.showinfo=true;
+					return ;
+				}
+				var add_value = {
+					type:this.radioinfo,
+					user_id: this.currentId,
+					comment: this.infoconent
+				}
+				// return 
+				return db.collection("jz-custom-systeminfo").add(add_value).then((res) => {
+					uni.showToast({
+						title: '发送成功'
+					});
+					this.infoconent="";
+					this.currentId="";
+				}).catch((err) => {
+					uni.showModal({
+						content: err.message || '请求服务失败',
+						showCancel: false
+					})
+				})
 			},
 			getUserRole() {
 				var _token = uni.getStorageSync("uni_id_token");
@@ -378,7 +487,7 @@
 				});
 			},
 			searchweibo() {
-				const newWhere = "weiboname!=''&&weiboname!=null";
+				const newWhere = "weiboname!=''&&weiboname!=null&&status!=1";
 				this.where = newWhere
 				// 下一帧拿到查询条件
 				this.$nextTick(() => {
@@ -386,7 +495,7 @@
 				})
 			},
 			searchweibono() {
-				const newWhere = "weiboname!=''&&weiboname!=null&&isbdwb!=true";
+				const newWhere = "weiboname!=''&&weiboname!=null&&isbdwb!=true&&status!=1";
 				this.where = newWhere
 				// 下一帧拿到查询条件
 				this.$nextTick(() => {

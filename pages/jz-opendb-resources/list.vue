@@ -275,14 +275,12 @@
 		},
 		// 导入excel
 		importExcel(id) {
-			// debugger;
 			uni.chooseFile({
 				count: 1,
 				extension: ['.xls', '.xlsx', '.csv'],
 				success: res => {
 					//此处是我将上一步的文件转base64做了全局
 					this.urlTobase64(res.tempFilePaths[0], base => {
-						// debugger;
 						uniCloud.callFunction({
 							name: 'jzfunction',
 							data: {
