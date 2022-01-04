@@ -10,7 +10,9 @@
 					<input class="uni-search" type="text" v-model="query" @confirm="search"
 						:placeholder="$t('common.placeholder.query')" />
 					<button class="uni-button" type="default" size="mini"
-						@click="search">{{$t('common.button.search')}}</button>
+						@click="search">模糊搜索</button>
+						<button class="uni-button" type="default" size="mini"
+							@click="search1">精确搜索</button>
 					<button class="uni-button" type="default" size="mini" @click="searchweibo">仅显示微博审核</button>
 					<button class="uni-button" type="default" size="mini" @click="searchweibono">仅显示未审核</button>
 					<button class="uni-button" type="default" size="mini" @click="createdYqm">生成邀请码</button>
@@ -478,8 +480,36 @@
 				const queryRe = new RegExp(query, 'i')
 				return dbSearchFields.map(name => queryRe + '.test(' + name + ')').join(' || ')
 			},
+			getWhere1() {
+				// debugger;
+				const query = this.query.trim()
+				if (!query) {
+					return ''
+				}
+				var _search="";
+				dbSearchFields.forEach((item,index)=>{
+					if(index!=dbSearchFields.length-1){
+						_search+=item+"=='"+query+"'||";
+					}else{
+						_search+=item+"=='"+query+"'";
+					}
+				});
+				return _search;
+				
+				// const queryRe = new RegExp(//, 'i')
+				// return dbSearchFields.map(name => queryRe + '.test(' + name + ')').join(' || ')
+			},
 			search() {
 				const newWhere = this.getWhere()
+				this.where = newWhere;
+				// 下一帧拿到查询条件
+				this.$nextTick(() => {
+					this.loadData();
+				});
+			},
+			search1() {
+				// debugger;
+				const newWhere = this.getWhere1()
 				this.where = newWhere;
 				// 下一帧拿到查询条件
 				this.$nextTick(() => {

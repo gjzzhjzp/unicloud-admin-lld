@@ -19,7 +19,7 @@
 		</view>
 		<view class="uni-container">
 			<unicloud-db ref="udb" collection="jz-custom-systeminfo,uni-id-users"
-				field="user_id{username,nickname},type,comment" :where="where" page-data="replace" :orderby="orderby"
+				field="user_id{username,nickname},manager_id{username,nickname},type,comment" :where="where" page-data="replace" :orderby="orderby"
 				:getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
 				v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual"
 				@load="onqueryload">
@@ -28,6 +28,7 @@
 					<uni-tr>
 						<uni-th align="center" >昵称</uni-th>
 						<uni-th align="center" >用户名</uni-th>
+						<uni-th align="center" >管理员</uni-th>
 						<uni-th align="center" filter-type="select" :filter-data="options.filterData.type_localdata"
 							@filter-change="filterChange($event, 'type')">类型</uni-th>
 						<uni-th width="300px" align="center" filter-type="search"
@@ -38,6 +39,7 @@
 					<uni-tr v-for="(item,index) in data" :key="index">
 						<uni-td align="center">{{item.user_id[0].nickname}}</uni-td>
 						<uni-td align="center">{{item.user_id[0].username}}</uni-td>
+						<uni-td align="center">{{item.manager_id[0].nickname}}</uni-td>
 						<uni-td align="center">{{options.type_valuetotext[item.type]}}</uni-td>
 						<uni-td align="center">
 							<view style="max-width: 500px;">
@@ -72,7 +74,7 @@
 	const db = uniCloud.database()
 	// 表查询配置
 	const dbOrderBy = '' // 排序字段
-	const dbSearchFields = [] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
+	const dbSearchFields = ["user_id.nickname","user_id.username","manager_id.nickname"] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
 	// 分页配置
 	const pageSize = 20
 	const pageCurrent = 1

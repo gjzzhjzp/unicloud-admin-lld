@@ -156,6 +156,7 @@
 				// value.id = this.formDataId;
 				delete value.username;
 				console.log("value",value);
+				console.log("this.formDataId",this.formDataId);
 				return db.collection('uni-id-users').doc(this.formDataId).update(value).then((res) => {
 					uni.showToast({
 						title: '修改成功'

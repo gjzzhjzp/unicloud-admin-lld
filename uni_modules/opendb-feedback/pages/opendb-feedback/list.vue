@@ -1,233 +1,296 @@
 <template>
-  <view>
-    <view class="uni-header">
-      <view class="uni-group">
-        <view class="uni-title"></view>
-        <view class="uni-sub-title"></view>
-      </view>
-      <view class="uni-group">
-        <input class="uni-search" type="text" v-model="query" @confirm="search" placeholder="请输入搜索内容" />
-        <button class="uni-button" type="default" size="mini" @click="search">搜索</button>
-        <button class="uni-button" type="default" size="mini" @click="navigateTo('./add')">新增</button>
-        <button class="uni-button" type="default" size="mini" :disabled="!selectedIndexs.length" @click="delTable">批量删除</button>
-        <download-excel class="hide-on-phone" :fields="exportExcel.fields" :data="exportExcelData" :type="exportExcel.type" :name="exportExcel.filename">
-          <button class="uni-button" type="primary" size="mini">导出 Excel</button>
-        </download-excel>
-      </view>
-    </view>
-    <view class="uni-container">
-      <unicloud-db ref="udb" collection="opendb-feedback,uni-id-users" field="type,content,imgs,contact,create_date,user_id{nickname,username}" :where="where" page-data="replace"
-        :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
-        v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
-		<!-- data：{{data}} -->
-        <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
-          <uni-tr>
-			  <uni-th align="center">用户昵称</uni-th>
-			  <uni-th align="center">用户名</uni-th>
-            <uni-th align="center" width="100" filter-type="select" :filter-data="options.filterData.type_localdata" @filter-change="filterChange($event, 'type')">留言类型</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'content')" sortable @sort-change="sortChange($event, 'content')">留言内容/回复内容</uni-th>
-            <uni-th align="center" sortable @sort-change="sortChange($event, 'imgs')">图片列表</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'contact')" sortable @sort-change="sortChange($event, 'contact')">联系人</uni-th>
-             <uni-th align="center">时间</uni-th>
-			<uni-th align="center">操作</uni-th>
-          </uni-tr>
-          <uni-tr v-for="(item,index) in data" :key="index">
-			   <uni-td align="center">{{item.user_id[0]?item.user_id[0].nickname:''}}</uni-td>
-			   <uni-td align="center">{{item.user_id[0]?item.user_id[0].username:''}}</uni-td>
-            <uni-td align="center">{{options.type_valuetotext[item.type]}}</uni-td>
-            <uni-td align="center">{{item.content}}</uni-td>
-            <uni-td align="center">
-              <template v-for="(file, j) in item.imgs">
-                <uni-file-picker v-if="file.fileType == 'image'" :value="file" :file-mediatype="file.fileType" :imageStyles="imageStyles" readonly></uni-file-picker>
-                <uni-link v-else :href="file.url" :text="file.url"></uni-link>
-              </template>
-            </uni-td>
-            <uni-td align="center">{{item.contact}}</uni-td>
-			<uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.create_date"></uni-dateformat></uni-td>
-			
-            <uni-td align="center">
-              <view class="uni-group">
-                <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
-                <button @click="confirmDelete(item._id)" class="uni-button" size="mini" type="warn">删除</button>
-              </view>
-            </uni-td>
-          </uni-tr>
-        </uni-table>
-        <view class="uni-pagination-box">
-          <uni-pagination show-icon :page-size="pagination.size" v-model="pagination.current" :total="pagination.count" @change="onPageChanged" />
-        </view>
-      </unicloud-db>
-    </view>
-  </view>
+	<view>
+		<view class="uni-header">
+			<view class="uni-group">
+				<view class="uni-title"></view>
+				<view class="uni-sub-title"></view>
+			</view>
+			<view class="uni-group">
+				<input class="uni-search" type="text" v-model="query" @confirm="search" placeholder="请输入搜索内容" />
+				<button class="uni-button" type="default" size="mini" @click="search">搜索</button>
+				<button class="uni-button" type="default" size="mini" @click="navigateTo('./add')">新增</button>
+				<button class="uni-button" type="default" size="mini" :disabled="!selectedIndexs.length"
+					@click="delTable">批量删除</button>
+				<download-excel class="hide-on-phone" :fields="exportExcel.fields" :data="exportExcelData"
+					:type="exportExcel.type" :name="exportExcel.filename">
+					<button class="uni-button" type="primary" size="mini">导出 Excel</button>
+				</download-excel>
+			</view>
+		</view>
+		<view class="uni-container">
+			<unicloud-db ref="udb" collection="opendb-feedback,uni-id-users"
+				field="type,content,imgs,contact,create_date,user_id{nickname,username,_id}" :where="where"
+				page-data="replace" :orderby="orderby" :getcount="true" :page-size="options.pageSize"
+				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
+				:options="options" loadtime="manual" @load="onqueryload">
+				<!-- data：{{data}} -->
+				<uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe
+					type="selection" @selection-change="selectionChange">
+					<uni-tr>
+						<uni-th align="center">用户昵称</uni-th>
+						<uni-th align="center">用户名</uni-th>
+						<uni-th align="center" width="100" filter-type="select"
+							:filter-data="options.filterData.type_localdata"
+							@filter-change="filterChange($event, 'type')">留言类型</uni-th>
+						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'content')"
+							sortable @sort-change="sortChange($event, 'content')">留言内容/回复内容</uni-th>
+						<uni-th align="center" sortable @sort-change="sortChange($event, 'imgs')">图片列表</uni-th>
+						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'contact')"
+							sortable @sort-change="sortChange($event, 'contact')">联系人</uni-th>
+						<uni-th align="center">时间</uni-th>
+						<uni-th align="center">操作</uni-th>
+					</uni-tr>
+					<uni-tr v-for="(item,index) in data" :key="index">
+						<uni-td align="center">{{item.user_id[0]?item.user_id[0].nickname:''}}</uni-td>
+						<uni-td align="center">{{item.user_id[0]?item.user_id[0].username:''}}</uni-td>
+						<uni-td align="center">{{options.type_valuetotext[item.type]}}</uni-td>
+						<uni-td align="center">{{item.content}}</uni-td>
+						<uni-td align="center">
+							<template v-for="(file, j) in item.imgs">
+								<uni-file-picker v-if="file.fileType == 'image'" :value="file"
+									:file-mediatype="file.fileType" :imageStyles="imageStyles" readonly>
+								</uni-file-picker>
+								<uni-link v-else :href="file.url" :text="file.url"></uni-link>
+							</template>
+						</uni-td>
+						<uni-td align="center">{{item.contact}}</uni-td>
+						<uni-td align="center">
+							<uni-dateformat :threshold="[0, 0]" :date="item.create_date"></uni-dateformat>
+						</uni-td>
+
+						<uni-td align="center">
+							<view class="uni-group">
+								<button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini"
+									type="primary">修改</button>
+								<!-- <button @click="confirmDelete(item._id)" class="uni-button" size="mini" type="warn">删除</button> -->
+								<button @click="sendinfo(item)" class="uni-button" size="mini"
+									type="warn">发送消息</button>
+							</view>
+						</uni-td>
+					</uni-tr>
+				</uni-table>
+				<view class="uni-pagination-box">
+					<uni-pagination show-icon :page-size="pagination.size" v-model="pagination.current"
+						:total="pagination.count" @change="onPageChanged" />
+				</view>
+			</unicloud-db>
+		</view>
+		<u-modal v-model="showinfo" width="40%" title="发送消息" @confirm="confirminfo" :show-cancel-button="true">
+			<view class="slot-content" style="padding: 10px;">
+				<u-form ref="uForm" :label-width="160">
+					<u-form-item label="内容">
+						<u-input v-model="infoconent" type="textarea" :maxlength="1000" />
+					</u-form-item>
+				</u-form>
+			</view>
+		</u-modal>
+	</view>
 </template>
 
 <script>
-  import { enumConverter, filterToWhere } from '../../js_sdk/validator/opendb-feedback.js';
+	import {
+		enumConverter,
+		filterToWhere
+	} from '../../js_sdk/validator/opendb-feedback.js';
 
-  const db = uniCloud.database()
-  // 表查询配置
-  const dbOrderBy = 'create_date desc' // 排序字段
-  const dbSearchFields = ["content"] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
-  // 分页配置
-  const pageSize = 20
-  const pageCurrent = 1
+	const db = uniCloud.database()
+	// 表查询配置
+	const dbOrderBy = 'create_date desc' // 排序字段
+	const dbSearchFields = ["content"] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
+	// 分页配置
+	const pageSize = 20
+	const pageCurrent = 1
 
-  const orderByMapping = {
-    "ascending": "asc",
-    "descending": "desc"
-  }
+	const orderByMapping = {
+		"ascending": "asc",
+		"descending": "desc"
+	}
 
-  export default {
-    data() {
-      return {
-        query: '',
-        where: '',
-        orderby: dbOrderBy,
-        orderByFieldName: "",
-        selectedIndexs: [],
-        options: {
-          pageSize,
-          pageCurrent,
-          filterData: {
-            "type_localdata": [
-              {
-                "value": 0,
-                "text": "系统bug"
-              },
-              {
-                "value": 1,
-                "text": "意见建议"
-              },
-              {
-                "value": 2,
-                "text": "版权质疑"
-              },
-              {
-                "value": 3,
-                "text": "我有话说"
-              }
-            ]
-          },
-          ...enumConverter
-        },
-        imageStyles: {
-          width: 64,
-          height: 64
-        },
-        exportExcel: {
-          "filename": "opendb-feedback.xls",
-          "type": "xls",
-          "fields": {
-            "留言类型": "type",
-            "留言内容/回复内容": "content",
-            "图片列表": "imgs",
-            "联系人": "contact"
-          }
-        },
-        exportExcelData: []
-      }
-    },
-    onLoad() {
-      this._filter = {}
-    },
-    onReady() {
-      this.$refs.udb.loadData()
-    },
-    methods: {
-      onqueryload(data) {
-        this.exportExcelData = data
-      },
-      getWhere() {
-        const query = this.query.trim()
-        if (!query) {
-          return ''
-        }
-        const queryRe = new RegExp(query, 'i')
-        return dbSearchFields.map(name => queryRe + '.test(' + name + ')').join(' || ')
-      },
-      search() {
-        const newWhere = this.getWhere()
-        this.where = newWhere
-        this.$nextTick(() => {
-          this.loadData()
-        })
-      },
-      loadData(clear = true) {
-        this.$refs.udb.loadData({
-          clear
-        })
-      },
-      onPageChanged(e) {
-        this.selectedIndexs.length = 0
-        this.$refs.table.clearSelection()
-        this.$refs.udb.loadData({
-          current: e.current
-        })
-      },
-      navigateTo(url, clear) {
-        // clear 表示刷新列表时是否清除页码，true 表示刷新并回到列表第 1 页，默认为 true
-        uni.navigateTo({
-          url,
-          events: {
-            refreshData: () => {
-              this.loadData(clear)
-            }
-          }
-        })
-      },
-      // 多选处理
-      selectedItems() {
-        var dataList = this.$refs.udb.dataList
-        return this.selectedIndexs.map(i => dataList[i]._id)
-      },
-      // 批量删除
-      delTable() {
-        this.$refs.udb.remove(this.selectedItems(), {
-          success:(res) => {
-            this.$refs.table.clearSelection()
-          }
-        })
-      },
-      // 多选
-      selectionChange(e) {
-        this.selectedIndexs = e.detail.index
-      },
-      confirmDelete(id) {
-        this.$refs.udb.remove(id, {
-          success:(res) => {
-            this.$refs.table.clearSelection()
-          }
-        })
-      },
-      sortChange(e, name) {
-        this.orderByFieldName = name;
-        if (e.order) {
-          this.orderby = name + ' ' + orderByMapping[e.order]
-        } else {
-          this.orderby = ''
-        }
-        this.$refs.table.clearSelection()
-        this.$nextTick(() => {
-          this.$refs.udb.loadData()
-        })
-      },
-      filterChange(e, name) {
-        this._filter[name] = {
-          type: e.filterType,
-          value: e.filter
-        }
-        let newWhere = filterToWhere(this._filter, db.command)
-        if (Object.keys(newWhere).length) {
-          this.where = newWhere
-        } else {
-          this.where = ''
-        }
-        this.$nextTick(() => {
-          this.$refs.udb.loadData()
-        })
-      }
-    }
-  }
+	export default {
+		data() {
+			return {
+				showinfo: false,
+				infoconent: "",
+				query: '',
+				where: '',
+				orderby: dbOrderBy,
+				orderByFieldName: "",
+				selectedIndexs: [],
+				options: {
+					pageSize,
+					pageCurrent,
+					filterData: {
+						"type_localdata": [{
+								"value": 0,
+								"text": "系统bug"
+							},
+							{
+								"value": 1,
+								"text": "意见建议"
+							},
+							{
+								"value": 2,
+								"text": "版权质疑"
+							},
+							{
+								"value": 3,
+								"text": "我有话说"
+							}
+						]
+					},
+					...enumConverter
+				},
+				imageStyles: {
+					width: 64,
+					height: 64
+				},
+				exportExcel: {
+					"filename": "opendb-feedback.xls",
+					"type": "xls",
+					"fields": {
+						"留言类型": "type",
+						"留言内容/回复内容": "content",
+						"图片列表": "imgs",
+						"联系人": "contact"
+					}
+				},
+				exportExcelData: []
+			}
+		},
+		onLoad() {
+			this._filter = {}
+		},
+		onReady() {
+			this.$refs.udb.loadData()
+		},
+		methods: {
+			sendinfo(item) {
+				this.showinfo = true;
+				this.currentId = item.user_id[0]?item.user_id[0]._id:'';
+			},
+			confirminfo() {
+				// debugger;
+				if (!this.infoconent) {
+					uni.showToast({
+						title: "请输入内容",
+						icon: "none"
+					});
+					this.showinfo = true;
+					return;
+				}
+				var add_value = {
+					type: 1,
+					user_id: this.currentId,
+					comment: this.infoconent
+				}
+				// return 
+				return db.collection("jz-custom-systeminfo").add(add_value).then((res) => {
+					uni.showToast({
+						title: '发送成功'
+					});
+					this.infoconent = "";
+					this.currentId = "";
+				}).catch((err) => {
+					uni.showModal({
+						content: err.message || '请求服务失败',
+						showCancel: false
+					})
+				})
+			},
+			onqueryload(data) {
+				this.exportExcelData = data
+			},
+			getWhere() {
+				const query = this.query.trim()
+				if (!query) {
+					return ''
+				}
+				const queryRe = new RegExp(query, 'i')
+				return dbSearchFields.map(name => queryRe + '.test(' + name + ')').join(' || ')
+			},
+			search() {
+				const newWhere = this.getWhere()
+				this.where = newWhere
+				this.$nextTick(() => {
+					this.loadData()
+				})
+			},
+			loadData(clear = true) {
+				this.$refs.udb.loadData({
+					clear
+				})
+			},
+			onPageChanged(e) {
+				this.selectedIndexs.length = 0
+				this.$refs.table.clearSelection()
+				this.$refs.udb.loadData({
+					current: e.current
+				})
+			},
+			navigateTo(url, clear) {
+				// clear 表示刷新列表时是否清除页码，true 表示刷新并回到列表第 1 页，默认为 true
+				uni.navigateTo({
+					url,
+					events: {
+						refreshData: () => {
+							this.loadData(clear)
+						}
+					}
+				})
+			},
+			// 多选处理
+			selectedItems() {
+				var dataList = this.$refs.udb.dataList
+				return this.selectedIndexs.map(i => dataList[i]._id)
+			},
+			// 批量删除
+			delTable() {
+				this.$refs.udb.remove(this.selectedItems(), {
+					success: (res) => {
+						this.$refs.table.clearSelection()
+					}
+				})
+			},
+			// 多选
+			selectionChange(e) {
+				this.selectedIndexs = e.detail.index
+			},
+			confirmDelete(id) {
+				this.$refs.udb.remove(id, {
+					success: (res) => {
+						this.$refs.table.clearSelection()
+					}
+				})
+			},
+			sortChange(e, name) {
+				this.orderByFieldName = name;
+				if (e.order) {
+					this.orderby = name + ' ' + orderByMapping[e.order]
+				} else {
+					this.orderby = ''
+				}
+				this.$refs.table.clearSelection()
+				this.$nextTick(() => {
+					this.$refs.udb.loadData()
+				})
+			},
+			filterChange(e, name) {
+				this._filter[name] = {
+					type: e.filterType,
+					value: e.filter
+				}
+				let newWhere = filterToWhere(this._filter, db.command)
+				if (Object.keys(newWhere).length) {
+					this.where = newWhere
+				} else {
+					this.where = ''
+				}
+				this.$nextTick(() => {
+					this.$refs.udb.loadData()
+				})
+			}
+		}
+	}
 </script>
 
 <style>
