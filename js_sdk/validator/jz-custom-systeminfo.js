@@ -17,9 +17,22 @@ const validator = {
     "rules": [
       {
         "format": "int"
+      },
+      {
+        "range": [
+          {
+            "value": 0,
+            "text": "审核消息"
+          },
+          {
+            "value": 1,
+            "text": "系统消息"
+          }
+        ]
       }
     ],
-    "label": "系统消息类型"
+    "defaultValue": 0,
+    "label": "消息类型"
   },
   "comment": {
     "rules": [
@@ -34,7 +47,12 @@ const validator = {
   }
 }
 
-const enumConverter = {}
+const enumConverter = {
+  "type_valuetotext": {
+    "0": "审核消息",
+    "1": "系统消息"
+  }
+}
 
 function filterToWhere(filter, command) {
   let where = {}

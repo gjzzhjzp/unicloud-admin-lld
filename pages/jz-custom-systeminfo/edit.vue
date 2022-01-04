@@ -4,8 +4,8 @@
       <uni-forms-item name="user_id" label="用户ID" required>
         <uni-easyinput placeholder="用户ID，参考`uni-id-users` 表" v-model="formData.user_id"></uni-easyinput>
       </uni-forms-item>
-      <uni-forms-item name="type" label="系统消息类型">
-        <uni-easyinput placeholder="系统消息类型： 0 针对文章的回复  1 针对评论的回复" type="number" v-model="formData.type"></uni-easyinput>
+      <uni-forms-item name="type" label="消息类型">
+        <uni-data-checkbox v-model="formData.type" :localdata="formOptions.type_localdata"></uni-data-checkbox>
       </uni-forms-item>
       <uni-forms-item name="comment" label="消息内容" required>
         <uni-easyinput placeholder="消息内容" v-model="formData.comment"></uni-easyinput>
@@ -41,12 +41,23 @@
     data() {
       let formData = {
         "user_id": "",
-        "type": null,
+        "type": 0,
         "comment": ""
       }
       return {
         formData,
-        formOptions: {},
+        formOptions: {
+          "type_localdata": [
+            {
+              "value": 0,
+              "text": "审核消息"
+            },
+            {
+              "value": 1,
+              "text": "系统消息"
+            }
+          ]
+        },
         rules: {
           ...getValidator(Object.keys(formData))
         }
