@@ -13,8 +13,9 @@
 						@click="search">模糊搜索</button>
 						<button class="uni-button" type="default" size="mini"
 							@click="search1">精确搜索</button>
-					<button class="uni-button" type="default" size="mini" @click="searchweibo">仅显示微博审核</button>
-					<button class="uni-button" type="default" size="mini" @click="searchweibono">仅显示未审核</button>
+					<button class="uni-button" type="default" size="mini" @click="searchweibo">微博审核</button>
+					<button class="uni-button" type="default" size="mini" @click="searchweibono">未审核通过</button>
+					<button class="uni-button" type="default" size="mini" @click="searchweibono2">未审核</button>
 					<button class="uni-button" type="default" size="mini" @click="createdYqm">生成邀请码</button>
 				</template>
 			</view>
@@ -482,10 +483,11 @@
 			},
 			getWhere1() {
 				// debugger;
-				const query = this.query.trim()
+				var query = this.query.trim()
 				if (!query) {
 					return ''
 				}
+				query=query.toLowerCase();
 				var _search="";
 				dbSearchFields.forEach((item,index)=>{
 					if(index!=dbSearchFields.length-1){
@@ -526,6 +528,14 @@
 			},
 			searchweibono() {
 				const newWhere = "weiboname!=''&&weiboname!=null&&isbdwb!=true&&status!=1";
+				this.where = newWhere
+				// 下一帧拿到查询条件
+				this.$nextTick(() => {
+					this.loadData()
+				})
+			},
+			searchweibono2(){
+				const newWhere = "weiboname!=''&&weiboname!=null&&isbdwb!=true&&status!=1&&(beizhu==''||beizhu==undefined)";
 				this.where = newWhere
 				// 下一帧拿到查询条件
 				this.$nextTick(() => {
