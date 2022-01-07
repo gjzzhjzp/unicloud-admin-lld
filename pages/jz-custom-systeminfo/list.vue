@@ -37,9 +37,9 @@
 						<uni-th align="center">操作</uni-th>
 					</uni-tr>
 					<uni-tr v-for="(item,index) in data" :key="index">
-						<uni-td align="center">{{item.user_id[0].nickname}}</uni-td>
-						<uni-td align="center">{{item.user_id[0].username}}</uni-td>
-						<uni-td align="center">{{item.manager_id[0].nickname}}</uni-td>
+						<uni-td align="center">{{item.user_id[0]?item.user_id[0].nickname:''}}</uni-td>
+						<uni-td align="center">{{item.user_id[0]?item.user_id[0].username:''}}</uni-td>
+						<uni-td align="center">{{item.manager_id[0]?item.manager_id[0].nickname:''}}</uni-td>
 						<uni-td align="center">{{options.type_valuetotext[item.type]}}</uni-td>
 						<uni-td align="center">
 							<view style="max-width: 500px;">
@@ -57,8 +57,19 @@
 					</uni-tr>
 				</uni-table>
 				<view class="uni-pagination-box">
-					<uni-pagination show-icon :page-size="pagination.size" v-model="pagination.current"
-						:total="pagination.count" @change="onPageChanged" />
+					<view class="uni-pagination-box">
+						<!-- #ifndef MP -->
+						<picker class="select-picker" mode="selector" :value="pageSizeIndex" :range="pageSizeOption"
+							@change="changeSize">
+							<button type="default" size="mini" :plain="true">
+								<text>{{pageSizeOption[pageSizeIndex]}} {{$t('common.piecePerPage')}}</text>
+								<uni-icons class="select-picker-icon" type="arrowdown" size="12" color="#999"></uni-icons>
+							</button>
+						</picker>
+						<!-- #endif -->
+						<uni-pagination show-icon :page-size="pagination.size" v-model="pagination.current"
+							:total="pagination.count" @change="onPageChanged" />
+					</view>
 				</view>
 			</unicloud-db>
 		</view>
@@ -87,6 +98,8 @@
 	export default {
 		data() {
 			return {
+				pageSizeIndex: 0,
+				pageSizeOption: [20, 50, 100, 500],
 				query: '',
 				where: '',
 				orderby: dbOrderBy,
@@ -130,7 +143,22 @@
 		onReady() {
 			this.$refs.udb.loadData()
 		},
+		watch: {
+			pageSizeIndex: {
+				immediate: true,
+				handler(val, old) {
+					this.options.pageSize = this.pageSizeOption[val]
+					this.options.pageCurrent = 1
+					this.$nextTick(() => {
+						this.loadData()
+					})
+				}
+			}
+		},
 		methods: {
+			changeSize(e) {
+				this.pageSizeIndex = e.detail.value
+			},
 			onqueryload(data) {
 				this.exportExcelData = data
 			},
