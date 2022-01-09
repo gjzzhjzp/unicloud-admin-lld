@@ -9,10 +9,8 @@
 				<template v-if="isManager">
 					<input class="uni-search" type="text" v-model="query" @confirm="search"
 						:placeholder="$t('common.placeholder.query')" />
-					<button class="uni-button" type="default" size="mini"
-						@click="search">模糊搜索</button>
-						<button class="uni-button" type="default" size="mini"
-							@click="search1">精确搜索</button>
+					<button class="uni-button" type="default" size="mini" @click="search">模糊搜索</button>
+					<button class="uni-button" type="default" size="mini" @click="search1">精确搜索</button>
 					<button class="uni-button" type="default" size="mini" @click="searchweibo">微博审核</button>
 					<button class="uni-button" type="default" size="mini" @click="searchweibono">未审核通过</button>
 					<button class="uni-button" type="default" size="mini" @click="searchweibono2">未审核</button>
@@ -34,6 +32,7 @@
 							@sort-change="sortChange($event, 'username')">用户名</uni-th>
 						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'nickname')"
 							sortable @sort-change="sortChange($event, 'nickname')">昵称</uni-th>
+
 						<uni-th width="250" align="center" filter-type="search"
 							@filter-change="filterChange($event, 'weiboname')" sortable
 							@sort-change="sortChange($event, 'weiboname')">微博主页地址</uni-th>
@@ -50,18 +49,7 @@
 					<uni-tr v-for="(item,index) in data" :key="index">
 						<uni-td align="center">{{item.username}}</uni-td>
 						<uni-td align="center">{{item.nickname}}</uni-td>
-						<!-- <uni-td align="center">{{item.mobile}}</uni-td> -->
-						<!-- <uni-td align="center">{{options.status_valuetotext[item.status]}}</uni-td> -->
-						<!-- 	<uni-td align="center">
-							<uni-link :href="'mailto:'+item.email" :text="item.email"></uni-link>
-						</uni-td> -->
-						<!-- <uni-td align="center">{{item.role}}</uni-td> -->
-						<!-- <uni-td align="center">
-							<uni-link v-if="item.dcloud_appid === undefined" :href="noAppidWhatShouldIDoLink">
-								未绑定可登录应用<view class="uni-icons-help"></view>
-							</uni-link>
-							{{item.dcloud_appid}}
-						</uni-td> -->
+
 						<uni-td align="center">
 							<view style="max-width: 400px;">
 								{{item.weiboname}}
@@ -91,8 +79,7 @@
 									size="mini" type="primary">{{$t('common.button.edit')}}</button>
 								<button @click="sendinfo(item._id)" class="uni-button" size="mini"
 									type="warn">发送消息</button>
-								<!-- <button @click="confirmDelete(item._id)" class="uni-button" size="mini"
-									type="warn">{{$t('common.button.delete')}}</button> -->
+								<button @click="lookUser(item._id)" class="uni-button" size="mini">查看邀请人</button>
 							</view>
 						</uni-td>
 					</uni-tr>
@@ -113,7 +100,7 @@
 			</unicloud-db>
 			<u-modal v-model="showinfo" width="40%" title="发送消息" @confirm="confirminfo" :show-cancel-button="true">
 				<view class="slot-content" style="padding: 10px;">
-					<u-form  ref="uForm" :label-width="160">
+					<u-form ref="uForm" :label-width="160">
 						<u-form-item label="消息类型">
 							<u-radio-group v-model="radioinfo" @change="changexxtype">
 								<u-radio v-for="(item, index) in radioList" :key="index" :name="item.value">
@@ -121,7 +108,7 @@
 								</u-radio>
 							</u-radio-group>
 						</u-form-item>
-						<u-form-item label="审核类型" v-if="showshType" >
+						<u-form-item label="审核类型" v-if="showshType">
 							<u-radio-group v-model="radioshinfo" @change="changeshtype">
 								<u-radio v-for="(item, index) in radioshList" :key="index" :name="item.value">
 									{{ item.name }}
@@ -130,6 +117,41 @@
 						</u-form-item>
 						<u-form-item label="内容">
 							<u-input v-model="infoconent" type="textarea" :maxlength="1000" />
+						</u-form-item>
+					</u-form>
+				</view>
+			</u-modal>
+			<u-modal v-model="showlookyqr" width="700px" title="邀请人信息" @confirm="confirmyqr">
+				<view class="slot-content" style="padding: 20px;">
+				<!-- 	<template v-if="allyqr.length==0">
+						无邀请人
+					</template> -->
+					<u-form  ref="uForm" :label-width="300">
+						<u-form-item label="登录/用户名">
+							{{yqrinfo.username||"无"}}
+						</u-form-item>
+						<u-form-item label="昵称">
+							<view style="white-space: nowrap;">
+								{{yqrinfo.nickname||"无"}}
+							</view>
+						</u-form-item>
+						<u-form-item label="微博主页地址">
+							{{yqrinfo.weiboname||"无"}}
+						</u-form-item>
+						<u-form-item label="该用户邀请的所有人">
+							<u-table>
+								<u-tr>
+									<u-th class="u-th1" >登录名</u-th>
+									<u-th class="u-th2" >昵称</u-th>
+									<u-th class="u-th3" >微博主页地址</u-th>
+								</u-tr>
+								<u-tr v-for="(item,index) in allyqr" :key="index">
+									<u-td class="u-td1" >{{item.byqr_id[0].username}}</u-td>
+									<u-td class="u-td2" >{{item.byqr_id[0].nickname}}</u-td>
+									<u-td class="u-td3" >{{item.byqr_id[0].weiboname}}</u-td>
+								</u-tr>
+								
+							</u-table>
 						</u-form-item>
 					</u-form>
 				</view>
@@ -163,8 +185,8 @@
 	export default {
 		data() {
 			return {
-				showshType:true,//显示审核类型
-				currentId:"",
+				showshType: true, //显示审核类型
+				currentId: "",
 				radioinfo: 0,
 				infoconent: "",
 				radioList: [{
@@ -176,31 +198,34 @@
 						value: 0
 					}
 				],
-				radioshinfo:"",//审核信息
-				radioshList:[{
+				radioshinfo: "", //审核信息
+				radioshList: [{
 					name: '微博链接不正确',
-					value: "宝，你的微博主页链接地址不对，请带上自己的APP用户名和微博的主页链接发送至审核邮箱：jzszd9192051129@163.com"
-				},{
+					value: "宝，你的微博主页链接地址不对，请带上自己的APP用户名和微博的主页链接发送至审核邮箱：jzszd921129910511@163.com"
+				}, {
 					name: '内容少和疑似小号',
-					value: "宝，请带上自己的APP用户名和你的他俩尽可能多的痕迹截图（氪金、相册、云盘、其他平台的~均可），发送至审核邮箱：jzszd9192051129@163.com"
-				},{
+					value: "宝，请带上自己的APP用户名和你的他俩尽可能多的痕迹截图（氪金、相册、云盘、其他平台的~均可），发送至审核邮箱：jzszd921129910511@163.com"
+				}, {
 					name: '疑似唯粉',
-					value: "宝，我们发现你比较关注他俩中的某一个人，请你跟我们发邮件说明一下，并带上用户名和关于他俩尽可能多的痕迹截图（氪金、相册、云盘、其他平台的~均可）。如果确实是唯粉，带单人痕迹也可。审核邮箱：jzszd9192051129@163.com"
-				},{
+					value: "宝，我们发现你比较关注他俩中的某一个人，请你跟我们发邮件说明一下，并带上用户名和关于他俩尽可能多的痕迹截图（氪金、相册、云盘、其他平台的~均可）。如果确实是唯粉，带单人痕迹也可。审核邮箱：jzszd921129910511@163.com"
+				}, {
 					name: '关注/点赞/转发对家或雷点、头像昵称疑似对家（含各种有毒cp）',
-					value: "宝，你的微博审核未通过，请带上自己的APP用户名（字母+数字），通过邮箱：jzszd9192051129@163.com与我们取得联系"
-				},{
+					value: "宝，你的微博审核未通过，请带上自己的APP用户名（字母+数字），通过邮箱：jzszd921129910511@163.com与我们取得联系"
+				}, {
 					name: '疑似仰卧起坐',
-					value: "宝，你的微博审核出现了一些问题，请带上自己的APP用户名（字母+数字），通过邮箱：jzszd9192051129@163.com与我们取得联系"
-				},{
+					value: "宝，你的微博审核出现了一些问题，请带上自己的APP用户名（字母+数字），通过邮箱：jzszd921129910511@163.com与我们取得联系"
+				}, {
 					name: '言论过激',
-					value: "宝，你的微博审核出现了一些问题，请带上自己APP的用户名，通过邮箱：jzszd9192051129@163.com与我们取得联系"
-				},{
+					value: "宝，你的微博审核出现了一些问题，请带上自己APP的用户名，通过邮箱：jzszd921129910511@163.com与我们取得联系"
+				}, {
 					name: '未发送验证微博',
-					value: "宝，请尽快发送微博验证内容，发送完成后，请带上自己的APP用户名和发送微博验证内容的截图，发送至审核邮箱：jzszd9192051129@163.com"
-				},{
+					value: "宝，请尽快发送微博验证内容，发送完成后，请带上自己的APP用户名和发送微博验证内容的截图，发送至审核邮箱：jzszd921129910511@163.com"
+				}, {
 					name: '特别明显的对家,不通过',
 					value: "宝，很抱歉，你的微博审核未通过"
+				}, {
+					name: '邀请人连带责任',
+					value: "宝，您邀请进app的人中有宝最终审核未通过，目前已经取消您的权限，需要对您进行再次审核。请带上自己的APP用户名和你这边关于他俩尽可能多的痕迹截图（氪金、相册、云盘、其他平台的~均可）发送至审核邮箱：jzszd921129910511@163.com"
 				}],
 				showinfo: false,
 				query: '',
@@ -262,7 +287,10 @@
 				exportExcelData: [],
 				noAppidWhatShouldIDoLink: 'https://uniapp.dcloud.net.cn/uniCloud/uni-id?id=makeup-dcloud-appid',
 				roles: [], ///角色
-				isManager: true
+				isManager: true,
+				showlookyqr: false,
+				yqrinfo: {}, ////邀请人信息
+				allyqr: []
 			}
 		},
 		onLoad() {
@@ -295,20 +323,47 @@
 			}
 		},
 		methods: {
+			confirmyqr(){
+				this.yqrinfo={};
+				this.allyqr=[];
+			},
+			// 查看邀请人
+			async lookUser(id) {
+				this.showlookyqr = true;
+
+				var yqr = await db.collection("jz-custom-yhyqm,uni-id-users").where({
+					byqr_id: id
+				}).field("yqr_id{username,nickname,weiboname}").get();
+				console.log("yqr", yqr);
+				if (yqr.result.data && yqr.result.data.length > 0) {
+					this.yqrinfo = yqr.result.data[0].yqr_id[0]
+				}
+				console.log("this.yqrinfo", this.yqrinfo);
+				if(this.yqrinfo._id){
+					var allyqr = await db.collection("jz-custom-yhyqm,uni-id-users").where({
+						yqr_id: this.yqrinfo._id
+					}).field("byqr_id{username,nickname,weiboname}").get();
+					if (allyqr.result.data && allyqr.result.data.length > 0) {
+						this.allyqr = allyqr.result.data;
+					}
+				}
+				
+				console.log("this.allyqr", this.allyqr);
+			},
 			// 改变消息类型
-			changexxtype(name){
+			changexxtype(name) {
 				// debugger;
-				if(name==1){
-					this.infoconent="";
-					this.showshType=false;
-				}else{
-					this.showshType=true;
+				if (name == 1) {
+					this.infoconent = "";
+					this.showshType = false;
+				} else {
+					this.showshType = true;
 				}
 			},
 			// 改变消息类型
-			changeshtype(name){
+			changeshtype(name) {
 				// debugger;
-				this.infoconent=name;
+				this.infoconent = name;
 			},
 			// 生成邀请码
 			createdYqm() {
@@ -362,7 +417,7 @@
 			},
 			sendinfo(id) {
 				this.showinfo = true;
-				this.currentId=id;
+				this.currentId = id;
 				// uni.showModal({
 				// 	editable: true,
 				// 	title: "输入内容",
@@ -398,16 +453,16 @@
 			},
 			confirminfo() {
 				// debugger;
-				if(!this.infoconent){
+				if (!this.infoconent) {
 					uni.showToast({
-						title:"请输入内容",
-						icon:"none"
+						title: "请输入内容",
+						icon: "none"
 					});
-					this.showinfo=true;
-					return ;
+					this.showinfo = true;
+					return;
 				}
 				var add_value = {
-					type:this.radioinfo,
+					type: this.radioinfo,
 					user_id: this.currentId,
 					comment: this.infoconent
 				}
@@ -416,8 +471,8 @@
 					uni.showToast({
 						title: '发送成功'
 					});
-					this.infoconent="";
-					this.currentId="";
+					this.infoconent = "";
+					this.currentId = "";
 				}).catch((err) => {
 					uni.showModal({
 						content: err.message || '请求服务失败',
@@ -487,17 +542,17 @@
 				if (!query) {
 					return ''
 				}
-				query=query.toLowerCase();
-				var _search="";
-				dbSearchFields.forEach((item,index)=>{
-					if(index!=dbSearchFields.length-1){
-						_search+=item+"=='"+query+"'||";
-					}else{
-						_search+=item+"=='"+query+"'";
+				query = query.toLowerCase();
+				var _search = "";
+				dbSearchFields.forEach((item, index) => {
+					if (index != dbSearchFields.length - 1) {
+						_search += item + "=='" + query + "'||";
+					} else {
+						_search += item + "=='" + query + "'";
 					}
 				});
 				return _search;
-				
+
 				// const queryRe = new RegExp(//, 'i')
 				// return dbSearchFields.map(name => queryRe + '.test(' + name + ')').join(' || ')
 			},
@@ -534,8 +589,9 @@
 					this.loadData()
 				})
 			},
-			searchweibono2(){
-				const newWhere = "weiboname!=''&&weiboname!=null&&isbdwb!=true&&status!=1&&(beizhu==''||beizhu==undefined)";
+			searchweibono2() {
+				const newWhere =
+				"weiboname!=''&&weiboname!=null&&isbdwb!=true&&status!=1&&(beizhu==''||beizhu==undefined)";
 				this.where = newWhere
 				// 下一帧拿到查询条件
 				this.$nextTick(() => {
@@ -627,5 +683,9 @@
 <style>
 	th {
 		max-width: 300px;
+	}
+	.u-th1,.u-th2,.u-td1,.u-td2{
+		max-width: 120px;
+		width: 120px;
 	}
 </style>

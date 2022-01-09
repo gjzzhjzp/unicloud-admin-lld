@@ -29,10 +29,10 @@
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
-            <uni-td align="center">{{item.yqr_id[0].nickname}}</uni-td>
-			<uni-td align="center">{{item.yqr_id[0].username}}</uni-td>
-			<uni-td align="center">{{item.byqr_id[0].nickname}}</uni-td>
-			<uni-td align="center">{{item.byqr_id[0].username}}</uni-td>
+            <uni-td align="center">{{item.yqr_id[0]?item.yqr_id[0].nickname:''}}</uni-td>
+			<uni-td align="center">{{item.yqr_id[0]?item.yqr_id[0].username:''}}</uni-td>
+			<uni-td align="center">{{item.byqr_id[0]?item.byqr_id[0].nickname:''}}</uni-td>
+			<uni-td align="center">{{item.byqr_id[0]?item.byqr_id[0].username:''}}</uni-td>
             <uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.date"></uni-dateformat></uni-td>
             <uni-td align="center">
               <view class="uni-group">
