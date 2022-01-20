@@ -35,7 +35,10 @@
 			<uni-th align="center" v-if="isManger" filter-type="select" :filter-data="options.filterData.is_recommend_localdata" @filter-change="filterChange($event, 'is_recommend')">推荐</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_grant_localdata" @filter-change="filterChange($event, 'is_grant')">授权</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_encryption_localdata" @filter-change="filterChange($event, 'is_encryption')">加密</uni-th>
-              <uni-th align="center" >发表时间</uni-th>
+              <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_gonggao_localdata" @filter-change="filterChange($event, 'is_gonggao')">公告</uni-th>
+              <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_danmu_localdata" @filter-change="filterChange($event, 'is_danmu')">弹幕</uni-th>
+              
+			  <uni-th align="center" >发表时间</uni-th>
               <uni-th align="center" >更新时间</uni-th>
 			  <uni-th align="center">操作</uni-th>
           </uni-tr>
@@ -63,6 +66,8 @@
 			
 			<uni-td align="center"> <checkbox-group @change="change_data(item,'is_grant')"><checkbox value="is_grant" :checked="item.is_grant==1" /></checkbox-group></uni-td>
 			<uni-td align="center"> <checkbox-group @change="change_data(item,'is_encryption')"><checkbox value="is_encryption" :checked="item.is_encryption==1" /></checkbox-group></uni-td>
+			<uni-td align="center"> <checkbox-group @change="change_data(item,'is_gonggao')"><checkbox value="is_gonggao" :checked="item.is_gonggao==1" /></checkbox-group></uni-td>
+			<uni-td align="center"> <checkbox-group @change="change_data(item,'is_danmu')"><checkbox value="is_danmu" :checked="item.is_danmu==1" /></checkbox-group></uni-td>
 		
 			<uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.publish_date"></uni-dateformat></uni-td>
 			<uni-td align="center"><uni-dateformat :threshold="[0, 0]" :date="item.last_modify_date"></uni-dateformat></uni-td>
@@ -123,7 +128,7 @@
         orderByFieldName: "",
         selectedIndexs: [],
 		collection:"jz-opendb-resources,uni-id-users",
-		field:"publish_date,last_modify_date,categories,categorieszw,labels,author,title,article_status,is_recommend,is_grant,is_encryption,is_login,avatar,resources,zy_gs,excerpt,content,user_id{nickname}",
+		field:"publish_date,last_modify_date,categories,categorieszw,labels,author,title,article_status,is_recommend,is_grant,is_encryption,is_gonggao,is_danmu,is_login,avatar,resources,zy_gs,excerpt,content,user_id{nickname}",
         options: {
           pageSize,
           pageCurrent,
@@ -183,7 +188,27 @@
                 "value": 1,
                 "text": "加密"
               }
-            ]
+            ],
+			"is_gonggao": [
+			  {
+			    "value": 0,
+			    "text": "否"
+			  },
+			  {
+			    "value": 1,
+			    "text": "是"
+			  }
+			],
+			"is_danmu": [
+			  {
+			    "value": 0,
+			    "text": "无"
+			  },
+			  {
+			    "value": 1,
+			    "text": "有"
+			  }
+			]
           },
           ...enumConverter
         },
@@ -224,7 +249,7 @@
 		if(roles.indexOf('only_zylist')!=-1){
 			this.isManger=false;
 			this.collection="jz-opendb-resources",
-			this.field="publish_date,last_modify_date,categories,categorieszw,labels,author,title,article_status,is_recommend,is_grant,is_encryption,is_login,avatar,resources,zy_gs,excerpt,content",
+			this.field="publish_date,last_modify_date,categories,categorieszw,labels,author,title,article_status,is_recommend,is_grant,is_encryption,is_gonggao,is_danmu,is_login,avatar,resources,zy_gs,excerpt,content",
 			
 			this.where="user_id==$cloudEnv_uid";
 			this.$nextTick(() => {
