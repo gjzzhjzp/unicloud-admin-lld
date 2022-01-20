@@ -2,17 +2,6 @@
 
 
 const validator = {
-  "title": {
-    "rules": [
-      {
-        "required": true
-      },
-      {
-        "format": "string"
-      }
-    ],
-    "label": "标题"
-  },
   "categories": {
     "rules": [
       {
@@ -62,6 +51,14 @@ const validator = {
     ],
     "defaultValue": 0,
     "label": "文章状态"
+  },
+  "pl_count": {
+    "rules": [
+      {
+        "format": "int"
+      }
+    ],
+    "label": "评论数"
   },
   "resources": {
     "rules": [

@@ -1,14 +1,14 @@
 <template>
   <view class="uni-container">
     <uni-forms ref="form" :value="formData" validateTrigger="bind">
-      <uni-forms-item name="title" label="标题" required>
-        <uni-easyinput placeholder="请输入标题" v-model="formData.title" trim="both"></uni-easyinput>
-      </uni-forms-item>
       <uni-forms-item name="categories" label="分类">
         <uni-data-checkbox v-model="formData.categories" :localdata="formOptions.categories_localdata"></uni-data-checkbox>
       </uni-forms-item>
       <uni-forms-item name="article_status" label="文章状态">
         <uni-data-checkbox v-model="formData.article_status" :localdata="formOptions.article_status_localdata"></uni-data-checkbox>
+      </uni-forms-item>
+      <uni-forms-item name="pl_count" label="评论数">
+        <uni-easyinput placeholder="评论数" type="number" v-model="formData.pl_count"></uni-easyinput>
       </uni-forms-item>
       <uni-forms-item name="resources" label="附件资源">
         <uni-file-picker file-mediatype="all" return-type="array" v-model="formData.resources"></uni-file-picker>
@@ -55,9 +55,9 @@
   export default {
     data() {
       let formData = {
-        "title": "",
         "categories": 0,
         "article_status": 0,
+        "pl_count": null,
         "resources": [],
         "last_modify_date": null,
         "excerpt": "",

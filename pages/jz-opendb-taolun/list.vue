@@ -16,14 +16,14 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" :collection="collectionList" field="title,categories,article_status,resources,last_modify_date,excerpt,is_recommend,is_off" :where="where" page-data="replace"
+      <unicloud-db ref="udb" :collection="collectionList" field="categories,article_status,pl_count,resources,last_modify_date,excerpt,is_recommend,is_off" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
           <uni-tr>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'title')" sortable @sort-change="sortChange($event, 'title')">标题</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.categories_localdata" @filter-change="filterChange($event, 'categories')">分类</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.article_status_localdata" @filter-change="filterChange($event, 'article_status')">文章状态</uni-th>
+            <uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'pl_count')" sortable @sort-change="sortChange($event, 'pl_count')">评论数</uni-th>
             <uni-th align="center" sortable @sort-change="sortChange($event, 'resources')">附件资源</uni-th>
             <uni-th align="center" filter-type="timestamp" @filter-change="filterChange($event, 'last_modify_date')" sortable @sort-change="sortChange($event, 'last_modify_date')">最后修改时间</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'excerpt')" sortable @sort-change="sortChange($event, 'excerpt')">详情</uni-th>
@@ -32,9 +32,9 @@
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
-            <uni-td align="center">{{item.title}}</uni-td>
             <uni-td align="center">{{options.categories_valuetotext[item.categories]}}</uni-td>
             <uni-td align="center">{{options.article_status_valuetotext[item.article_status]}}</uni-td>
+            <uni-td align="center">{{item.pl_count}}</uni-td>
             <uni-td align="center">
               <template v-for="(file, j) in item.resources">
                 <uni-file-picker v-if="file.fileType == 'image'" :value="file" :file-mediatype="file.fileType" :imageStyles="imageStyles" readonly></uni-file-picker>
@@ -151,9 +151,9 @@
           "filename": "jz-opendb-taolun.xls",
           "type": "xls",
           "fields": {
-            "标题": "title",
             "分类": "categories",
             "文章状态": "article_status",
+            "评论数": "pl_count",
             "附件资源": "resources",
             "最后修改时间": "last_modify_date",
             "详情": "excerpt",
