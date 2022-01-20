@@ -282,7 +282,7 @@
 					//此处是我将上一步的文件转base64做了全局
 					this.urlTobase64(res.tempFilePaths[0], base => {
 						uniCloud.callFunction({
-							name: 'jzfunction',
+							name: 'jzexcel',
 							data: {
 								action: 'excel/importExcel',
 								data:{
