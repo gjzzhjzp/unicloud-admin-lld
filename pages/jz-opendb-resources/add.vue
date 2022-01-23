@@ -47,7 +47,7 @@
         <uni-file-picker file-mediatype="all" return-type="array" v-model="formData.resources"></uni-file-picker>
       </uni-forms-item> -->
 			<uni-forms-item name="aliyun_dz" label="外链">
-				<uni-easyinput placeholder="请输入外链地址" v-model="formData.aliyun_dz" trim="both"></uni-easyinput>
+				<uni-easyinput type="textarea" :maxlength="500" placeholder="请输入外链地址" v-model="formData.aliyun_dz" trim="both"></uni-easyinput>
 			</uni-forms-item>
 			<uni-forms-item name="excerpt" label="内容">
 				<uni-easyinput placeholder="请输入内容" v-model="formData.excerpt" trim="both"></uni-easyinput>
