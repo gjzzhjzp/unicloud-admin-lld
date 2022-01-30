@@ -172,6 +172,7 @@
 			},
 			search() {
 				const newWhere = this.getWhere()
+				console.log("newWhere",newWhere);
 				this.where = newWhere
 				this.$nextTick(() => {
 					this.loadData()

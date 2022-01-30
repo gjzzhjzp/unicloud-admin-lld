@@ -26,8 +26,8 @@
 			</view>
 		</view>
 		<view class="uni-container">
-			<unicloud-db ref="udb" collection="uni-id-users"
-				field="username,nickname,weiboname,beizhu,weibocontent,isbdwb,status,dcloud_appid,register_date"
+			<unicloud-db ref="udb" collection="uni-id-users,uni-id-roles"
+				field="username,nickname,weiboname,beizhu,weibocontent,isbdwb,status,role{role_name},dcloud_appid,register_date"
 				:where="where" page-data="replace" :orderby="orderby" :getcount="true" :page-size="options.pageSize"
 				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
 				:options="options" loadtime="manual" @load="onqueryload">
@@ -45,7 +45,7 @@
 							@filter-change="filterChange($event, 'status')">用户状态</uni-th>
 						<!-- <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'email')"
 							sortable @sort-change="sortChange($event, 'email')">邮箱</uni-th> -->
-						<!-- <uni-th align="center" width="100">角色</uni-th> -->
+						<uni-th align="center" width="100">角色</uni-th>
 						<uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'weiboname')"
 							sortable @sort-change="sortChange($event, 'weiboname')">微博主页地址</uni-th>
 						<uni-th align="center">微博验证</uni-th>
@@ -67,7 +67,7 @@
 						<!-- 	<uni-td align="center">
 							<uni-link :href="'mailto:'+item.email" :text="item.email"></uni-link>
 						</uni-td> -->
-						<!-- <uni-td align="center">{{item.role}}</uni-td> -->
+						<uni-td align="center">{{item.role}}</uni-td>
 						<!-- <uni-td align="center">
 							<uni-link v-if="item.dcloud_appid === undefined" :href="noAppidWhatShouldIDoLink">
 								未绑定可登录应用<view class="uni-icons-help"></view>
@@ -139,7 +139,7 @@
 	const db = uniCloud.database()
 	// 表查询配置
 	const dbOrderBy = 'register_date desc' // 排序字段
-	const dbSearchFields = ['username', "nickname", 'weiboname'] // 支持模糊搜索的字段列表
+	const dbSearchFields = ['username', "nickname", 'role.role_name', 'weiboname'] // 支持模糊搜索的字段列表
 	// 分页配置
 	const pageSize = 20
 	const pageCurrent = 1
@@ -299,15 +299,15 @@
 				});
 			},
 			onqueryload(data) {
-				// for (var i = 0; i < data.length; i++) {
-				// 	let item = data[i]
-				// 	const roleArr = item.role.map(item => item.role_name)
-				// 	item.role = roleArr.join('、')
-				// 	if (Array.isArray(item.dcloud_appid)) {
-				// 		item.dcloud_appid = item.dcloud_appid.join('、')
-				// 	}
-				// 	item.register_date = this.$formatDate(item.register_date)
-				// }
+				for (var i = 0; i < data.length; i++) {
+					let item = data[i]
+					const roleArr = item.role.map(item => item.role_name)
+					item.role = roleArr.join('、')
+					if (Array.isArray(item.dcloud_appid)) {
+						item.dcloud_appid = item.dcloud_appid.join('、')
+					}
+					item.register_date = this.$formatDate(item.register_date)
+				}
 				this.exportExcelData = data
 			},
 			changeSize(e) {

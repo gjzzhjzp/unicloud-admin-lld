@@ -231,7 +231,26 @@
       },
       confirmDelete(id) {
         this.$refs.udb.remove(id, {
-          success:(res) => {
+			"confirmContent":"删除后不可恢复，确定删除？",
+          success:async (res) => {
+			  await db.collection("opendb-news-likeTaolun").where({
+			  							"article_id":id
+			  						}).remove();
+			  						await db.collection("opendb-news-likeplTaolun").where({
+			  							"article_id":id
+			  						}).remove();
+			  						await db.collection("opendb-news-favoriteTaolun").where({
+			  							"article_id":id
+			  						}).remove();
+			  						await db.collection("opendb-news-historyTaolun").where({
+			  							"article_id":id
+			  						}).remove();
+			  						await db.collection("opendb-news-commentsTaolun").where({
+			  							"article_id":id
+			  						}).remove();
+			  						await db.collection("opendb-news-jubaoplTaolun").where({
+			  							"article_id":id
+			  						}).remove();
             this.$refs.table.clearSelection()
           }
         })

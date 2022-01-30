@@ -4,6 +4,12 @@
 			<uni-forms-item name="username" label="用户名" required>
 				<uni-easyinput :disabled="true" v-model="formData.username" :clearable="false" placeholder="请输入用户名" />
 			</uni-forms-item>
+			<!-- <uni-forms-item :name="showPassword ? 'password' : ''" label="重置密码">
+				<span v-show="!showPassword" class="reset-password-btn" @click="trigger">点击重置密码</span>
+				<uni-easyinput v-show="showPassword" v-model="formData.password" :clearable="false" placeholder="请输入重置密码">
+					<view slot="right" class="cancel-reset-password-btn" @click="trigger">取消</view>
+				</uni-easyinput>
+			</uni-forms-item> -->
 			<uni-forms-item name="weiboname" label="微博主页地址">
 				<uni-easyinput v-model="formData.weiboname" :clearable="false" placeholder="请输入微博主页地址" />
 			</uni-forms-item>

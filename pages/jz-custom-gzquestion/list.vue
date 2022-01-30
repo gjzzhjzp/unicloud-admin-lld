@@ -16,30 +16,24 @@
       </view>
     </view>
     <view class="uni-container">
-      <unicloud-db ref="udb" collection="opendb-news-comments" field="article_id,comment_content,like_count,comment_type,reply_user_id,reply_comment_id,all_reply_comment_id,comment_cj" :where="where" page-data="replace"
+      <unicloud-db ref="udb" :collection="collectionList" field="title,options,answer,status,description" :where="where" page-data="replace"
         :orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
         v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual" @load="onqueryload">
         <uni-table ref="table" :loading="loading" :emptyText="error.message || '没有更多数据'" border stripe type="selection" @selection-change="selectionChange">
           <uni-tr>
-            <uni-th align="center" sortable @sort-change="sortChange($event, 'article_id')">文章ID</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'comment_content')" sortable @sort-change="sortChange($event, 'comment_content')">评论内容</uni-th>
-            <uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'like_count')" sortable @sort-change="sortChange($event, 'like_count')">评论喜欢数、点赞数</uni-th>
-            <uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'comment_type')" sortable @sort-change="sortChange($event, 'comment_type')">回复类型</uni-th>
-            <uni-th align="center" sortable @sort-change="sortChange($event, 'reply_user_id')">评论用户ID</uni-th>
-            <uni-th align="center" sortable @sort-change="sortChange($event, 'reply_comment_id')">被回复的评论ID</uni-th>
-            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'all_reply_comment_id')" sortable @sort-change="sortChange($event, 'all_reply_comment_id')">所有被回复的评论ID</uni-th>
-            <uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'comment_cj')" sortable @sort-change="sortChange($event, 'comment_cj')">评论层级</uni-th>
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'title')" sortable @sort-change="sortChange($event, 'title')">问题</uni-th>
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'options')" sortable @sort-change="sortChange($event, 'options')">选项</uni-th>
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'answer')" sortable @sort-change="sortChange($event, 'answer')">答案</uni-th>
+            <uni-th align="center" sortable @sort-change="sortChange($event, 'status')">生效状态</uni-th>
+            <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'description')" sortable @sort-change="sortChange($event, 'description')">备注</uni-th>
             <uni-th align="center">操作</uni-th>
           </uni-tr>
           <uni-tr v-for="(item,index) in data" :key="index">
-            <uni-td align="center">{{item.article_id}}</uni-td>
-            <uni-td align="center">{{item.comment_content}}</uni-td>
-            <uni-td align="center">{{item.like_count}}</uni-td>
-            <uni-td align="center">{{item.comment_type}}</uni-td>
-            <uni-td align="center">{{item.reply_user_id}}</uni-td>
-            <uni-td align="center">{{item.reply_comment_id}}</uni-td>
-            <uni-td align="center">{{item.all_reply_comment_id}}</uni-td>
-            <uni-td align="center">{{item.comment_cj}}</uni-td>
+            <uni-td align="center">{{item.title}}</uni-td>
+            <uni-td align="center">{{item.options}}</uni-td>
+            <uni-td align="center">{{item.answer}}</uni-td>
+            <uni-td align="center">{{item.status == true ? '✅' : '❌'}}</uni-td>
+            <uni-td align="center">{{item.description}}</uni-td>
             <uni-td align="center">
               <view class="uni-group">
                 <button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini" type="primary">修改</button>
@@ -57,7 +51,7 @@
 </template>
 
 <script>
-  import { enumConverter, filterToWhere } from '../../js_sdk/validator/opendb-news-comments.js';
+  import { enumConverter, filterToWhere } from '../../js_sdk/validator/jz-custom-gzquestion.js';
 
   const db = uniCloud.database()
   // 表查询配置
@@ -75,6 +69,7 @@
   export default {
     data() {
       return {
+        collectionList: "jz-custom-gzquestion",
         query: '',
         where: '',
         orderby: dbOrderBy,
@@ -91,17 +86,14 @@
           height: 64
         },
         exportExcel: {
-          "filename": "opendb-news-comments.xls",
+          "filename": "jz-custom-gzquestion.xls",
           "type": "xls",
           "fields": {
-            "文章ID": "article_id",
-            "评论内容": "comment_content",
-            "评论喜欢数、点赞数": "like_count",
-            "回复类型": "comment_type",
-            "评论用户ID": "reply_user_id",
-            "被回复的评论ID": "reply_comment_id",
-            "所有被回复的评论ID": "all_reply_comment_id",
-            "评论层级": "comment_cj"
+            "问题": "title",
+            "选项": "options",
+            "答案": "answer",
+            "生效状态": "status",
+            "备注": "description"
           }
         },
         exportExcelData: []
@@ -113,20 +105,6 @@
     onReady() {
       this.$refs.udb.loadData()
     },
-	async created(){
-		// var res=await db.collection('opendb-news-comments').where({
-			
-		// }).limit(500).get();
-		// var rows=res.result.data;
-		// console.log("rowsaaaaaaaaaaaaaaaaaaaaa",rows);
-		// rows.forEach(async (item)=>{
-		// 	await db.collection('opendb-news-comments').where({
-		// 		_id:item._id
-		// 	}).update({
-		// 		comment_id:"pl_"+Math.random().toString(36).substr(2)
-		// 	});
-		// });
-	},
     methods: {
       onqueryload(data) {
         this.exportExcelData = data

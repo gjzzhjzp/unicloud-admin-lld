@@ -19,11 +19,18 @@
 			</view>
 		</view>
 		<view class="uni-container">
-			<unicloud-db ref="udb" collection="uni-id-users,uni-id-roles"
-				field="username,nickname,weiboname,weibocontent,isbdwb,resources,update_date,beizhu,status,role{role_name},dcloud_appid,register_date"
-				:where="where" page-data="replace" :orderby="orderby" :getcount="true" :page-size="options.pageSize"
+			<!-- :getcount="true" -->
+			<unicloud-db ref="udb" collection="uni-id-users"
+				field="username,nickname,weiboname,weibocontent,isbdwb,resources,update_date,beizhu,status,dcloud_appid,register_date"
+				:where="where" page-data="replace" :getcount="true" :orderby="orderby" :page-size="options.pageSize"
 				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
 				:options="options" loadtime="manual" @load="onqueryload">
+			
+		<!-- 	<unicloud-db ref="udb" collection="uni-id-users,uni-id-roles"
+				field="username,nickname,weiboname,weibocontent,isbdwb,resources,update_date,beizhu,status,role{role_name},dcloud_appid,register_date"
+				:where="where" page-data="replace" :orderby="orderby" :page-size="options.pageSize"
+				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
+				:options="options" loadtime="manual" @load="onqueryload"> -->
 				<uni-table ref="table" :loading="loading" :emptyText="error.message || $t('common.empty')" border stripe
 					type="selection" @selection-change="selectionChange" class="table-pc">
 					<uni-tr>
@@ -202,8 +209,8 @@
 	const db = uniCloud.database()
 	// 表查询配置
 	const dbOrderBy = 'register_date desc' // 排序字段
-	const dbSearchFields = ['username', "nickname", 'role.role_name', 'weiboname'] // 支持模糊搜索的字段列表
-	// 分页配置
+	const dbSearchFields = ['username', "nickname", 'weiboname'] // 支持模糊搜索的字段列表
+	// 分页配置'role.role_name'
 	const pageSize = 20
 	const pageCurrent = 1
 
@@ -336,7 +343,7 @@
 			this._filter = {}
 		},
 		onReady() {
-			this.roles = this.getUserRole();
+			// this.roles = this.getUserRole();
 			// 如果仅是上传资源
 			if (this.roles.indexOf('only_zylist') != -1) {
 				this.isManager = false;
@@ -558,15 +565,15 @@
 				});
 			},
 			onqueryload(data) {
-				for (var i = 0; i < data.length; i++) {
-					let item = data[i]
-					const roleArr = item.role.map(item => item.role_name)
-					item.role = roleArr.join('、')
-					if (Array.isArray(item.dcloud_appid)) {
-						item.dcloud_appid = item.dcloud_appid.join('、')
-					}
-					item.register_date = this.$formatDate(item.register_date)
-				}
+				// for (var i = 0; i < data.length; i++) {
+				// 	let item = data[i]
+				// 	const roleArr = item.role.map(item => item.role_name)
+				// 	item.role = roleArr.join('、')
+				// 	if (Array.isArray(item.dcloud_appid)) {
+				// 		item.dcloud_appid = item.dcloud_appid.join('、')
+				// 	}
+				// 	item.register_date = this.$formatDate(item.register_date)
+				// }
 				this.exportExcelData = data
 			},
 			changeSize(e) {
