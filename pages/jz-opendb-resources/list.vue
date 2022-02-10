@@ -548,6 +548,10 @@
 				var dataList = this.$refs.udb.dataList
 				return this.selectedIndexs.map(i => dataList[i]._id)
 			},
+			// 多选
+			selectionChange(e) {
+				this.selectedIndexs = e.detail.index
+			},
 			// 批量删除
 			delTable() {
 				this.$refs.udb.remove(this.selectedItems(), {
@@ -556,10 +560,7 @@
 					}
 				})
 			},
-			// 多选
-			selectionChange(e) {
-				this.selectedIndexs = e.detail.index
-			},
+			
 			confirmDelete(id) {
 				this.$refs.udb.remove(id, {
 					"confirmContent":"删除后不可恢复，确定删除？",

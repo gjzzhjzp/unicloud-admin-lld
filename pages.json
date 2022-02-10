@@ -406,6 +406,24 @@
         "navigationBarTitleText": "列表"
     }
 }
+,{
+    "path": "pages/jz-opendb-resourceshj/add",
+    "style": {
+        "navigationBarTitleText": "新增"
+    }
+}
+,{
+    "path": "pages/jz-opendb-resourceshj/edit",
+    "style": {
+        "navigationBarTitleText": "编辑"
+    }
+}
+,{
+    "path": "pages/jz-opendb-resourceshj/list",
+    "style": {
+        "navigationBarTitleText": "列表"
+    }
+}
 ],
 	"subPackages": [{
 		"root": "pages/system",

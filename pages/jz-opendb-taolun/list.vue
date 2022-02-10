@@ -23,8 +23,8 @@
           <uni-tr>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.categories_localdata" @filter-change="filterChange($event, 'categories')">分类</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.article_status_localdata" @filter-change="filterChange($event, 'article_status')">文章状态</uni-th>
-            <uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'pl_count')" sortable @sort-change="sortChange($event, 'pl_count')">评论数</uni-th>
-            <uni-th align="center" sortable @sort-change="sortChange($event, 'resources')">附件资源</uni-th>
+            <!-- <uni-th align="center" filter-type="range" @filter-change="filterChange($event, 'pl_count')" sortable @sort-change="sortChange($event, 'pl_count')">评论数</uni-th> -->
+            <!-- <uni-th align="center" sortable @sort-change="sortChange($event, 'resources')">附件资源</uni-th> -->
             <uni-th align="center" filter-type="timestamp" @filter-change="filterChange($event, 'last_modify_date')" sortable @sort-change="sortChange($event, 'last_modify_date')">最后修改时间</uni-th>
             <uni-th align="center" filter-type="search" @filter-change="filterChange($event, 'excerpt')" sortable @sort-change="sortChange($event, 'excerpt')">详情</uni-th>
             <uni-th align="center" filter-type="select" :filter-data="options.filterData.is_recommend_localdata" @filter-change="filterChange($event, 'is_recommend')">是否推荐</uni-th>
@@ -34,13 +34,13 @@
           <uni-tr v-for="(item,index) in data" :key="index">
             <uni-td align="center">{{options.categories_valuetotext[item.categories]}}</uni-td>
             <uni-td align="center">{{options.article_status_valuetotext[item.article_status]}}</uni-td>
-            <uni-td align="center">{{item.pl_count}}</uni-td>
-            <uni-td align="center">
+            <!-- <uni-td align="center">{{item.pl_count}}</uni-td> -->
+            <!-- <uni-td align="center">
               <template v-for="(file, j) in item.resources">
                 <uni-file-picker v-if="file.fileType == 'image'" :value="file" :file-mediatype="file.fileType" :imageStyles="imageStyles" readonly></uni-file-picker>
                 <uni-link v-else :href="file.url" :text="file.url"></uni-link>
               </template>
-            </uni-td>
+            </uni-td> -->
             <uni-td align="center">
               <uni-dateformat :threshold="[0, 0]" :date="item.last_modify_date"></uni-dateformat>
             </uni-td>
@@ -68,8 +68,8 @@
 
   const db = uniCloud.database()
   // 表查询配置
-  const dbOrderBy = '' // 排序字段
-  const dbSearchFields = [] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
+  const dbOrderBy = 'publish_date desc' // 排序字段
+  const dbSearchFields = ["excerpt"] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
   // 分页配置
   const pageSize = 20
   const pageCurrent = 1

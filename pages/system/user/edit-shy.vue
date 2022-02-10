@@ -4,12 +4,12 @@
 			<uni-forms-item name="username" label="用户名" required>
 				<uni-easyinput :disabled="true" v-model="formData.username" :clearable="false" placeholder="请输入用户名" />
 			</uni-forms-item>
-			<!-- <uni-forms-item :name="showPassword ? 'password' : ''" label="重置密码">
+			<uni-forms-item v-if="show_password" :name="showPassword ? 'password' : ''" label="重置密码">
 				<span v-show="!showPassword" class="reset-password-btn" @click="trigger">点击重置密码</span>
 				<uni-easyinput v-show="showPassword" v-model="formData.password" :clearable="false" placeholder="请输入重置密码">
 					<view slot="right" class="cancel-reset-password-btn" @click="trigger">取消</view>
 				</uni-easyinput>
-			</uni-forms-item> -->
+			</uni-forms-item>
 			<uni-forms-item name="weiboname" label="微博主页地址">
 				<uni-easyinput v-model="formData.weiboname" :clearable="false" placeholder="请输入微博主页地址" />
 			</uni-forms-item>
@@ -44,7 +44,7 @@
 	const db = uniCloud.database();
 	const dbCmd = db.command;
 	const dbCollectionName = 'uni-id-users';
-
+import BASE64 from "../../../common/common/base64.js"
 	function getValidator(fields) {
 		let result = {}
 		for (let key in validator) {
@@ -59,6 +59,7 @@
 		data() {
 			return {
 				showPassword: false,
+				show_password:false,
 				formData: {
 					"username": "",
 					"password": "",
@@ -114,7 +115,27 @@
 			this.loadroles()
 
 		},
+		created(){
+			// debugger;
+			var roles=this.getUserRole();
+			if(roles.indexOf("password")!=-1){
+				this.show_password=true;
+			}else{
+				this.show_password=false;
+			}
+		},
 		methods: {
+			// 获取用户角色
+			getUserRole() {
+				var _token = uni.getStorageSync("uni_id_token");
+				var __token = {};
+				if (_token) {
+					_token = _token.split(".")[1];
+					var __token = BASE64.decode(_token);
+					__token = JSON.parse(__token.split("}")[0] + "}");
+				}
+				return __token.role;
+			},
 			/**
 			 * 跳转应用管理的 list 页
 			 */
@@ -161,20 +182,46 @@
 				}
 				// value.id = this.formDataId;
 				delete value.username;
-				console.log("value",value);
-				console.log("this.formDataId",this.formDataId);
-				return db.collection('uni-id-users').doc(this.formDataId).update(value).then((res) => {
-					uni.showToast({
-						title: '修改成功'
-					});
-					this.getOpenerEventChannel().emit('refreshData');
-					setTimeout(() => uni.navigateBack(), 500)
-				}).catch((err) => {
-					uni.showModal({
-						content: err.message || '请求服务失败',
-						showCancel: false
-					})
+				// console.log("value",value);
+				// console.log("this.formDataId",this.formDataId);
+				
+				uniCloud.callFunction({
+					name: 'jzuser',
+					data: {
+						action: 'user/updateuser',
+						data:{
+							id:this.formDataId,
+							data:value
+						}
+					},
+				}).then((res) => {
+					var res = res.result;
+					if (res.state == "0000") {
+							uni.showToast({
+								title: '修改成功'
+							});
+								this.getOpenerEventChannel().emit('refreshData')
+							setTimeout(() => uni.navigateBack(), 500)
+					} else {
+						uni.showToast({
+							title: res.msg,
+							icon: null
+						});
+					}
 				});
+				
+				// return db.collection('uni-id-users').doc(this.formDataId).update(value).then((res) => {
+				// 	uni.showToast({
+				// 		title: '修改成功'
+				// 	});
+				// 	this.getOpenerEventChannel().emit('refreshData');
+				// 	setTimeout(() => uni.navigateBack(), 500)
+				// }).catch((err) => {
+				// 	uni.showModal({
+				// 		content: err.message || '请求服务失败',
+				// 		showCancel: false
+				// 	})
+				// });
 				// this.$request('updateUser', value, {
 				// 	functionName: 'uni-id-cf'
 				// }).then(res => {

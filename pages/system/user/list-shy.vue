@@ -12,9 +12,10 @@
 					<button class="uni-button" type="default" size="mini" @click="search">模糊搜索</button>
 					<button class="uni-button" type="default" size="mini" @click="search1">精确搜索</button>
 					<button class="uni-button" type="default" size="mini" @click="searchweibo">微博审核</button>
-					<button class="uni-button" type="default" size="mini" @click="searchweibono">未审核通过</button>
-					<button class="uni-button" type="default" size="mini" @click="searchweibono2">未审核</button>
-					<button class="uni-button" type="default" size="mini" @click="createdYqm">生成邀请码</button>
+					<!-- <button class="uni-button" type="default" size="mini" @click="searchweibono">未审核通过</button> -->
+					<button class="uni-button" type="default" size="mini" @click="searchweibono2">未审核通过</button>
+					<button class="uni-button" type="default" size="mini" @click="searchweibono3">未审核</button>
+					<!-- <button class="uni-button" type="default" size="mini" @click="createdYqm">生成邀请码</button> -->
 				</template>
 			</view>
 		</view>
@@ -123,7 +124,7 @@
 						@change="onPageChanged" />
 				</view>
 			</unicloud-db>
-			<u-modal v-model="showinfo" width="40%" title="发送消息" @confirm="confirminfo" :show-cancel-button="true">
+			<u-modal v-model="showinfo" width="500px" title="发送消息" @confirm="confirminfo" @cancel="openHistory" :mask-close-able="true" cancel-text="历史消息" :show-cancel-button="true">
 				<view class="slot-content" style="padding: 10px;">
 					<u-form ref="uForm" :label-width="160">
 						<u-form-item label="消息类型">
@@ -193,6 +194,22 @@
 					</template>
 				</view>
 			</u-modal>
+			<u-modal @confirm="historyinfoList=[]" v-model="showhistory" title="历史消息" width="500px">
+				<view class="slot-content" style="padding: 10px;">
+					<u-table>
+							<u-tr>
+								<u-th>时间</u-th>
+								<u-th>内容</u-th>
+								<u-th>审核人</u-th>
+							</u-tr>
+							<u-tr v-for="item in historyinfoList">
+								<u-td>{{$u.timeFormat(item.comment_date, 'yyyy-mm-dd hh:MM:ss')}}</u-td>
+								<u-td>{{item.comment}}</u-td>
+								<u-td>{{item.manager_id[0]?item.manager_id[0].nickname:''}}</u-td>
+							</u-tr>
+						</u-table>
+				</view>
+			</u-modal>
 		</view>
 		<!-- #ifndef H5 -->
 		<fix-window />
@@ -222,6 +239,8 @@
 	export default {
 		data() {
 			return {
+				showhistory:false,
+				historyinfoList:[],///历史消息
 				curitemtitle:"",
 				showresources: false,
 				moreresources: [], ///更多资料
@@ -239,40 +258,131 @@
 					}
 				],
 				radioshinfo: "", //审核信息
-				radioshList: [{
-					name: '微博链接不正确',
-					value: "宝，你的微博主页链接地址不对，请重新提交输入正确的主页地址"
-				}, {
-					name: '内容少和疑似小号',
-					value: "宝，请尽可能多的提供有关俊哲相关的痕迹截图（氪金、相册、云盘、其他平台的~均可）。请记得打码，并露出截图的系统时间与提交申请时间不超过半小时"
-				}, {
-					name: '疑似唯粉',
-					value: "宝，我们发现你比较关注他俩中的某一个人，请你跟我们发邮件说明一下。如果确实是唯粉，带单人痕迹也可。审核邮箱：jzszd921129910511@163.com"
-				}, {
-					name: '关注/点赞/转发对家或雷点、头像昵称疑似对家（含各种有毒cp）',
-					value: "宝，很抱歉，你的审核未通过。如有疑虑，可重新提交申请"
-				}, {
-					name: '关注对家无互动',
-					value: "宝，这边审核发现您关注了(某先生/某超话)，如果您取消关注，可重新提交申请"
+				radioshList:[{
+					name: '耘影',
+					value: "宝，请使用注册时填写的微博主动联系@耘影 继续后续审核"
 				},{
-					name: '疑似仰卧起坐',
-					value: "宝，你的微博审核出现了一些问题，请带上自己的APP用户名（字母+数字），通过邮箱：jzszd921129910511@163.com与我们取得联系"
-				}, {
-					name: '言论过激',
-					value: "姐子您好，我们的预期是尽可能的优先准入温和佛系的铁血橘子皮，因为在初始阶段app还很脆弱，内外经不起任何风波。为了避免引起不必要的麻烦，你的微博审核没有通过，很抱歉"
-				}, {
-					name: '未发送验证微博',
-					value: "宝，请尽快发送微博验证内容，发送完成后，请重新提交申请"
-				}, {
-					name: '多次踩雷',
-					value: "宝，不好意思，官微已经明确说过我们婉拒关注橘域网的公认雷点，这边发现您仍然关注/转发某先生和某女士，不好意思基于您未事先尽到注意义务，您的审核不予通过"
-				},  {
-					name: '验证资料过少',
-					value: "宝，您的验证资料过少，请尽可能更多的提供有关俊哲相关的痕迹截图（氪金、相册、云盘、其他平台的~均可）。请记得打码，并露出截图的系统时间与提交申请时间不超过半小时"
+					name: '恶龙3388',
+					value: "宝，请使用注册时填写的微博主动联系@恶龙3388 继续后续审核"
 				},{
-					name: '邀请人连带责任',
-					value: "宝，您邀请进app的人中有宝最终审核未通过，目前已经取消您的权限，需要对您进行再次审核。"
+					name: '宁阿蛮',
+					value: "宝，请使用注册时填写的微博主动联系@宁阿蛮 继续后续审核"
+				},{
+					name: '橘子女士s',
+					value: "宝，请使用注册时填写的微博主动联系@橘子女士s 继续后续审核"
+				},{
+					name: '小宇宙审核_黑尾',
+					value: "宝，请使用注册时填写的微博主动联系@小宇宙审核_黑尾 继续后续审核"
+				},{
+					name: '闲云51129',
+					value: "宝，请使用注册时填写的微博主动联系@闲云51129 继续后续审核"
+				},{
+					name: '大橘大利jz',
+					value: "宝，请使用注册时填写的微博主动联系@大橘大利jz 继续后续审核"
+				},{
+					name: '康庄大道·9291',
+					value: "宝，请使用注册时填写的微博主动联系@康庄大道·9291 继续后续审核"
+				},{
+					name: '小宇宙审核_等一个五年2026',
+					value: "宝，请使用注册时填写的微博主动联系@小宇宙审核_等一个五年2026 继续后续审核"
+				},{
+					name: '我家老爷子养了一只公主喵',
+					value: "宝，请使用注册时填写的微博主动联系@我家老爷子养了一只公主喵 继续后续审核"
+				},{
+					name: '落草为扣',
+					value: "宝，请使用注册时填写的微博主动联系@落草为扣 继续后续审核"
+				},{
+					name: '在晾衣架上练瑜伽',
+					value: "宝，请使用注册时填写的微博主动联系@在晾衣架上练瑜伽 继续后续审核"
+				},{
+					name: '含含_1640',
+					value: "宝，请使用注册时填写的微博主动联系@含含_1640 继续后续审核"
+				},{
+					name: '黑巧拌芹菜',
+					value: "宝，请使用注册时填写的微博主动联系@黑巧拌芹菜 继续后续审核"
+				},{
+					name: '·龚张得起·',
+					value: "宝，请使用注册时填写的微博主动联系@·龚张得起· 继续后续审核"
+				},{
+					name: '影子_0511291640',
+					value: "宝，请使用注册时填写的微博主动联系@影子_0511291640 继续后续审核"
+				},{
+					name: '遇见银河_51129',
+					value: "宝，请使用注册时填写的微博主动联系@遇见银河_51129 继续后续审核"
+				},{
+					name: '佩儒·1640',
+					value: "宝，请使用注册时填写的微博主动联系@佩儒·1640 继续后续审核"
+				},{
+					name: '小米吖哟',
+					value: "宝，请使用注册时填写的微博主动联系@小米吖哟 继续后续审核"
+				},{
+					name: '搞点高点',
+					value: "宝，请使用注册时填写的微博主动联系@搞点高点 继续后续审核"
+				},{
+					name: '三天夏日里',
+					value: "宝，请使用注册时填写的微博主动联系@三天夏日里 继续后续审核"
+				},{
+					name: '伤晴_等待',
+					value: "宝，请使用注册时填写的微博主动联系@伤晴_等待 继续后续审核"
+				},{
+					name: '小鱼真的喜欢橘子',
+					value: "宝，请使用注册时填写的微博主动联系@小鱼真的喜欢橘子 继续后续审核"
+				},{
+					name: '嘟嘟3579',
+					value: "宝，请使用注册时填写的微博主动联系@嘟嘟3579 继续后续审核"
+				},{
+					name: '小小西瓜1640',
+					value: "宝，请使用注册时填写的微博主动联系@小小西瓜1640 继续后续审核"
+				},{
+					name: '卿和鹿',
+					value: "宝，请使用注册时填写的微博主动联系@卿和鹿 继续后续审核"
+				},{
+					name: '教程号勿cue',
+					value: "宝，请使用注册时填写的微博主动联系@教程号勿cue 继续后续审核"
+				},{
+					name: '可乐and绿豆汤',
+					value: "宝，请使用注册时填写的微博主动联系@可乐and绿豆汤 继续后续审核"
+				},{
+					name: 'WSLHHYY',
+					value: "宝，请使用注册时填写的微博主动联系@WSLHHYY 继续后续审核"
 				}],
+				// radioshList: [{
+				// 	name: '微博链接不正确',
+				// 	value: "宝，你的微博主页链接地址不对，请重新提交输入正确的主页地址"
+				// }, {
+				// 	name: '内容少和疑似小号',
+				// 	value: "宝，请尽可能多的提供有关俊哲相关的痕迹截图（氪金、相册、云盘、其他平台的~均可）。请记得打码，并露出截图的系统时间与提交申请时间不超过半小时"
+				// }, {
+				// 	name: '图裂',
+				// 	value: "宝，你上传的验证资料图裂未上传成功，请务必等待图片上传完成后点击提交"
+				// }, {
+				// 	name: '疑似唯粉',
+				// 	value: "宝，我们发现你比较关注他俩中的某一个人，请你跟我们发邮件说明一下。如果确实是唯粉，带单人痕迹也可。审核邮箱：jzszd921129910511@163.com"
+				// }, {
+				// 	name: '关注/点赞/转发对家或雷点、头像昵称疑似对家（含各种有毒cp）',
+				// 	value: "宝，很抱歉，你的审核未通过。如有疑虑，可重新提交申请"
+				// }, {
+				// 	name: '关注对家无互动',
+				// 	value: "宝，这边审核发现您关注了(某先生/某超话)，如果您取消关注，可重新提交申请"
+				// },{
+				// 	name: '疑似仰卧起坐',
+				// 	value: "宝，你的微博审核出现了一些问题，请带上自己的APP用户名（字母+数字），通过邮箱：jzszd921129910511@163.com与我们取得联系"
+				// }, {
+				// 	name: '言论过激',
+				// 	value: "姐子您好，我们的预期是尽可能的优先准入温和佛系的铁血橘子皮，因为在初始阶段app还很脆弱，内外经不起任何风波。为了避免引起不必要的麻烦，你的微博审核没有通过，很抱歉"
+				// }, {
+				// 	name: '未发送验证微博',
+				// 	value: "宝，请尽快发送微博验证内容，发送完成后，请重新提交申请"
+				// }, {
+				// 	name: '多次踩雷',
+				// 	value: "宝，不好意思，官微已经明确说过我们婉拒关注橘域网的公认雷点，这边发现您仍然关注/转发某先生和某女士，不好意思基于您未事先尽到注意义务，您的审核不予通过"
+				// },  {
+				// 	name: '验证资料过少',
+				// 	value: "宝，您的验证资料过少，请尽可能更多的提供有关俊哲相关的痕迹截图（氪金、相册、云盘、其他平台的~均可）。请记得打码，并露出截图的系统时间与提交申请时间不超过半小时"
+				// },{
+				// 	name: '邀请人连带责任',
+				// 	value: "宝，您邀请进app的人中有宝最终审核未通过，目前已经取消您的权限，需要对您进行再次审核。"
+				// }],
 				showinfo: false,
 				query: '',
 				where: '',
@@ -369,6 +479,24 @@
 			}
 		},
 		methods: {
+			// 获取历史消息
+			async getHistoryInfo(){
+				// debugger;
+				var that=this;
+				console.log("currentid",that.currentId);
+				var res=await db.collection("jz-custom-systeminfo,uni-id-users").where({
+					type:0,
+					user_id:that.currentId
+				}).field("manager_id{nickname,username},comment_date,comment").get()
+				
+				var rows=res.result.data;
+				this.historyinfoList=rows;
+				console.log("historyinfoList",this.historyinfoList);
+			},
+			openHistory(){
+				this.showhistory=true;
+				this.getHistoryInfo();
+			},
 			// 查看验证资料
 			lookYzzl(item) {
 				this.curitemtitle=item.nickname+"("+item.username+")";
@@ -650,6 +778,15 @@
 					this.loadData()
 				})
 			},
+			searchweibono3() {
+				const newWhere =
+					"weiboname!=''&&weiboname!=null&&isbdwb!=true&&status!=1&&(beizhu==''||beizhu==undefined)";
+				this.where = newWhere
+				// 下一帧拿到查询条件
+				this.$nextTick(() => {
+					this.loadData()
+				})
+			},
 			loadData(clear = true) {
 				this.$refs.udb.loadData({
 					clear
@@ -733,6 +870,7 @@
 </script>
 
 <style>
+	
 	uni-button[size=mini] {
 	    padding: 0.2em !important;
 	}

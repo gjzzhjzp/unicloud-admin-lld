@@ -22,6 +22,9 @@
       <uni-forms-item name="is_recommend" label="是否推荐">
         <uni-data-checkbox v-model="formData.is_recommend" :localdata="formOptions.is_recommend_localdata"></uni-data-checkbox>
       </uni-forms-item>
+	  <uni-forms-item name="is_good" label="是否精华">
+	    <uni-data-checkbox v-model="formData.is_good" :localdata="formOptions.is_good_localdata"></uni-data-checkbox>
+	  </uni-forms-item>
       <uni-forms-item name="is_off" label="是否下架">
         <uni-data-checkbox v-model="formData.is_off" :localdata="formOptions.is_off_localdata"></uni-data-checkbox>
       </uni-forms-item>
@@ -62,6 +65,7 @@
         "last_modify_date": null,
         "excerpt": "",
         "is_recommend": 0,
+		"is_good":0,
         "is_off": 0
       }
       return {
@@ -105,6 +109,16 @@
               "text": "推荐"
             }
           ],
+		  "is_good_localdata": [
+		    {
+		      "value": 0,
+		      "text": "不是"
+		    },
+		    {
+		      "value": 1,
+		      "text": "是"
+		    }
+		  ],
           "is_off_localdata": [
             {
               "value": 0,
@@ -174,7 +188,7 @@
         uni.showLoading({
           mask: true
         })
-        db.collection(dbCollectionName).doc(id).field("categories,article_status,pl_count,resources,last_modify_date,excerpt,is_recommend,is_off").get().then((res) => {
+        db.collection(dbCollectionName).doc(id).field("categories,article_status,pl_count,resources,last_modify_date,excerpt,is_recommend,is_good,is_off").get().then((res) => {
           const data = res.result.data[0]
           if (data) {
             this.formData = data
