@@ -1,3 +1,11 @@
-.u-mode-center-box{
-		max-width:100%;
-	}
+.u-mode-center-box {
+	max-width: 100%;
+}
+
+uni-modal {
+	z-index: 99998;
+}
+
+.uni-table-scroll {
+	min-height: 150px;
+}
