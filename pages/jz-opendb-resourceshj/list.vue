@@ -58,7 +58,7 @@
 					</uni-forms-item>
 				</view>
 			</u-modal>
-			<u-modal v-model="showaddhjzy" width="600px" @cancel="showaddhjzy==false" :show-cancel-button="true"
+			<u-modal v-model="showaddhjzy" width="800px" @cancel="showaddhjzy==false" :show-cancel-button="true"
 				title="新增合集资源" @confirm="confirmaddhjzy">
 				<view class="uni-container" style="height: 500px;overflow: auto;">
 					<unicloud-db ref="listudb" collection="jz-opendb-resources" field="title,zy_gs,author"

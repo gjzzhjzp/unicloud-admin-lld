@@ -26,8 +26,8 @@
 				:where="where" page-data="replace" :getcount="true" :orderby="orderby" :page-size="options.pageSize"
 				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
 				:options="options" loadtime="manual" @load="onqueryload">
-			
-		<!-- 	<unicloud-db ref="udb" collection="uni-id-users,uni-id-roles"
+
+				<!-- 	<unicloud-db ref="udb" collection="uni-id-users,uni-id-roles"
 				field="username,nickname,weiboname,weibocontent,isbdwb,resources,update_date,beizhu,status,role{role_name},dcloud_appid,register_date"
 				:where="where" page-data="replace" :orderby="orderby" :page-size="options.pageSize"
 				:page-current="options.pageCurrent" v-slot:default="{data,pagination,loading,error,options}"
@@ -59,14 +59,15 @@
 					</uni-tr>
 					<uni-tr v-for="(item,index) in data" :key="index">
 						<uni-td align="center">
-						<view style="width: 100px;">
-						{{item.username}}
-						</view>
+							<view style="width: 100px;">
+								{{item.username}}
+							</view>
 						</uni-td>
 						<uni-td align="center">
-						<view style="width: 100px;">
-						{{item.nickname}}
-						</view></uni-td>
+							<view style="width: 100px;">
+								{{item.nickname}}
+							</view>
+						</uni-td>
 
 						<uni-td align="center">
 							<view style="width: 200px;">
@@ -75,7 +76,7 @@
 						</uni-td>
 						<uni-td align="center">
 							<view style="width: 200px;">
-							{{item.weibocontent}}
+								{{item.weibocontent}}
 							</view>
 						</uni-td>
 						<uni-td align="center">
@@ -89,7 +90,7 @@
 						</uni-td>
 						<uni-td align="center">
 							<view style="width: 150px;">
-							{{item.beizhu}}
+								{{item.beizhu}}
 							</view>
 						</uni-td>
 						<uni-td align="center">
@@ -124,7 +125,8 @@
 						@change="onPageChanged" />
 				</view>
 			</unicloud-db>
-			<u-modal v-model="showinfo" width="500px" title="发送消息" @confirm="confirminfo" @cancel="openHistory" :mask-close-able="true" cancel-text="历史消息" :show-cancel-button="true">
+			<u-modal v-model="showinfo" width="500px" title="发送消息" @confirm="confirminfo" @cancel="openHistory"
+				:mask-close-able="true" cancel-text="历史消息" :show-cancel-button="true">
 				<view class="slot-content" style="padding: 10px;">
 					<u-form ref="uForm" :label-width="160">
 						<u-form-item label="消息类型">
@@ -197,17 +199,17 @@
 			<u-modal @confirm="historyinfoList=[]" v-model="showhistory" title="历史消息" width="500px">
 				<view class="slot-content" style="padding: 10px;">
 					<u-table>
-							<u-tr>
-								<u-th>时间</u-th>
-								<u-th>内容</u-th>
-								<u-th>审核人</u-th>
-							</u-tr>
-							<u-tr v-for="item in historyinfoList">
-								<u-td>{{$u.timeFormat(item.comment_date, 'yyyy-mm-dd hh:MM:ss')}}</u-td>
-								<u-td>{{item.comment}}</u-td>
-								<u-td>{{item.manager_id[0]?item.manager_id[0].nickname:''}}</u-td>
-							</u-tr>
-						</u-table>
+						<u-tr>
+							<u-th>时间</u-th>
+							<u-th>内容</u-th>
+							<u-th>审核人</u-th>
+						</u-tr>
+						<u-tr v-for="item in historyinfoList">
+							<u-td>{{$u.timeFormat(item.comment_date, 'yyyy-mm-dd hh:MM:ss')}}</u-td>
+							<u-td>{{item.comment}}</u-td>
+							<u-td>{{item.manager_id[0]?item.manager_id[0].nickname:''}}</u-td>
+						</u-tr>
+					</u-table>
 				</view>
 			</u-modal>
 		</view>
@@ -239,9 +241,9 @@
 	export default {
 		data() {
 			return {
-				showhistory:false,
-				historyinfoList:[],///历史消息
-				curitemtitle:"",
+				showhistory: false,
+				historyinfoList: [], ///历史消息
+				curitemtitle: "",
 				showresources: false,
 				moreresources: [], ///更多资料
 				showshType: true, //显示审核类型
@@ -258,113 +260,146 @@
 					}
 				],
 				radioshinfo: "", //审核信息
-				radioshList:[
-				// 	{
-				// 	name: '耘影',
-				// 	value: "宝，请使用注册时填写的微博主动联系@耘影 继续后续审核"
-				// },{
-				// 	name: '恶龙3388',
-				// 	value: "宝，请使用注册时填写的微博主动联系@恶龙3388 继续后续审核"
-				// },{
-				// 	name: '宁阿蛮',
-				// 	value: "宝，请使用注册时填写的微博主动联系@宁阿蛮 继续后续审核"
-				// },{
-				// 	name: '橘子女士s',
-				// 	value: "宝，请使用注册时填写的微博主动联系@橘子女士s 继续后续审核"
-				// },
-				{
-					name: '小宇宙审核_黑尾（黑尾吖）',
-					value: "宝，请使用注册时填写的微博主动联系@小宇宙审核_黑尾 继续后续审核"
-				},
-				// {
-				// 	name: '闲云51129',
-				// 	value: "宝，请使用注册时填写的微博主动联系@闲云51129 继续后续审核"
-				// },{
-				// 	name: '大橘大利jz',
-				// 	value: "宝，请使用注册时填写的微博主动联系@大橘大利jz 继续后续审核"
-				// },{
-				// 	name: '康庄大道·9291',
-				// 	value: "宝，请使用注册时填写的微博主动联系@康庄大道·9291 继续后续审核"
-				// },
-				{
-					name: '小宇宙审核_等一个五年2026(小主)',
-					value: "宝，请使用注册时填写的微博主动联系@小宇宙审核_等一个五年2026 继续后续审核"
-				},
-				// {
-				// 	name: '我家老爷子养了一只公主喵',
-				// 	value: "宝，请使用注册时填写的微博主动联系@我家老爷子养了一只公主喵 继续后续审核"
-				// },{
-				// 	name: '落草为扣',
-				// 	value: "宝，请使用注册时填写的微博主动联系@落草为扣 继续后续审核"
-				// },{
-				// 	name: '在晾衣架上练瑜伽',
-				// 	value: "宝，请使用注册时填写的微博主动联系@在晾衣架上练瑜伽 继续后续审核"
-				// },
-				{
-					name: '含含_1640',
-					value: "宝，请使用注册时填写的微博主动联系@含含_1640 继续后续审核"
-				},
-				
-				// {
-				// 	name: '黑巧拌芹菜',
-				// 	value: "宝，请使用注册时填写的微博主动联系@黑巧拌芹菜 继续后续审核"
-				// },{
-				// 	name: '·龚张得起·',
-				// 	value: "宝，请使用注册时填写的微博主动联系@·龚张得起· 继续后续审核"
-				// },{
-				// 	name: '影子_0511291640',
-				// 	value: "宝，请使用注册时填写的微博主动联系@影子_0511291640 继续后续审核"
-				// },
-				{
-					name: '遇见银河_51129（风车）',
-					value: "宝，请使用注册时填写的微博主动联系@遇见银河_51129 继续后续审核"
-				},
-				// {
-				// 	name: '佩儒·1640',
-				// 	value: "宝，请使用注册时填写的微博主动联系@佩儒·1640 继续后续审核"
-				// },{
-				// 	name: '小米吖哟',
-				// 	value: "宝，请使用注册时填写的微博主动联系@小米吖哟 继续后续审核"
-				// },{
-				// 	name: '搞点高点',
-				// 	value: "宝，请使用注册时填写的微博主动联系@搞点高点 继续后续审核"
-				// },{
-				// 	name: '三天夏日里',
-				// 	value: "宝，请使用注册时填写的微博主动联系@三天夏日里 继续后续审核"
-				// },{
-				// 	name: '伤晴_等待',
-				// 	value: "宝，请使用注册时填写的微博主动联系@伤晴_等待 继续后续审核"
-				// },{
-				// 	name: '小鱼真的喜欢橘子',
-				// 	value: "宝，请使用注册时填写的微博主动联系@小鱼真的喜欢橘子 继续后续审核"
-				// },
-				{
-					name: '嘟嘟3579',
-					value: "宝，请使用注册时填写的微博主动联系@嘟嘟3579 继续后续审核"
-				},
-				// {
-				// 	name: '小小西瓜1640',
-				// 	value: "宝，请使用注册时填写的微博主动联系@小小西瓜1640 继续后续审核"
-				// },{
-				// 	name: '卿和鹿',
-				// 	value: "宝，请使用注册时填写的微博主动联系@卿和鹿 继续后续审核"
-				// },
-				{
-					name: '教程号勿cue（格格）',
-					value: "宝，请使用注册时填写的微博主动联系@教程号勿cue 继续后续审核"
-				},
-				{
-					name: '苏酒_小宇宙审核（苏酒）',
-					value: "宝，请使用注册时填写的微博主动联系@苏酒_小宇宙审核 继续后续审核"
-				}
-				// ,{
-				// 	name: '可乐and绿豆汤',
-				// 	value: "宝，请使用注册时填写的微博主动联系@可乐and绿豆汤 继续后续审核"
-				// },{
-				// 	name: 'WSLHHYY',
-				// 	value: "宝，请使用注册时填写的微博主动联系@WSLHHYY 继续后续审核"
-				// },
+				radioshList: [{
+						name: '小宇宙审核_黑尾（黑尾吖）',
+						value: "宝，请使用注册时填写的微博主动联系@小宇宙审核_黑尾 继续后续审核"
+					},
+					{
+						name: '小宇宙审核_等一个五年2026(小主)',
+						value: "宝，请使用注册时填写的微博主动联系@小宇宙审核_等一个五年2026 继续后续审核"
+					},
+					{
+						name: '含含_1640',
+						value: "宝，请使用注册时填写的微博主动联系@含含_1640 继续后续审核"
+					},
+					{
+						name: '遇见银河_51129（风车）',
+						value: "宝，请使用注册时填写的微博主动联系@遇见银河_51129 继续后续审核"
+					},
+					{
+						name: '嘟嘟3579',
+						value: "宝，请使用注册时填写的微博主动联系@嘟嘟3579 继续后续审核"
+					},
+					{
+						name: '教程号勿cue（格格）',
+						value: "宝，请使用注册时填写的微博主动联系@教程号勿cue 继续后续审核"
+					},
+					{
+						name: '苏酒_小宇宙审核（苏酒）',
+						value: "宝，请使用注册时填写的微博主动联系@苏酒_小宇宙审核 继续后续审核"
+					},
+					{
+						name: '微博链接不正确',
+						value: "宝，你的微博主页链接地址不对，请重新提交输入正确的主页地址"
+					}
 				],
+				// radioshList:[
+				// // 	{
+				// // 	name: '耘影',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@耘影 继续后续审核"
+				// // },{
+				// // 	name: '恶龙3388',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@恶龙3388 继续后续审核"
+				// // },{
+				// // 	name: '宁阿蛮',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@宁阿蛮 继续后续审核"
+				// // },{
+				// // 	name: '橘子女士s',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@橘子女士s 继续后续审核"
+				// // },
+				// {
+				// 	name: '小宇宙审核_黑尾（黑尾吖）',
+				// 	value: "宝，请使用注册时填写的微博主动联系@小宇宙审核_黑尾 继续后续审核"
+				// },
+				// // {
+				// // 	name: '闲云51129',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@闲云51129 继续后续审核"
+				// // },{
+				// // 	name: '大橘大利jz',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@大橘大利jz 继续后续审核"
+				// // },{
+				// // 	name: '康庄大道·9291',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@康庄大道·9291 继续后续审核"
+				// // },
+				// {
+				// 	name: '小宇宙审核_等一个五年2026(小主)',
+				// 	value: "宝，请使用注册时填写的微博主动联系@小宇宙审核_等一个五年2026 继续后续审核"
+				// },
+				// // {
+				// // 	name: '我家老爷子养了一只公主喵',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@我家老爷子养了一只公主喵 继续后续审核"
+				// // },{
+				// // 	name: '落草为扣',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@落草为扣 继续后续审核"
+				// // },{
+				// // 	name: '在晾衣架上练瑜伽',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@在晾衣架上练瑜伽 继续后续审核"
+				// // },
+				// {
+				// 	name: '含含_1640',
+				// 	value: "宝，请使用注册时填写的微博主动联系@含含_1640 继续后续审核"
+				// },
+
+				// // {
+				// // 	name: '黑巧拌芹菜',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@黑巧拌芹菜 继续后续审核"
+				// // },{
+				// // 	name: '·龚张得起·',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@·龚张得起· 继续后续审核"
+				// // },{
+				// // 	name: '影子_0511291640',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@影子_0511291640 继续后续审核"
+				// // },
+				// {
+				// 	name: '遇见银河_51129（风车）',
+				// 	value: "宝，请使用注册时填写的微博主动联系@遇见银河_51129 继续后续审核"
+				// },
+				// // {
+				// // 	name: '佩儒·1640',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@佩儒·1640 继续后续审核"
+				// // },{
+				// // 	name: '小米吖哟',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@小米吖哟 继续后续审核"
+				// // },{
+				// // 	name: '搞点高点',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@搞点高点 继续后续审核"
+				// // },{
+				// // 	name: '三天夏日里',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@三天夏日里 继续后续审核"
+				// // },{
+				// // 	name: '伤晴_等待',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@伤晴_等待 继续后续审核"
+				// // },{
+				// // 	name: '小鱼真的喜欢橘子',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@小鱼真的喜欢橘子 继续后续审核"
+				// // },
+				// {
+				// 	name: '嘟嘟3579',
+				// 	value: "宝，请使用注册时填写的微博主动联系@嘟嘟3579 继续后续审核"
+				// },
+				// // {
+				// // 	name: '小小西瓜1640',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@小小西瓜1640 继续后续审核"
+				// // },{
+				// // 	name: '卿和鹿',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@卿和鹿 继续后续审核"
+				// // },
+				// {
+				// 	name: '教程号勿cue（格格）',
+				// 	value: "宝，请使用注册时填写的微博主动联系@教程号勿cue 继续后续审核"
+				// },
+				// {
+				// 	name: '苏酒_小宇宙审核（苏酒）',
+				// 	value: "宝，请使用注册时填写的微博主动联系@苏酒_小宇宙审核 继续后续审核"
+				// }
+				// // ,{
+				// // 	name: '可乐and绿豆汤',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@可乐and绿豆汤 继续后续审核"
+				// // },{
+				// // 	name: 'WSLHHYY',
+				// // 	value: "宝，请使用注册时填写的微博主动联系@WSLHHYY 继续后续审核"
+				// // },
+				// ],
 				// radioshList: [{
 				// 	name: '微博链接不正确',
 				// 	value: "宝，你的微博主页链接地址不对，请重新提交输入正确的主页地址"
@@ -499,26 +534,26 @@
 		},
 		methods: {
 			// 获取历史消息
-			async getHistoryInfo(){
+			async getHistoryInfo() {
 				// debugger;
-				var that=this;
-				console.log("currentid",that.currentId);
-				var res=await db.collection("jz-custom-systeminfo,uni-id-users").where({
-					type:0,
-					user_id:that.currentId
+				var that = this;
+				console.log("currentid", that.currentId);
+				var res = await db.collection("jz-custom-systeminfo,uni-id-users").where({
+					type: 0,
+					user_id: that.currentId
 				}).field("manager_id{nickname,username},comment_date,comment").get()
-				
-				var rows=res.result.data;
-				this.historyinfoList=rows;
-				console.log("historyinfoList",this.historyinfoList);
+
+				var rows = res.result.data;
+				this.historyinfoList = rows;
+				console.log("historyinfoList", this.historyinfoList);
 			},
-			openHistory(){
-				this.showhistory=true;
+			openHistory() {
+				this.showhistory = true;
 				this.getHistoryInfo();
 			},
 			// 查看验证资料
 			lookYzzl(item) {
-				this.curitemtitle=item.nickname+"("+item.username+")";
+				this.curitemtitle = item.nickname + "(" + item.username + ")";
 				this.showresources = true;
 				this.moreresources = item.resources;
 			},
@@ -889,10 +924,10 @@
 </script>
 
 <style>
-	
 	uni-button[size=mini] {
-	    padding: 0.2em !important;
+		padding: 0.2em !important;
 	}
+
 	.file-picker {
 		display: inline-block;
 	}
