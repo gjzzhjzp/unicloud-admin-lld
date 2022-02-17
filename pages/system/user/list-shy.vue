@@ -104,6 +104,7 @@
 								<button @click="sendinfo(item._id)" class="uni-button" size="mini"
 									type="warn">发送消息</button>
 								<button @click="lookUser(item._id)" class="uni-button" size="mini">邀请人</button>
+								<button @click="lookBUser(item._id)" class="uni-button" size="mini">被邀请人</button>
 								<button @click="lookYzzl(item)" class="uni-button" size="mini">验证资料</button>
 							</view>
 						</uni-td>
@@ -177,6 +178,27 @@
 									<u-td class="u-td3">{{item.byqr_id[0].weiboname}}</u-td>
 								</u-tr>
 
+							</u-table>
+						</u-form-item>
+					</u-form>
+				</view>
+			</u-modal>
+			<u-modal v-model="showlookbyqr" width="700px" title="被邀请人信息" @confirm="confirmbyqr">
+				<view class="slot-content" style="padding: 20px;">
+					<u-form ref="uForm" :label-width="300">
+						<u-form-item label="该用户邀请的所有人">
+							<u-table>
+								<u-tr>
+									<u-th class="u-th1">登录名</u-th>
+									<u-th class="u-th2">昵称</u-th>
+									<u-th class="u-th3">微博主页地址</u-th>
+								</u-tr>
+								<u-tr v-for="(item,index) in allbyqr" :key="index">
+									<u-td class="u-td1">{{item.byqr_id[0].username}}</u-td>
+									<u-td class="u-td2">{{item.byqr_id[0].nickname}}</u-td>
+									<u-td class="u-td3">{{item.byqr_id[0].weiboname}}</u-td>
+								</u-tr>
+			
 							</u-table>
 						</u-form-item>
 					</u-form>
@@ -501,8 +523,10 @@
 				roles: [], ///角色
 				isManager: true,
 				showlookyqr: false,
+				showlookbyqr:false,
 				yqrinfo: {}, ////邀请人信息
-				allyqr: []
+				allyqr: [],
+				allbyqr:[]
 			}
 		},
 		onLoad() {
@@ -563,6 +587,9 @@
 				this.yqrinfo = {};
 				this.allyqr = [];
 			},
+			confirmbyqr() {
+				this.allbyqr = [];
+			},
 			// 查看邀请人
 			async lookUser(id) {
 				this.showlookyqr = true;
@@ -585,6 +612,16 @@
 				}
 
 				console.log("this.allyqr", this.allyqr);
+			},
+			async lookBUser(id){
+				this.showlookbyqr = true;
+				
+				var yqr = await db.collection("jz-custom-yhyqm,uni-id-users").where({
+					yqr_id: id
+				}).field("byqr_id{username,nickname,weiboname}").get();
+				if (yqr.result.data && yqr.result.data.length > 0) {
+					this.allbyqr = yqr.result.data;
+				}
 			},
 			// 改变消息类型
 			changexxtype(name) {
