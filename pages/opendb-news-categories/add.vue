@@ -69,8 +69,14 @@
       }
     },
     onReady() {
-      this.$refs.form.setRules(this.rules)
+      this.$refs.form.setRules(this.rules);
+	  
     },
+	onLoad(e){
+		console.log("formData",e);
+		this.$set(this.formData,"parent_flbm",e.parent_flbm);
+		this.$set(this.formData,"flbm",e.next_flbm);
+	},
     methods: {
       /**
        * 验证表单并提交
