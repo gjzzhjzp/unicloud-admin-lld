@@ -4,6 +4,9 @@
 			<uni-forms-item name="username" label="用户名" required>
 				<uni-easyinput v-model="formData.username" :clearable="false" placeholder="请输入用户名" />
 			</uni-forms-item>
+			<uni-forms-item name="nickname" label="昵称" required>
+				<uni-easyinput v-model="formData.nickname" :clearable="false" placeholder="请输入昵称" />
+			</uni-forms-item>
 			<uni-forms-item :name="showPassword ? 'password' : ''" label="重置密码">
 				<span v-show="!showPassword" class="reset-password-btn" @click="trigger">点击重置密码</span>
 				<uni-easyinput v-show="showPassword" v-model="formData.password" :clearable="false" placeholder="请输入重置密码">
@@ -72,6 +75,7 @@
 				showPassword: false,
 				formData: {
 					"username": "",
+					"nickname":"",
 					"password": "",
 					"role": [],
 					"dcloud_appid": [],
@@ -83,7 +87,7 @@
 					"forbiddenwords":false//是否禁言
 				},
 				rules: {
-					...getValidator(["username", "password", "role", "mobile", "email","weiboname"]),
+					...getValidator(["username","nickname", "password", "role", "mobile", "email","weiboname"]),
 					"status": {
 						"rules": [{
 							"format": "bool"
@@ -208,12 +212,11 @@
 				})
 				db.collection(dbCollectionName)
 					.doc(id)
-					.field('username,role,dcloud_appid,mobile,email,status,weiboname,original,forbiddenwords,fanSx')
+					.field('username,nickname,role,dcloud_appid,status,weiboname,original,forbiddenwords,fanSx')
 					.get()
 					.then((res) => {
 						const data = res.result.data[0]
 						if (data) {
-							console.log("222222222222",data);	
 							if (data.status === undefined) {
 								data.status = true
 							}

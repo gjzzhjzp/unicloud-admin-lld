@@ -4,6 +4,9 @@
 			<uni-forms-item name="username" label="用户名" required>
 				<uni-easyinput :disabled="true" v-model="formData.username" :clearable="false" placeholder="请输入用户名" />
 			</uni-forms-item>
+			<uni-forms-item name="nickname" label="昵称" required>
+				<uni-easyinput :disabled="true" v-model="formData.nickname" :clearable="false" placeholder="请输入昵称" />
+			</uni-forms-item>
 			<uni-forms-item v-if="show_password" :name="showPassword ? 'password' : ''" label="重置密码">
 				<span v-show="!showPassword" class="reset-password-btn" @click="trigger">点击重置密码</span>
 				<uni-easyinput v-show="showPassword" v-model="formData.password" :clearable="false" placeholder="请输入重置密码">
@@ -26,13 +29,16 @@
 			<uni-forms-item name="forbiddenwords" label="是否禁言">
 				<switch  :checked="formData.forbiddenwords" @change="binddata('forbiddenwords', $event.detail.value)"/>
 			</uni-forms-item>
+			<!-- <uni-forms-item name="isshr" label="是否审核">
+				<switch  :checked="formData.isshr" @change="binddata('isshr', $event.detail.value)"/>
+			</uni-forms-item> -->
 			<uni-forms-item name="fanSx" label="粉丝属性">
 				<uni-data-checkbox v-model="formData.fanSx" :localdata="fanSx_localdata">
 				</uni-data-checkbox>
 			</uni-forms-item>
 			<view class="uni-button-group">
 				<button style="width: 100px;" type="primary" class="uni-button" @click="submitForm">{{$t('common.button.submit')}}</button>
-				<navigator open-type="navigateBack" style="margin-left: 15px;"><button style="width: 100px;" class="uni-button">{{$t('common.button.back')}}</button></navigator>
+				<button style="width: 100px;" class="uni-button" @click="cancelForm">{{$t('common.button.back')}}</button>
 			</view>
 		</uni-forms>
 	</view>
@@ -62,6 +68,7 @@ import BASE64 from "../../../common/common/base64.js"
 				show_password:false,
 				formData: {
 					"username": "",
+					"nickname":"",
 					"password": "",
 					"role": [],
 					"dcloud_appid": [],
@@ -72,10 +79,11 @@ import BASE64 from "../../../common/common/base64.js"
 					"fanSx":0,
 					"status": false ,//默认禁用
 					"original":false,///是否是原创
-					"forbiddenwords":false//是否禁言
+					"forbiddenwords":false,//是否禁言
+					"isshr":false///是否审核
 				},
 				rules: {
-					...getValidator(["username", "password", "role", "mobile", "email","weiboname","beizhu"]),
+					...getValidator(["username","nickname", "password", "role", "mobile", "email","weiboname","beizhu"]),
 					"status": {
 						"rules": [{
 							"format": "bool"
@@ -87,6 +95,11 @@ import BASE64 from "../../../common/common/base64.js"
 						}]
 					},
 					"forbiddenwords":{
+						"rules": [{
+							"format": "bool"
+						}]
+					},
+					"isshr":{
 						"rules": [{
 							"format": "bool"
 						}]
@@ -108,13 +121,29 @@ import BASE64 from "../../../common/common/base64.js"
 				]
 			}
 		},
-		onLoad(e) {
-			const id = e.id
-			this.formDataId = id
-			this.getDetail(id)
-			this.loadroles()
-
+		props:{
+			formdataid:{
+				type:String,
+				default(){
+					return {
+						
+					}
+				}
+			}
 		},
+		watch:{
+			formdataid(){
+				this.getDetail(this.formdataid);
+				this.loadroles()
+			}
+		},
+		// onLoad(e) {
+		// 	const id = e.id
+		// 	this.formDataId = id
+		// 	this.getDetail(id)
+		// 	this.loadroles()
+
+		// },
 		created(){
 			// debugger;
 			var roles=this.getUserRole();
@@ -122,6 +151,12 @@ import BASE64 from "../../../common/common/base64.js"
 				this.show_password=true;
 			}else{
 				this.show_password=false;
+			}
+		},
+		mounted(){
+			if(this.formdataid){
+				this.getDetail(this.formdataid);
+				this.loadroles()
 			}
 		},
 		methods: {
@@ -157,6 +192,10 @@ import BASE64 from "../../../common/common/base64.js"
 			submitForm(form) {
 				this.$refs.form.submit();
 			},
+			cancelForm() {
+				this.$emit("confirm");
+				// this.$refs.form.submit();
+			},
 
 			/**
 			 * 表单提交
@@ -180,17 +219,15 @@ import BASE64 from "../../../common/common/base64.js"
 				if (typeof value.status === "boolean") {
 					value.status = Number(!value.status)
 				}
-				// value.id = this.formDataId;
 				delete value.username;
-				// console.log("value",value);
-				// console.log("this.formDataId",this.formDataId);
+				delete value.nickname;
 				
 				uniCloud.callFunction({
 					name: 'jzuser',
 					data: {
 						action: 'user/updateuser',
 						data:{
-							id:this.formDataId,
+							id:this.formdataid,
 							data:value
 						}
 					},
@@ -200,8 +237,9 @@ import BASE64 from "../../../common/common/base64.js"
 							uni.showToast({
 								title: '修改成功'
 							});
-								this.getOpenerEventChannel().emit('refreshData')
-							setTimeout(() => uni.navigateBack(), 500)
+							this.$emit("confirm",value);
+								// this.getOpenerEventChannel().emit('refreshData')
+							// setTimeout(() => uni.navigateBack(), 500)
 					} else {
 						uni.showToast({
 							title: res.msg,
@@ -210,34 +248,6 @@ import BASE64 from "../../../common/common/base64.js"
 					}
 				});
 				
-				// return db.collection('uni-id-users').doc(this.formDataId).update(value).then((res) => {
-				// 	uni.showToast({
-				// 		title: '修改成功'
-				// 	});
-				// 	this.getOpenerEventChannel().emit('refreshData');
-				// 	setTimeout(() => uni.navigateBack(), 500)
-				// }).catch((err) => {
-				// 	uni.showModal({
-				// 		content: err.message || '请求服务失败',
-				// 		showCancel: false
-				// 	})
-				// });
-				// this.$request('updateUser', value, {
-				// 	functionName: 'uni-id-cf'
-				// }).then(res => {
-				// 	uni.showToast({
-				// 		title: '修改成功'
-				// 	})
-				// 	this.getOpenerEventChannel().emit('refreshData')
-				// 	setTimeout(() => uni.navigateBack(), 500)
-				// }).catch(err => {
-				// 	uni.showModal({
-				// 		content: err.message || '请求服务失败',
-				// 		showCancel: false
-				// 	})
-				// }).finally(err => {
-				// 	uni.hideLoading()
-				// })
 			},
 
 			resetPWd(resetData) {
@@ -259,7 +269,7 @@ import BASE64 from "../../../common/common/base64.js"
 				})
 				db.collection(dbCollectionName)
 					.doc(id)
-					.field('username,role,dcloud_appid,mobile,email,status,weiboname,beizhu,original,forbiddenwords,fanSx')
+					.field('username,nickname,role,status,weiboname,beizhu,original,isshr,forbiddenwords,fanSx')
 					.get()
 					.then((res) => {
 						const data = res.result.data[0]
@@ -278,6 +288,9 @@ import BASE64 from "../../../common/common/base64.js"
 							}
 							if (data.forbiddenwords === undefined) {
 								data.forbiddenwords = false
+							}
+							if (data.isshr === undefined) {
+								data.isshr = false
 							}
 							this.formData = Object.assign(this.formData, data)
 						}

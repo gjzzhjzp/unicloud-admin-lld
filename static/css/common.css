@@ -9,3 +9,11 @@ uni-modal {
 .uni-table-scroll {
 	min-height: 150px;
 }
+.uni-search{
+	min-width: 100px !important;
+}
+@media screen and (max-width: 500px) {
+.uni-header .uni-title{
+	display: none;
+}
+}

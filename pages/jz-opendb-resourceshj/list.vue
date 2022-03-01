@@ -6,8 +6,8 @@
 				<view class="uni-sub-title"></view>
 			</view>
 			<view class="uni-group">
-				<!-- <input class="uni-search" type="text" v-model="query" @confirm="search" placeholder="请输入搜索内容" /> -->
-				<!-- <button class="uni-button" type="default" size="mini" @click="search">搜索</button> -->
+				<input class="uni-search" type="text" v-model="query" @confirm="search" placeholder="请输入搜索内容" />
+				<button class="uni-button" type="default" size="mini" @click="search">搜索</button>
 				<button class="uni-button" type="default" size="mini" @click="addHj()">新增</button>
 				<!-- <button class="uni-button" type="default" size="mini" @click="navigateTo('./add')">新增</button> -->
 				<button class="uni-button" type="default" size="mini" :disabled="!selectedIndexs.length"
@@ -18,8 +18,8 @@
 			</view>
 		</view>
 		<view class="uni-container">
-			<unicloud-db ref="udb" :collection="collectionList"
-				field="article_id{title},hj_id,parent_id,resourceshj_title,sort" :where="where" page-data="replace"
+			<unicloud-db ref="udb" collection="jz-opendb-resourceshj"
+				field="hj_id,parent_id,resourceshj_title,sort" :where="where" page-data="replace"
 				:orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
 				v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual"
 				@load="onqueryload">
@@ -146,7 +146,7 @@
 	const db = uniCloud.database()
 	// 表查询配置
 	const dbOrderBy = '' // 排序字段
-	const dbSearchFields = [] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
+	const dbSearchFields = ["resourceshj_title"] // 模糊搜索字段，支持模糊搜索的字段列表。联表查询格式: 主表字段名.副表字段名，例如用户表关联角色表 role.role_name
 	// 分页配置
 	const pageSize = 20
 	const pageCurrent = 1

@@ -9,14 +9,18 @@
 				<template v-if="isManager">
 					<input class="uni-search" type="text" v-model="query" @confirm="search"
 						:placeholder="$t('common.placeholder.query')" />
-					<button class="uni-button" type="default" size="mini" @click="search">模糊搜索</button>
-					<button class="uni-button" type="default" size="mini" @click="search1">精确搜索</button>
-					<button class="uni-button" type="default" size="mini" @click="searchweibo">微博审核</button>
-					<!-- <button class="uni-button" type="default" size="mini" @click="searchweibono">未审核通过</button> -->
-					<button class="uni-button" type="default" size="mini" @click="searchweibono2">未审核通过</button>
-					<button class="uni-button" type="default" size="mini" @click="searchweibono3">未审核</button>
-					<!-- <button class="uni-button" type="default" size="mini" @click="createdYqm">生成邀请码</button> -->
-				</template>
+						<view style="overflow: auto;display: flex;width: calc(100vw - 150px);">
+							<button class="uni-button" type="default" size="mini" @click="search">模糊搜索</button>
+								<button class="uni-button" type="default" size="mini" @click="search1">精确搜索</button>
+								<button class="uni-button" type="default" size="mini" @click="searchweibo">微博审核</button>
+								<!-- <button class="uni-button" type="default" size="mini" @click="searchweibono">未审核通过</button> -->
+								<button class="uni-button" type="default" size="mini" @click="searchweibono2">未审核通过</button>
+								<button class="uni-button" type="default" size="mini" @click="searchweibono3">未审核</button>
+								<button class="uni-button" type="default" size="mini" @click="searchweibono4">当前未审核</button>
+								<!-- <button class="uni-button" type="default" size="mini" @click="createdYqm">生成邀请码</button> -->
+							
+						</view>
+					</template>
 			</view>
 		</view>
 		<view class="uni-container">
@@ -99,9 +103,9 @@
 						</uni-td>
 						<uni-td align="center" v-if="isManager">
 							<view class="uni-group">
-								<button @click="navigateTo('./edit-shy?id='+item._id, false)" class="uni-button"
+								<button @click="editinfo(item)" class="uni-button"
 									size="mini" type="primary">{{$t('common.button.edit')}}</button>
-								<button @click="sendinfo(item._id)" class="uni-button" size="mini"
+								<button @click="sendinfo(item._id)" cslass="uni-button" size="mini"
 									type="warn">发送消息</button>
 								<button @click="lookUser(item._id)" class="uni-button" size="mini">邀请人</button>
 								<button @click="lookBUser(item._id)" class="uni-button" size="mini">被邀请人</button>
@@ -232,6 +236,11 @@
 					</u-table>
 				</view>
 			</u-modal>
+			<u-modal :show-confirm-button="false" v-model="showedit" title="编辑信息" width="500px">
+				<view class="slot-content" style="padding: 10px;">
+					<edit-shy ref="editshy" @confirm="confirmEdit" :formdataid="currentId"></edit-shy>
+				</view>
+			</u-modal>
 		</view>
 		<!-- #ifndef H5 -->
 		<fix-window />
@@ -244,6 +253,7 @@
 		enumConverter,
 		filterToWhere
 	} from '../../../js_sdk/validator/uni-id-users.js';
+	import editShy from "./edit-shy.vue"
 	const BASE64 = require("../common/base64.js")
 	const db = uniCloud.database()
 	// 表查询配置
@@ -261,6 +271,7 @@
 	export default {
 		data() {
 			return {
+				showedit:false,
 				showhistory: false,
 				historyinfoList: [], ///历史消息
 				curitemtitle: "",
@@ -268,6 +279,7 @@
 				moreresources: [], ///更多资料
 				showshType: true, //显示审核类型
 				currentId: "",
+				currentItem:{},
 				radioinfo: 0,
 				infoconent: "",
 				radioList: [{
@@ -311,6 +323,18 @@
 					{
 						name: '我家老爷子养了一只公主喵(十一)',
 						value: "宝，请使用注册时填写的微博主动私信@我家老爷子养了一只公主喵 继续后续审核"
+					},
+					{
+						name: '小宇宙审核_小小橘子皮(肖肖)',
+						value: "宝，请使用注册时填写的微博主动私信@小宇宙审核_小小橘子皮 继续后续审核"
+					},
+					{
+						name: '小米吖哟喂（小米粥）',
+						value: "宝，请使用注册时填写的微博主动私信@小米吖哟喂 继续后续审核"
+					},
+					{
+						name: '恶龙3388',
+						value: "宝，请使用注册时填写的微博主动私信@恶龙3388 继续后续审核"
 					},
 					{
 						name: '微博链接不正确',
@@ -529,6 +553,7 @@
 				allbyqr:[]
 			}
 		},
+		components:{editShy},
 		onLoad() {
 			this._filter = {}
 		},
@@ -559,6 +584,20 @@
 			}
 		},
 		methods: {
+			confirmEdit(item){
+				if(item){
+					for(var key in item){
+						this.$set(this.currentItem,key,item[key]);
+					}
+				}
+				this.showedit=false;
+			},
+			// 编辑信息
+			editinfo(item){
+				this.currentId=item._id;
+				this.currentItem=item;
+				this.showedit=true;
+			},
 			// 获取历史消息
 			async getHistoryInfo() {
 				// debugger;
@@ -879,6 +918,41 @@
 				this.$nextTick(() => {
 					this.loadData()
 				})
+			},
+			async searchweibono4(){
+				var name=uni.getStorageSync("lastUsername");
+				var userInfo=uni.getStorageSync("userInfo");
+				// console.log("name",name);
+				// alert(name+","+userInfo.username);
+				// var name=userinfo.username;
+				var res = await db.collection("jz-custom-shtime").where({
+					// name: "Wuyu1640"
+					 name:name.toLowerCase()
+				}).get()
+				// console.log("res",res);
+				// var row={};
+				if(res.result&&res.result.data){
+					var _add="(";
+					res.result.data.forEach((item,index)=>{
+						var row=item;
+						var time1=new Date(row.start_date).getTime()-1000;
+						var time2=new Date(row.end_date).getTime()+1000;
+						_add+="(register_date>"+time1+"&&register_date<"+time2+")";
+						if(index==res.result.data.length-1){
+							_add+=")";
+						}else{
+							_add+="||"
+						}
+					});
+					const newWhere =
+						"weiboname!=''&&weiboname!=null&&isbdwb!=true&&status!=1&&(beizhu==''||beizhu==undefined)&&"+_add;
+					// console.log("newWhere",newWhere);
+					this.where = newWhere
+					// 下一帧拿到查询条件
+					this.$nextTick(() => {
+						this.loadData()
+					})
+				}
 			},
 			loadData(clear = true) {
 				this.$refs.udb.loadData({
