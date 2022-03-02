@@ -97,7 +97,8 @@ import lauwenSelect from "@/components/lauwen-select/lauwenSelect.vue"
 			'jzp520579': "坑坑",
 			'jz0511291640jz': "羲亭",
 			'junzheyuzhoush1': "审核组公号1",
-			'junzheyuzhoush2': "审核组公号2"
+			'junzheyuzhoush2': "审核组公号2",
+			'orangejz051129':"橙子"
 		  },
 		  three_options:{
 		  	'puppytae0926': "风车",
