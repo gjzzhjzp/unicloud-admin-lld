@@ -9,18 +9,18 @@
 				<template v-if="isManager">
 					<input class="uni-search" type="text" v-model="query" @confirm="search"
 						:placeholder="$t('common.placeholder.query')" />
-						<view style="overflow: auto;display: flex;width: calc(100vw - 150px);">
-							<button class="uni-button" type="default" size="mini" @click="search">模糊搜索</button>
-								<button class="uni-button" type="default" size="mini" @click="search1">精确搜索</button>
-								<button class="uni-button" type="default" size="mini" @click="searchweibo">微博审核</button>
-								<!-- <button class="uni-button" type="default" size="mini" @click="searchweibono">未审核通过</button> -->
-								<button class="uni-button" type="default" size="mini" @click="searchweibono2">未审核通过</button>
-								<button class="uni-button" type="default" size="mini" @click="searchweibono3">未审核</button>
-								<button class="uni-button" type="default" size="mini" @click="searchweibono4">当前未审核</button>
-								<!-- <button class="uni-button" type="default" size="mini" @click="createdYqm">生成邀请码</button> -->
-							
-						</view>
-					</template>
+					<view style="overflow: auto;display: flex;width: calc(100vw - 150px);">
+						<button class="uni-button" type="default" size="mini" @click="search">模糊搜索</button>
+						<button class="uni-button" type="default" size="mini" @click="search1">精确搜索</button>
+						<button class="uni-button" type="default" size="mini" @click="searchweibo">微博审核</button>
+						<!-- <button class="uni-button" type="default" size="mini" @click="searchweibono">未审核通过</button> -->
+						<button class="uni-button" type="default" size="mini" @click="searchweibono2">未审核通过</button>
+						<button class="uni-button" type="default" size="mini" @click="searchweibono3">未审核</button>
+						<button class="uni-button" type="default" size="mini" @click="searchweibono4">当前未审核</button>
+						<!-- <button class="uni-button" type="default" size="mini" @click="createdYqm">生成邀请码</button> -->
+
+					</view>
+				</template>
 			</view>
 		</view>
 		<view class="uni-container">
@@ -53,10 +53,8 @@
 							@filter-change="filterChange($event, 'isbdwb')">微博验证状态</uni-th>
 						<uni-th align="center" width="100">备注</uni-th>
 						<!-- <uni-th align="center">可登录应用</uni-th> -->
-						<uni-th align="center"  sortable
-							@sort-change="sortChange($event, 'register_date')">注册时间</uni-th>
-						<uni-th align="center" sortable
-							@sort-change="sortChange($event, 'update_date')">更新时间</uni-th>
+						<uni-th align="center" sortable @sort-change="sortChange($event, 'register_date')">注册时间</uni-th>
+						<uni-th align="center" sortable @sort-change="sortChange($event, 'update_date')">更新时间</uni-th>
 						<uni-th v-if="isManager" align="center">操作</uni-th>
 					</uni-tr>
 					<uni-tr v-for="(item,index) in data" :key="index">
@@ -103,8 +101,8 @@
 						</uni-td>
 						<uni-td align="center" v-if="isManager">
 							<view class="uni-group">
-								<button @click="editinfo(item)" class="uni-button"
-									size="mini" type="primary">{{$t('common.button.edit')}}</button>
+								<button @click="editinfo(item)" class="uni-button" size="mini"
+									type="primary">{{$t('common.button.edit')}}</button>
 								<button @click="sendinfo(item._id)" cslass="uni-button" size="mini"
 									type="warn">发送消息</button>
 								<button @click="lookUser(item._id)" class="uni-button" size="mini">邀请人</button>
@@ -202,7 +200,7 @@
 									<u-td class="u-td2">{{item.byqr_id[0].nickname}}</u-td>
 									<u-td class="u-td3">{{item.byqr_id[0].weiboname}}</u-td>
 								</u-tr>
-			
+
 							</u-table>
 						</u-form-item>
 					</u-form>
@@ -271,7 +269,7 @@
 	export default {
 		data() {
 			return {
-				showedit:false,
+				showedit: false,
 				showhistory: false,
 				historyinfoList: [], ///历史消息
 				curitemtitle: "",
@@ -279,7 +277,7 @@
 				moreresources: [], ///更多资料
 				showshType: true, //显示审核类型
 				currentId: "",
-				currentItem:{},
+				currentItem: {},
 				radioinfo: 0,
 				infoconent: "",
 				radioList: [{
@@ -551,13 +549,15 @@
 				roles: [], ///角色
 				isManager: true,
 				showlookyqr: false,
-				showlookbyqr:false,
+				showlookbyqr: false,
 				yqrinfo: {}, ////邀请人信息
 				allyqr: [],
-				allbyqr:[]
+				allbyqr: []
 			}
 		},
-		components:{editShy},
+		components: {
+			editShy
+		},
 		onLoad() {
 			this._filter = {}
 		},
@@ -588,19 +588,36 @@
 			}
 		},
 		methods: {
-			confirmEdit(item){
-				if(item){
-					for(var key in item){
-						this.$set(this.currentItem,key,item[key]);
+			async confirmEdit(item) {
+				if (item) {
+					var id = item.id;
+					var res = await db.collection("uni-id-users").where({
+						_id: id
+					}).field(
+						"username,nickname,weiboname,weibocontent,isbdwb,resources,update_date,beizhu,status,dcloud_appid,register_date"
+						).get();
+					console.log("res", res);
+					var data = {};
+					if (res && res.result && res.result.data && res.result.data.length > 0) {
+						data = res.result.data[0];
+						for (var key in data) {
+							this.$set(this.currentItem, key, data[key]);
+						}
 					}
 				}
-				this.showedit=false;
+
+				// if(item){
+				// 	for(var key in item){
+				// 		this.$set(this.currentItem,key,item[key]);
+				// 	}
+				// }
+				this.showedit = false;
 			},
 			// 编辑信息
-			editinfo(item){
-				this.currentId=item._id;
-				this.currentItem=item;
-				this.showedit=true;
+			editinfo(item) {
+				this.currentId = item._id;
+				this.currentItem = item;
+				this.showedit = true;
 			},
 			// 获取历史消息
 			async getHistoryInfo() {
@@ -656,9 +673,9 @@
 
 				console.log("this.allyqr", this.allyqr);
 			},
-			async lookBUser(id){
+			async lookBUser(id) {
 				this.showlookbyqr = true;
-				
+
 				var yqr = await db.collection("jz-custom-yhyqm,uni-id-users").where({
 					yqr_id: id
 				}).field("byqr_id{username,nickname,weiboname}").get();
@@ -923,33 +940,36 @@
 					this.loadData()
 				})
 			},
-			async searchweibono4(){
-				var name=uni.getStorageSync("lastUsername");
-				var userInfo=uni.getStorageSync("userInfo");
+			async searchweibono4() {
+				var name = uni.getStorageSync("lastUsername");
+				var userInfo = uni.getStorageSync("userInfo");
 				// console.log("name",name);
 				// alert(name+","+userInfo.username);
 				// var name=userinfo.username;
+				// debugger;
+				// var name="  junzheyuzhoush1";
 				var res = await db.collection("jz-custom-shtime").where({
 					// name: "Wuyu1640"
-					 name:name.toLowerCase()
+					name: name.toLowerCase().replace(/\s/g, "")
 				}).get()
-				// console.log("res",res);
+				console.log("res", res);
 				// var row={};
-				if(res.result&&res.result.data){
-					var _add="(";
-					res.result.data.forEach((item,index)=>{
-						var row=item;
-						var time1=new Date(row.start_date).getTime()-1000;
-						var time2=new Date(row.end_date).getTime()+1000;
-						_add+="(register_date>"+time1+"&&register_date<"+time2+")";
-						if(index==res.result.data.length-1){
-							_add+=")";
-						}else{
-							_add+="||"
+				if (res.result && res.result.data) {
+					var _add = "(";
+					res.result.data.forEach((item, index) => {
+						var row = item;
+						var time1 = new Date(row.start_date).getTime() - 1000;
+						var time2 = new Date(row.end_date).getTime() + 1000;
+						_add += "(register_date>" + time1 + "&&register_date<" + time2 + ")";
+						if (index == res.result.data.length - 1) {
+							_add += ")";
+						} else {
+							_add += "||"
 						}
 					});
 					const newWhere =
-						"weiboname!=''&&weiboname!=null&&isbdwb!=true&&status!=1&&(beizhu==''||beizhu==undefined)&&"+_add;
+						"weiboname!=''&&weiboname!=null&&isbdwb!=true&&status!=1&&(beizhu==''||beizhu==undefined)&&" +
+						_add;
 					// console.log("newWhere",newWhere);
 					this.where = newWhere
 					// 下一帧拿到查询条件

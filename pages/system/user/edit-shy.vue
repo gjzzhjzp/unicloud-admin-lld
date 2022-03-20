@@ -221,7 +221,7 @@ import BASE64 from "../../../common/common/base64.js"
 				}
 				delete value.username;
 				delete value.nickname;
-				
+				// const cloudEnv_now = db.getCloudEnv('$cloudEnv_now');
 				uniCloud.callFunction({
 					name: 'jzuser',
 					data: {
@@ -237,7 +237,9 @@ import BASE64 from "../../../common/common/base64.js"
 							uni.showToast({
 								title: '修改成功'
 							});
-							this.$emit("confirm",value);
+							this.$emit("confirm",Object.assign(value,{
+								id:this.formdataid
+							}));
 								// this.getOpenerEventChannel().emit('refreshData')
 							// setTimeout(() => uni.navigateBack(), 500)
 					} else {

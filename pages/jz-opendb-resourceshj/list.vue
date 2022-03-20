@@ -19,7 +19,7 @@
 		</view>
 		<view class="uni-container">
 			<unicloud-db ref="udb" collection="jz-opendb-resourceshj"
-				field="hj_id,parent_id,resourceshj_title,sort" :where="where" page-data="replace"
+				field="hj_id,status,parent_id,resourceshj_title,sort" :where="where" page-data="replace"
 				:orderby="orderby" :getcount="true" :page-size="options.pageSize" :page-current="options.pageCurrent"
 				v-slot:default="{data,pagination,loading,error,options}" :options="options" loadtime="manual"
 				@load="onqueryload">
@@ -29,10 +29,12 @@
 						<uni-th align="center" filter-type="search"
 							@filter-change="filterChange($event, 'resourceshj_title')" sortable
 							@sort-change="sortChange($event, 'resourceshj_title')">合集标题</uni-th>
+							<uni-th align="center" sortable @sort-change="sortChange($event, 'status')">生效状态</uni-th>
 						<uni-th align="center">操作</uni-th>
 					</uni-tr>
 					<uni-tr v-for="(item,index) in data" :key="index">
 						<uni-td align="center">{{item.resourceshj_title}}</uni-td>
+						 <uni-td align="center">{{item.status != 0 ? '✅' : '❌'}}</uni-td>
 						<uni-td align="center">
 							<view class="uni-group">
 								<button @click="navigateTo('./edit?id='+item._id, false)" class="uni-button" size="mini"
@@ -289,7 +291,8 @@
 				this.showaddhj = false;
 				await db.collection("jz-opendb-resourceshj").add({
 					hj_id,
-					resourceshj_title: this.addtitle
+					resourceshj_title: this.addtitle,
+					status:1
 				});
 				this.$refs.udb.loadData({
 					current: 1
@@ -298,6 +301,7 @@
 				uni.hideLoading();
 			},
 			async confirmaddhjzy() {
+				
 				this.showhjManage = true;
 				this.showaddhjzy = true;
 				var lists = this.listselectedItems(this.curhjid);

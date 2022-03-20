@@ -13,6 +13,9 @@
       <uni-forms-item name="resourceshj_title" label="合集标题">
         <uni-easyinput placeholder="合集标题" v-model="formData.resourceshj_title"></uni-easyinput>
       </uni-forms-item>
+	  <uni-forms-item name="status" label="生效状态">
+	    <switch @change="binddata('status', $event.detail.value)" :checked="!!formData.status"></switch>
+	  </uni-forms-item>
      <!-- <uni-forms-item name="sort" label="排序">
         <uni-easyinput placeholder="排序号" type="number" v-model="formData.sort"></uni-easyinput>
       </uni-forms-item> -->
@@ -50,6 +53,7 @@
         "parent_id": "",
         "article_id": "",
         "resourceshj_title": "",
+		"status":0,
         "sort": null
       }
       return {
@@ -91,6 +95,11 @@
        */
       submitForm(value) {
         // 使用 clientDB 提交数据
+		if(value.status){
+			value.status=1;
+		}else{
+			value.status=0;
+		}
         return db.collection(dbCollectionName).doc(this.formDataId).update(value).then((res) => {
           uni.showToast({
             title: '修改成功'
@@ -113,9 +122,13 @@
         uni.showLoading({
           mask: true
         })
-        db.collection(dbCollectionName).doc(id).field("hj_id,parent_id,article_id,resourceshj_title,sort").get().then((res) => {
+        db.collection(dbCollectionName).doc(id).field("hj_id,parent_id,article_id,resourceshj_title,status,sort").get().then((res) => {
           const data = res.result.data[0]
           if (data) {
+			  // debugger;
+			  if(typeof data.status=="undefined"){
+				  this.$set(data,"status",1)
+			  }
             this.formData = data
           }
         }).catch((err) => {
