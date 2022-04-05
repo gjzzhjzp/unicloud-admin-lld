@@ -79,7 +79,9 @@
 							</template>
 						</uni-td>
 						<uni-td align="center">{{options.zy_gs_valuetotext[item.zy_gs]}}</uni-td>
+						<!-- {{item.resources[0]?item.resources[0].url:""}} -->
 						<uni-td align="center">{{item.title}}</uni-td>
+						<!-- {{item.resources[0]?item.resources[0].url:""}} -->
 						<!-- <uni-td align="center">{{item.categories}}</uni-td> -->
 						<uni-td align="center">{{item.categorieszw}}</uni-td>
 						<uni-td align="center">{{item.labels}}</uni-td>

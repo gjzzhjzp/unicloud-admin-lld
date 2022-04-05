@@ -114,7 +114,7 @@
 							<uni-td align="center">{{item.article_id[0]?item.article_id[0].title:''}}</uni-td>
 							<uni-td align="center">{{item.article_id[0]?item.article_id[0].author:''}}</uni-td>
 							<uni-td align="center">
-								{{zy_gs_localdata[item.article_id[0]?item.article_id[0].zy_gs:''].text}}
+								{{zy_gs_localdata[item.article_id[0]?item.article_id[0].zy_gs:'']?zy_gs_localdata[item.article_id[0]?item.article_id[0].zy_gs:''].text:""}}
 							</uni-td>
 							<uni-td align="center" >
 							<view class="px" @contextmenu.stop.prevent="changepx(item)">
